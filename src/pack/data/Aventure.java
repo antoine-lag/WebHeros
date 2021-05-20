@@ -11,10 +11,10 @@ public class Aventure {
 	
 	String nom;
 	
-	@OneToOne
+	@OneToOne(fetch = FetchType.EAGER)
 	Situation debut;
 	
-	@OneToMany
+	@OneToMany(fetch = FetchType.EAGER)
 	Collection<Situation> situations;
 	
 	public Aventure() {}

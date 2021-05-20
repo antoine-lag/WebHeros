@@ -16,7 +16,7 @@ public class Evenement {
 	
 	String type;
 	
-	@OneToMany
+	@OneToMany(fetch = FetchType.EAGER)
 	Collection<Utilisateur> participants;
 		
 	public Evenement() {}

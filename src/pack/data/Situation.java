@@ -12,10 +12,10 @@ public class Situation {
 	
 	String texte;
 	
-	@OneToMany
+	@OneToMany(fetch = FetchType.EAGER)
 	Collection<Choix> choix;
 	
-	@OneToOne
+	@OneToOne(fetch = FetchType.EAGER)
 	Moderation moderation;
 	
 	public Situation() {}

@@ -1,6 +1,7 @@
 package pack.data;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -12,7 +13,7 @@ public class Vote {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	int id;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	Utilisateur votant;
 	
 	int score;

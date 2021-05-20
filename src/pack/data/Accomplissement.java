@@ -13,7 +13,7 @@ public class Accomplissement {
 	
 	String nom;
 	
-	@OneToOne
+	@OneToOne(fetch = FetchType.EAGER)
 	Utilisateur titulaire;
 	
 	public Accomplissement(int id, String date, String nom, Utilisateur titulaire) {

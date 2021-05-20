@@ -9,10 +9,10 @@ public class Moderation {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	int id;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	Utilisateur createur;
 	
-	@OneToMany
+	@OneToMany(fetch = FetchType.EAGER)
 	Collection<Vote> votes;
 	
 	Boolean validee;

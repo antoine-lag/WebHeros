@@ -13,10 +13,10 @@ public class Utilisateur {
 	
 	String mail;
 	
-	@OneToMany
+	@OneToMany(fetch = FetchType.EAGER)
 	Collection<Cheminement> cheminements;
 	
-	@OneToMany
+	@OneToMany(fetch = FetchType.EAGER)
 	Collection<Accomplissement> accomplissements;
 	
 	public Utilisateur() {}
