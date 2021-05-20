@@ -4,12 +4,10 @@ import java.util.Collection;
 import javax.persistence.*;
 @Entity
 public class Utilisateur {
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	int id;
 	
 	Boolean premium;
 	
+	@Id
 	String pseudonyme;
 	
 	String mail;
