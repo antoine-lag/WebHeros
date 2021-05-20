@@ -32,6 +32,14 @@ public class Jeu {
 		this.aventure = aventure;
 		this.evenement = evenement;
 	}
+	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	public Collection<Utilisateur> getUtilisateurs() {
 		return utilisateurs;

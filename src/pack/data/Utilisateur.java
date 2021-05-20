@@ -8,6 +8,7 @@ public class Utilisateur {
 	Boolean premium;
 	
 	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	String pseudonyme;
 	
 	String mail;

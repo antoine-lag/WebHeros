@@ -8,7 +8,7 @@ public class Choix {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	int id;
-	
+
 	String string_texte;
 	
 	@OneToOne
@@ -24,6 +24,14 @@ public class Choix {
 		super();
 		this.string_texte = string_texte;
 		this.situation = situation;
+	}
+	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String getString_texte() {

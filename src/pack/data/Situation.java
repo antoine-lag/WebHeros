@@ -31,6 +31,14 @@ public class Situation {
 		this.choix = choix;
 		this.moderation = moderation;
 	}
+	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	public String getTexte() {
 		return texte;

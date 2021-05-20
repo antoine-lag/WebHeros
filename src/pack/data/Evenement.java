@@ -9,7 +9,7 @@ public class Evenement {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	int id;
-	
+
 	String dateDebut;
 	
 	String dateFin;
@@ -33,6 +33,14 @@ public class Evenement {
 		this.dateFin = dateFin;
 		this.participants = participants;
 		this.type = type;
+	}
+	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String getDateDebut() {

@@ -28,6 +28,14 @@ public class Vote {
 		this.votant = votant;
 		this.score = score;
 	}
+	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	public Utilisateur getVotant() {
 		return votant;

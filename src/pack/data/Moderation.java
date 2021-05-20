@@ -30,6 +30,14 @@ public class Moderation {
 		this.votes = votes;
 		this.validee = validee;
 	}
+	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	public Utilisateur getCreateur() {
 		return createur;
