@@ -48,7 +48,7 @@ public class Servlet extends HttpServlet {
 			id_jeu = jeu.getId();
 			Utilisateur u = facade.ajouterUtilisateur("Bob", "bob@supermail.com", id_jeu);
 			id_joueur = u.getId();
-			String stringSetup = "Setup done !\n idJeu="+id_jeu;
+			String stringSetup = "Setup done !\n joueur="+facade.getIDJoueur("Bob", id_jeu);
 			response.getWriter().println("<html><body>"+stringSetup+"</body></html>");
 		}
 	}
