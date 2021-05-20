@@ -19,6 +19,7 @@ import pack.data.Vote;
 
 @Singleton
 public class Facade {
+	
 	@PersistenceContext
 	private EntityManager em;
 	
@@ -187,4 +188,5 @@ public class Facade {
 			return null;
 		}
 	}
+
 }
