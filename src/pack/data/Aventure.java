@@ -4,12 +4,16 @@ import java.util.*;
 
 @Entity
 public class Aventure {
+	
 	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	int id;
 	
 	String nom;
+	
 	@OneToOne
 	Situation debut;
+	
 	@OneToMany
 	Collection<Situation> situations;
 	
@@ -45,7 +49,5 @@ public class Aventure {
 	}
 	public void setSituations(Collection<Situation> situations) {
 		this.situations = situations;
-	}
-	
-	
+	}	
 }

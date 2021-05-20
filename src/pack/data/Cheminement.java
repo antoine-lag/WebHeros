@@ -4,14 +4,19 @@ import java.util.*;
 
 @Entity
 public class Cheminement {
+	
 	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	int id;
 	
 	boolean actif;
+	
 	@ManyToOne
 	Situation position;
+	
 	@OneToMany
 	Collection<SituationClasse> parcours;
+	
 	@ManyToOne
 	Aventure aventure;
 	
@@ -66,5 +71,4 @@ public class Cheminement {
 	public void setAventure(Aventure aventure) {
 		this.aventure = aventure;
 	}
-	
 }

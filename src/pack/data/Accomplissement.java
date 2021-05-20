@@ -1,18 +1,20 @@
 package pack.data;
+
 import javax.persistence.*;
-import java.util.*;
 
 @Entity
 public class Accomplissement {
+	
 	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	int id;
 	
 	String date;
+	
 	String nom;
+	
 	@OneToOne
 	Utilisateur titulaire;
-	
-	
 	
 	public Accomplissement(int id, String date, String nom, Utilisateur titulaire) {
 		super();
