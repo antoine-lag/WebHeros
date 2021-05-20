@@ -1,21 +1,11 @@
 package pack;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import javax.ejb.Singleton;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
-import pack.data.Aventure;
-
-import pack.data.Choix;
-import pack.data.Jeu;
-import pack.data.Moderation;
-import pack.data.Situation;
-import pack.data.Utilisateur;
-import pack.data.Vote;
+import pack.data.*;
 
 @Singleton
 public class Facade {
