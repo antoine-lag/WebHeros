@@ -31,6 +31,11 @@ public class Situation {
 		this.choix = choix;
 		this.moderation = moderation;
 	}
+	public Situation(String texte, Moderation moderation) {
+		super();
+		this.texte = texte;
+		this.moderation = moderation;
+	}
 	
 	public int getId() {
 		return id;
