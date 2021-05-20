@@ -1,6 +1,8 @@
 package pack;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import javax.ejb.Singleton;
 import javax.persistence.EntityManager;
@@ -9,15 +11,26 @@ import javax.persistence.PersistenceContext;
 import pack.data.Aventure;
 
 import pack.data.Choix;
+import pack.data.Jeu;
 import pack.data.Moderation;
 import pack.data.Situation;
 import pack.data.Utilisateur;
+import pack.data.Vote;
 
 @Singleton
 public class Facade {
 	@PersistenceContext
 	private EntityManager em;
 	
+	///Ajout de situations ///
+	
+	//Initialise une instance de jeu
+	public Jeu initJeu()
+	{
+		Jeu jeu = new Jeu();
+		em.persist(jeu);
+		return jeu;
+	}
 	//Ajoute une situation et sa modération vide, ses options de choix ,puis ajoute cette situation a l'aventure
 	public Situation ajouterSituation(String texte,List<String> textesChoix, int id_utilisateur,int id_aventure)
 	{
@@ -72,5 +85,106 @@ public class Facade {
 		Choix source = em.find(Choix.class, id_choix);
 		return source.getSituation() != null;
 	}
+	//Cree une aventure avec une unique situation et ses choix
+	public Aventure ajouterAventure(String nom, String texteSituation, List<String> textesChoix, int id_utilisateur,int id_jeu)
+	{
+		Aventure aventure = new Aventure();
+		aventure.setNom(nom);
+		em.persist(aventure);
+		Situation init = ajouterSituation(texteSituation,textesChoix,id_utilisateur,aventure.getId());
+		aventure.setDebut(init);
+		Jeu jeu = em.find(Jeu.class, id_jeu);
+		jeu.getAventure().add(aventure);
+		return aventure;
+		
+	}
 	
+	///Votes ///
+	//Ajoute un vote du joueur sur la situation, et la valide si elle passe un certain score
+	public Vote voter(int id_joueur, int id_situation, int note)
+	{
+		int scoreValidation = 3;
+		Utilisateur joueur = em.find(Utilisateur.class, id_joueur);
+		Situation sit = em.find(Situation.class, id_situation);
+		Vote vote = new Vote();
+		em.persist(note);
+		vote.setScore(note);
+		vote.setVotant(joueur);
+		Moderation mod = sit.getModeration();
+		if(!aVote(joueur.getId(),mod))
+		{
+			mod.getVotes().add(vote);
+			if((!mod.getValidee()) && calculerScore(mod.getId())>scoreValidation)
+			{
+				mod.setValidee(true);
+			}
+		}
+		return vote;
+	}
+	//Calcule le score associe a une moderation
+	public int calculerScore(int id_moderation)
+	{
+		Moderation mod = em.find(Moderation.class, id_moderation);
+		Collection<Vote> votes = mod.getVotes();
+		int score = 0;
+		for(Vote v : votes)
+		{
+			score += v.getScore();
+		}
+		return score;
+	}
+	//Indique si un joueur a vote pour une situation
+	public boolean aVote(int id_joueur, Moderation moderation)
+	{
+		return moderation.getVotes().stream().anyMatch(x->(x.getVotant().getId() == id_joueur));
+	}
+	
+	//Indique si une situation est validee et peut etre poursuivie
+	public boolean estValidee(int id_situation)
+	{
+		Situation situation = em.find(Situation.class,id_situation);
+		return situation.getModeration().getValidee();
+	}
+	
+	//Joueurs//
+	//Indique si un pseudo existe deja
+	public boolean pseudoExiste(String pseudoJoueur, int id_jeu)
+	{
+		Jeu jeu = em.find(Jeu.class, id_jeu);
+		Collection<Utilisateur> joueurs = jeu.getUtilisateurs();
+		return joueurs.stream().anyMatch(j->j.getPseudonyme().equals(pseudoJoueur));
+
+	}
+	//Trouve l'ID d'un joueur a partir de son pseudo, -1 sinon
+	public int getIDJoueur(String pseudoJoueur, int id_jeu)
+	{
+		Jeu jeu = em.find(Jeu.class, id_jeu);
+		Collection<Utilisateur> joueurs = jeu.getUtilisateurs();
+		Optional<Utilisateur> ut = joueurs.stream().filter(j->j.getPseudonyme().equals(pseudoJoueur)).findFirst();
+		if(ut.isPresent())
+		{
+			return ut.get().getId();
+		}else
+		{
+			return -1;
+		}
+	}
+	//Ajoute un utilisateur a la base de donnees, null si deja present
+	public Utilisateur ajouterUtilisateur(String pseudo,String email, int id_jeu)
+	{
+		Utilisateur utilisateur = new Utilisateur();
+		utilisateur.setPremium(false);
+		utilisateur.setMail(email);
+		utilisateur.setPseudonyme(pseudo);
+		if(pseudoExiste(pseudo, id_jeu))
+		{
+			em.persist(utilisateur);
+			Jeu jeu = em.find(Jeu.class, id_jeu);
+			jeu.getUtilisateurs().add(utilisateur);
+			return utilisateur;
+		}else
+		{
+			return null;
+		}
+	}
 }

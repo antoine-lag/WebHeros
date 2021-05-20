@@ -9,6 +9,8 @@ public class Utilisateur {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	int id;
+	
 	String pseudonyme;
 	
 	String mail;
@@ -37,7 +39,16 @@ public class Utilisateur {
 		this.cheminements = cheminements;
 		this.accomplissements = accomplissements;
 	}
+	
+	public int getId() {
+		return id;
+	}
 
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	
 	public Boolean getPremium() {
 		return premium;
 	}
@@ -77,4 +88,5 @@ public class Utilisateur {
 	public void setAccomplissements(Collection<Accomplissement> accomplissements) {
 		this.accomplissements = accomplissements;
 	};
+	
 }
