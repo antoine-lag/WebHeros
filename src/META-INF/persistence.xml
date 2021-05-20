@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0"
+    xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+    <persistence-unit name="MaPU"
+        transaction-type="JTA">
+        <provider>org.hibernate.ejb.HibernatePersistence</provider>
+        
+        <jta-data-source>java:jboss/datasources/ExampleDS</jta-data-source>
+        
+        <class>pack.Acomplissement</class>
+        <class>pack.Aventure</class>
+        <class>pack.Cheminement</class>
+        <class>pack.Choix</class>
+        <class>pack.Evenement</class>
+        <class>pack.Jeu</class>
+        <class>pack.Moderation</class>
+        <class>pack.Situation</class>
+        <class>pack.SituationClasse</class>
+        <class>pack.Utilisateur</class>
+        <class>pack.Vote</class>
+        <properties>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />
+            <property name="hibernate.hbm2ddl.auto" value="create-drop" />
+            <property name="hibernate.show_sql" value="true" />
+        </properties>
+    </persistence-unit>
+</persistence>
