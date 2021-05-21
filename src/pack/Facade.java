@@ -10,7 +10,7 @@ import pack.data.*;
 @Singleton
 public class Facade {
 	
-	@PersistenceContext
+	@PersistenceContext(unitName = "MaPU")
 	private EntityManager em;
 	
 	///Ajout de situations ///
@@ -167,7 +167,7 @@ public class Facade {
 		utilisateur.setPremium(false);
 		utilisateur.setMail(email);
 		utilisateur.setPseudonyme(pseudo);
-		if(pseudoExiste(pseudo, id_jeu))
+		if(!pseudoExiste(pseudo, id_jeu))
 		{
 			em.persist(utilisateur);
 			Jeu jeu = em.find(Jeu.class, id_jeu);
