@@ -22,7 +22,6 @@ public class Servlet extends HttpServlet {
 	@EJB
 	Facade facade;
 	
-	
 	//Temporairement on utilise un seul joueur
 	int id_joueur;
 	int id_jeu;
@@ -33,15 +32,13 @@ public class Servlet extends HttpServlet {
     public Servlet() {
         // TODO Auto-generated constructor stub
     }
-    
-
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		
+		/*
 		if(request.getParameter("mode").equals("init"))
 		{
 			Jeu jeu= facade.initJeu();
@@ -50,6 +47,9 @@ public class Servlet extends HttpServlet {
 			id_joueur = u.getId();
 			String stringSetup = "Setup done !\n joueur="+facade.getIDJoueur("Bob", id_jeu);
 			response.getWriter().println("<html><body>"+stringSetup+"</body></html>");
+		}*/
+		if (request.getParameter("")) {
+			
 		}
 	}
 
@@ -60,5 +60,4 @@ public class Servlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
-
 }
