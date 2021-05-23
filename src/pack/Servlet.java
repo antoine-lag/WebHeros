@@ -20,6 +20,7 @@ import javax.servlet.http.HttpSession;
 
 import pack.data.Jeu;
 import pack.data.Utilisateur;
+import pack.data.Aventure;
 
 /**
  * Servlet implementation class Servlet
@@ -31,14 +32,31 @@ public class Servlet extends HttpServlet {
 	@EJB
 	Facade facade;
 	
-	//Temporairement on utilise un seul joueur
+	Jeu jeuPrincipal;
+	Utilisateur bob;
+	Utilisateur tom;
+	Utilisateur pierre;
+	Aventure aventureChateauHante;
+	
+	//Temporairement on utilise un seul jeu
 	int id_jeu;
 
     /**
      * Default constructor. 
      */
     public Servlet() {
-        // TODO Auto-generated constructor stub
+    	/*INITIALISATION
+    	 * Un seul jeu. 3 utilisateurs (nom, mdp): (Bob, mdpbob) (Tom, tomi) (Pierre, pauljack).
+    	 * Une aventure: chateau hanté
+    	 * Une situation initiale: "Tout commence dans ..." + 3 choix
+    	 */
+    	jeuPrincipal = facade.initJeu();
+    	id_jeu = jeuPrincipal.getId();
+    	bob = facade.ajouterUtilisateur("Bob", "boby@neutronMail.com", id_jeu, "mdpbob");
+    	tom = facade.ajouterUtilisateur("Tom", "tomi@quarkMail.com", id_jeu, "tomi");
+    	pierre = facade.ajouterUtilisateur("Pierre", "boby@electronMail.com", id_jeu, "pauljack");
+    	aventureChateauHante = facade.ajouterAventure("Creepy castle", "Tout commence dans le chateau du Duc de Normandie...", Arrays.asList("Vous sortez du chateau.", "Vous allez dans la cave.", "Vous allez dans la tour pour voir l'extérieur."), bob.getId(), id_jeu);
+		
     }
 
 	/**
@@ -69,6 +87,10 @@ public class Servlet extends HttpServlet {
 			int idJoueur = (int)(session.getAttribute("idJoueur"));
 			int idAventure = (int)(session.getAttribute("idAventure"));
 			response.getWriter().println("<html><body>"+"id_joueur = "+idJoueur+"\nidAventure = "+idAventure+"</body></html>");
+		}
+		else if (request.getParameter("display").equals("aventure")){
+			request.setAttribute("Aventure", aventureChateauHante);
+			request.getRequestDispatcher("Aventure.jsp").forward(request, response);
 		}
 	}
 
