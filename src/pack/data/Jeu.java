@@ -11,13 +11,13 @@ public class Jeu {
 	int id;
 	
 	@OneToMany(fetch = FetchType.EAGER)
-	Collection<Utilisateur> utilisateurs;
+	Collection<Utilisateur> utilisateurs = new LinkedList<Utilisateur>();
 	
 	@OneToMany(fetch = FetchType.EAGER)
-	Collection<Aventure> aventure;
+	Collection<Aventure> aventure = new LinkedList<Aventure>();
 
 	@OneToMany(fetch = FetchType.EAGER)
-	Collection<Evenement> evenement;
+	Collection<Evenement> evenement = new LinkedList<Evenement>();
 	
 	public Jeu() {}
 
@@ -42,6 +42,7 @@ public class Jeu {
 	}
 
 	public Collection<Utilisateur> getUtilisateurs() {
+		setUtilisateurs(new HashSet<Utilisateur>(utilisateurs));
 		return utilisateurs;
 	}
 
@@ -50,6 +51,7 @@ public class Jeu {
 	}
 
 	public Collection<Aventure> getAventure() {
+		setAventure(new HashSet<Aventure>(aventure));
 		return aventure;
 	}
 
@@ -58,6 +60,7 @@ public class Jeu {
 	}
 
 	public Collection<Evenement> getEvenement() {
+		setEvenement(new HashSet<Evenement>(evenement));
 		return evenement;
 	}
 

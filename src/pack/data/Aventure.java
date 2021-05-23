@@ -15,7 +15,7 @@ public class Aventure {
 	Situation debut;
 	
 	@OneToMany(fetch = FetchType.EAGER)
-	Collection<Situation> situations;
+	Collection<Situation> situations = new LinkedList<Situation>();
 	
 	public Aventure() {}
 	
@@ -45,6 +45,7 @@ public class Aventure {
 		this.debut = debut;
 	}
 	public Collection<Situation> getSituations() {
+		setSituations(new HashSet<Situation>(situations));
 		return situations;
 	}
 	public void setSituations(Collection<Situation> situations) {

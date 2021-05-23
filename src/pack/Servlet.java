@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.ejb.EJB;
 import javax.servlet.RequestDispatcher;
@@ -45,6 +46,7 @@ public class Servlet extends HttpServlet {
      * Default constructor. 
      */
     public Servlet() {
+    	
     }
     
     public void initialiseServlet() throws ServletException{
@@ -59,9 +61,7 @@ public class Servlet extends HttpServlet {
     	tom = facade.ajouterUtilisateur("Tom", "tomi@quarkMail.com", id_jeu, "tomi");
     	pierre = facade.ajouterUtilisateur("Pierre", "boby@electronMail.com", id_jeu, "pauljack");
     	List<String> choix = Arrays.asList("Vous sortez du chateau.", "Vous allez dans la cave.", "Vous allez dans la tour pour voir l'extérieur.");
-    	//NULL_POINT_EXCEPTION
 		aventureChateauHante = facade.ajouterAventure("Creepy castle", "Tout commence dans le chateau du Duc de Normandie...", choix, bob.getId(), id_jeu);
-		
 		System.out.println("\nServlet initialised !");
     }
 
@@ -69,12 +69,11 @@ public class Servlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		initialiseServlet();
+		
 		
 		if(request.getParameter("mode").equals("init")) {
-			Jeu jeu= facade.initJeu();
-			id_jeu = jeu.getId();
-			String stringSetup = "Setup done !";
+			initialiseServlet();
+			String stringSetup = "Setup done !"+facade.getUtilisateurs(id_jeu).stream().map(x->x.getPseudonyme()).collect(Collectors.toList()).toString();
 			response.getWriter().println("<html><body>"+stringSetup+"</body></html>");
 		} else if (request.getParameter("mode").equals("ajoutSituation")) {
 			HttpSession session = request.getSession(false);

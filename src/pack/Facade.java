@@ -27,7 +27,7 @@ public class Facade {
 		return jeu;
 	}
 	//Ajoute une situation et sa modération vide, ses options de choix ,puis ajoute cette situation a l'aventure
-	private Situation ajouterSituation(String texte,List<String> textesChoix, int id_utilisateur,int id_aventure)
+	public Situation ajouterSituation(String texte,List<String> textesChoix, int id_utilisateur,int id_aventure)
 	{
 		
 		Utilisateur utilisateur = em.find(Utilisateur.class, id_utilisateur);
@@ -39,19 +39,18 @@ public class Facade {
 		situation.setModeration(moderation);
 		situation.setTexte(texte);
 		em.persist(situation);
-		
+
 		for(String txtChoix : textesChoix)
 		{
-			Choix choix = ajouterChoix(txtChoix);
-			//NULL_POINT_EXCEPTION
-			situation.getChoix().add(choix);
 			
+			Choix choix = ajouterChoix(txtChoix);
+			situation.getChoix().add(choix);
+			em.merge(choix);
 		}
 
 		Aventure aventure = em.find(Aventure.class, id_aventure);
-		//NULL_POINT_EXCEPTION
-		//aventure.getSituations().add(situation);
-		
+		aventure.getSituations().add(situation);
+		em.merge(situation);
 		return situation;
 		
 	}
@@ -76,6 +75,7 @@ public class Facade {
 		Situation nouvelle = ajouterSituation(texte,textesChoix,id_utilisateur,id_aventure);
 		Aventure aventure = em.find(Aventure.class, id_aventure);
 		aventure.setDebut(nouvelle);
+		em.merge(nouvelle);
 	}
 	//Indique si un choix mene vers une situation qui n'existe pas encore
 	public boolean situationDoitEtreCree(int id_choix)
@@ -92,6 +92,7 @@ public class Facade {
 		affilierSituationInitiale(texteSituation,textesChoix, id_utilisateur,aventure.getId());
 		Jeu jeu = em.find(Jeu.class, id_jeu);
 		jeu.getAventure().add(aventure);
+		em.merge(aventure);
 		return aventure;
 		
 	}
@@ -104,7 +105,7 @@ public class Facade {
 		Utilisateur joueur = em.find(Utilisateur.class, id_joueur);
 		Situation sit = em.find(Situation.class, id_situation);
 		Vote vote = new Vote();
-		em.persist(note);
+		em.persist(vote);
 		vote.setScore(note);
 		vote.setVotant(joueur);
 		Moderation mod = sit.getModeration();
@@ -178,13 +179,31 @@ public class Facade {
 		{
 			em.persist(utilisateur);
 			Jeu jeu = em.find(Jeu.class, id_jeu);
-			jeu.getUtilisateurs().add(utilisateur);
+			Collection<Utilisateur> utilisateurs = jeu.getUtilisateurs();
+			utilisateurs.add(utilisateur);
+			jeu.setUtilisateurs(utilisateurs);
+			em.merge(utilisateur);
 			return utilisateur;
 		} else {
 			return null;
 		}
 	}
+	public Collection<Utilisateur> getUtilisateurs(int id_jeu)
+	{
+		Jeu jeu = em.find(Jeu.class, id_jeu);
+		return jeu.getUtilisateurs();
+	}
+	public void mergeUtilisateurs(int id_jeu)
+	{
+		Jeu jeu = em.find(Jeu.class, id_jeu);
+		for(Utilisateur u : jeu.getUtilisateurs())
+		{
+			em.merge(u);
+		}
+	}
 	
+	
+	//Securite
 	public String getMdp(String pseudo, int id_jeu) {
 		int id_joueur = getIDJoueur(pseudo, id_jeu);
 		String mdp;
