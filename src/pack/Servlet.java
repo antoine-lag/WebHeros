@@ -45,6 +45,9 @@ public class Servlet extends HttpServlet {
      * Default constructor. 
      */
     public Servlet() {
+    }
+    
+    public void initialiseServlet() throws ServletException{
     	/*INITIALISATION
     	 * Un seul jeu. 3 utilisateurs (nom, mdp): (Bob, mdpbob) (Tom, tomi) (Pierre, pauljack).
     	 * Une aventure: chateau hanté
@@ -55,15 +58,18 @@ public class Servlet extends HttpServlet {
     	bob = facade.ajouterUtilisateur("Bob", "boby@neutronMail.com", id_jeu, "mdpbob");
     	tom = facade.ajouterUtilisateur("Tom", "tomi@quarkMail.com", id_jeu, "tomi");
     	pierre = facade.ajouterUtilisateur("Pierre", "boby@electronMail.com", id_jeu, "pauljack");
-    	aventureChateauHante = facade.ajouterAventure("Creepy castle", "Tout commence dans le chateau du Duc de Normandie...", Arrays.asList("Vous sortez du chateau.", "Vous allez dans la cave.", "Vous allez dans la tour pour voir l'extérieur."), bob.getId(), id_jeu);
+    	List<String> choix = Arrays.asList("Vous sortez du chateau.", "Vous allez dans la cave.", "Vous allez dans la tour pour voir l'extérieur.");
+    	//NULL_POINT_EXCEPTION
+		aventureChateauHante = facade.ajouterAventure("Creepy castle", "Tout commence dans le chateau du Duc de Normandie...", choix, bob.getId(), id_jeu);
 		
+		System.out.println("\nServlet initialised !");
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		initialiseServlet();
 		
 		if(request.getParameter("mode").equals("init")) {
 			Jeu jeu= facade.initJeu();

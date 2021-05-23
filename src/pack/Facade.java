@@ -43,11 +43,14 @@ public class Facade {
 		for(String txtChoix : textesChoix)
 		{
 			Choix choix = ajouterChoix(txtChoix);
+			//NULL_POINT_EXCEPTION
 			situation.getChoix().add(choix);
+			
 		}
 
 		Aventure aventure = em.find(Aventure.class, id_aventure);
-		aventure.getSituations().add(situation);
+		//NULL_POINT_EXCEPTION
+		//aventure.getSituations().add(situation);
 		
 		return situation;
 		
@@ -86,8 +89,7 @@ public class Facade {
 		Aventure aventure = new Aventure();
 		aventure.setNom(nom);
 		em.persist(aventure);
-		Situation init = ajouterSituation(texteSituation,textesChoix,id_utilisateur,aventure.getId());
-		aventure.setDebut(init);
+		affilierSituationInitiale(texteSituation,textesChoix, id_utilisateur,aventure.getId());
 		Jeu jeu = em.find(Jeu.class, id_jeu);
 		jeu.getAventure().add(aventure);
 		return aventure;
