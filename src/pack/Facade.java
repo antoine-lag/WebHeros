@@ -1,5 +1,9 @@
 package pack;
 
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 import javax.ejb.Singleton;
@@ -161,22 +165,63 @@ public class Facade {
 		}
 	}
 	//Ajoute un utilisateur a la base de donnees, null si deja present
-	public Utilisateur ajouterUtilisateur(String pseudo,String email, int id_jeu)
+	public Utilisateur ajouterUtilisateur(String pseudo,String email, int id_jeu, String mdp)
 	{
 		Utilisateur utilisateur = new Utilisateur();
 		utilisateur.setPremium(false);
 		utilisateur.setMail(email);
 		utilisateur.setPseudonyme(pseudo);
+		utilisateur.setMdp(mdp);
 		if(!pseudoExiste(pseudo, id_jeu))
 		{
 			em.persist(utilisateur);
 			Jeu jeu = em.find(Jeu.class, id_jeu);
 			jeu.getUtilisateurs().add(utilisateur);
 			return utilisateur;
-		}else
-		{
+		} else {
 			return null;
 		}
 	}
+	
+	public String getMdp(String pseudo, int id_jeu) {
+		int id_joueur = getIDJoueur(pseudo, id_jeu);
+		String mdp;
+		if (id_joueur!=-1) {
+			Utilisateur utilisateur = em.find(Utilisateur.class, id_joueur);
+			mdp = utilisateur.getMdp();
+		} else {
+			mdp = "";
+		}
+		return mdp;
+	}
+	
+	public String hasher(String mdp) {
+		MessageDigest digest = null;
+        try {
+            digest = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        assert digest != null;
+        byte[] hash = digest.digest(mdp.getBytes(StandardCharsets.UTF_8));
+        return toHexString(hash);
+	}
+	
+	public static String toHexString(byte[] hash)
+    {
+        // Convert byte array into signum representation
+        BigInteger number = new BigInteger(1, hash);
+
+        // Convert message digest into hex value
+        StringBuilder hexString = new StringBuilder(number.toString(16));
+
+        // Pad with leading zeros
+        while (hexString.length() < 32)
+        {
+            hexString.insert(0, '0');
+        }
+
+        return hexString.toString();
+    }
 
 }

@@ -15,6 +15,8 @@ public class Utilisateur {
 	
 	String mail;
 	
+	String mdp;
+	
 	@OneToMany(fetch = FetchType.EAGER)
 	Collection<Cheminement> cheminements;
 	
@@ -30,16 +32,25 @@ public class Utilisateur {
 	 * @param cheminements
 	 * @param accomplissements
 	 */
-	public Utilisateur(Boolean premium, String pseudonyme, String mail, Collection<Cheminement> cheminements,
-			Collection<Accomplissement> accomplissements) {
+	public Utilisateur(Boolean premium,  String mdp, String pseudonyme, String mail, 
+			Collection<Cheminement> cheminements, Collection<Accomplissement> accomplissements) {
 		super();
 		this.premium = premium;
 		this.pseudonyme = pseudonyme;
 		this.mail = mail;
 		this.cheminements = cheminements;
 		this.accomplissements = accomplissements;
+		this.mdp = mdp;
 	}
 	
+	public String getMdp() {
+		return mdp;
+	}
+
+	public void setMdp(String mdp) {
+		this.mdp = mdp;
+	}
+
 	public int getId() {
 		return id;
 	}
