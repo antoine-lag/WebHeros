@@ -27,7 +27,7 @@ public class Facade {
 		return jeu;
 	}
 	//Ajoute une situation et sa modération vide, ses options de choix ,puis ajoute cette situation a l'aventure
-	public Situation ajouterSituation(String texte,List<String> textesChoix, int id_utilisateur,int id_aventure)
+	private Situation ajouterSituation(String texte,List<String> textesChoix, int id_utilisateur,int id_aventure)
 	{
 		
 		Utilisateur utilisateur = em.find(Utilisateur.class, id_utilisateur);
