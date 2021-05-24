@@ -7,8 +7,8 @@
 	<title>Aventure</title>
 </head>
 <body>
-	<div ng-app="myApp" ng-controller="myCtrl"> 
-		<h1>Vous naviguez dans l'aventure {{aventure.name}}</h1>
+	<div ng-app="webHerosApp" ng-controller="webHerosCtrl"> 
+		<h1>Vous naviguez dans l'aventure {{aventureName}}</h1>
 		
 		<div ng-show="showSituationText">
 			<h3>{{situation.text}}</h3>
@@ -23,8 +23,64 @@
 		</div>
 		<br>
 		
+		<div ng-show="showAddSituation">
+			<a href="/AjoutSitutation.html">Ajouter une situation</a>
+		</div>
+		
 		<a href="/index.html">Accueil</a>
 		
+		<div ng-show="showMessage">
+			{{message}}
+		</div>
 	</div>
+	
+<script>
+function initVars(scope) {
+	scope.situation = new Object();//Not sure
+	scope.aventure = new Object();
+	scope.message = "___";
+}
+function initView(scope) {
+	scope.showSituationText = true;
+	scope.showChoicesList = true;
+	scop.showAddSituation = false;
+}
+function initSituation(scope){
+	http.get("rest/getAventure").then(function(response) {
+		if (response.status == 200) {
+			scope.aventureName = response.data;
+		} else {
+			scope.message = "failed to get list of persons";
+			scope.showMessage = true;
+		}
+	});
+}
+
+function selectChoice(button, scope, http) {
+	initView(scope);
+	initVars(scope);
+	switch (button) {
+		case "addPerson" :
+			scope.showAddPerson = true;
+			break;
+		case "addAddress" :
+			scope.showAddAddress = true;
+			break;
+		case "associate" :
+			
+			break;
+	}
+}
+
+
+var app = angular.module('webHerosApp', []);
+app.controller('webHerosCtrl', function($scope,$http) {
+	initVars($scope);
+ 	initView($scope);
+ 	initSituation($scope);
+    $scope.doChoice=function(button) {selectChoice(button,$scope,$http);}
+});
+	
+</script>
 </body>
 </html>

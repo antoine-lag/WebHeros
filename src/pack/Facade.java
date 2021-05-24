@@ -9,6 +9,10 @@ import java.util.*;
 import javax.ejb.Singleton;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+
 import pack.data.*;
 
 @Singleton
@@ -17,7 +21,16 @@ public class Facade {
 	@PersistenceContext(unitName = "MaPU")
 	private EntityManager em;
 	
-	///Ajout de situations ///
+	
+	@GET
+	@Path("/getAventureName")
+    @Produces({ "application/json" })
+	public String getAventureName() {
+		int id_aventure = 1;//HARDCODDED FOR NOW
+		return em.find(Aventure.class, id_aventure).getNom();
+	}
+	
+	///___________________________________///
 	
 	//Initialise une instance de jeu
 	public Jeu initJeu()
