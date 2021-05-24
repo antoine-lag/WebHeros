@@ -1,0 +1,13 @@
+@charset "UTF-8";
+
+a.button {
+	color: black;
+	background-color: grey;
+	text-decoration: none;
+	text-align: center;
+	padding: 2px;
+	border-width: 1px;
+	border-color: black;
+	border-style: solid;
+	border-radius: 5px;
+}
