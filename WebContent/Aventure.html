@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Aventure</title>
+</head>
+<body>
+	<div ng-app="myApp" ng-controller="myCtrl"> 
+		<h1>Vous naviguez dans l'aventure {{aventure.name}}</h1>
+		
+		<div ng-show="showSituationText">
+			<h3>{{situation.text}}</h3>
+		</div>
+		<br>
+		
+		</div ng-show="showChoicesList">
+			<ul>
+				<li ng-repeat="c in situation.choix">{{c.text}}
+				</li>
+			</ul>
+		</div>
+		<br>
+		
+		<a href="/index.html">Accueil</a>
+		
+	</div>
+</body>
+</html>
