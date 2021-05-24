@@ -16,6 +16,7 @@ import javax.ws.rs.Produces;
 import pack.data.*;
 
 @Singleton
+@Path("/")
 public class Facade {
 	
 	@PersistenceContext(unitName = "MaPU")
@@ -27,7 +28,15 @@ public class Facade {
     @Produces({ "application/json" })
 	public String getAventureName() {
 		int id_aventure = 1;//HARDCODDED FOR NOW
-		return em.find(Aventure.class, id_aventure).getNom();
+		Aventure av = em.find(Aventure.class, id_aventure);
+		String avName;
+		if(av == null) {
+			avName = "Aventure not found... Debug again !";
+		}else {
+			avName = av.getNom();
+		}
+		avName = "{\"aventureName\": \"" + avName + "\"}"; //JSON formatting
+		return avName;
 	}
 	
 	///___________________________________///

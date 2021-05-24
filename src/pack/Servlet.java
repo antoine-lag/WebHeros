@@ -57,6 +57,7 @@ public class Servlet extends HttpServlet {
     	pierre = facade.ajouterUtilisateur("Pierre", "boby@electronMail.com", id_jeu, "pauljack");
     	List<String> choix = Arrays.asList("Vous sortez du chateau.", "Vous allez dans la cave.", "Vous allez dans la tour pour voir l'extérieur.");
 		aventureChateauHante = facade.ajouterAventure("Creepy castle", "Tout commence dans le chateau du Duc de Normandie...", choix, bob.getId(), id_jeu);
+		System.out.println("\nID aventure: "+aventureChateauHante.getId());
 		System.out.println("\nServlet initialised !");
     }
 
