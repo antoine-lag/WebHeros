@@ -49,7 +49,7 @@ public class Servlet extends HttpServlet {
     	
     }
     
-    public void initialiseServlet() throws ServletException{
+    public void init() throws ServletException{
     	/*INITIALISATION
     	 * Un seul jeu. 3 utilisateurs (nom, mdp): (Bob, mdpbob) (Tom, tomi) (Pierre, pauljack).
     	 * Une aventure: chateau hanté
@@ -69,10 +69,7 @@ public class Servlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		
 		if(request.getParameter("mode").equals("init")) {
-			initialiseServlet();
 			String stringSetup = "Setup done !"+facade.getUtilisateurs(id_jeu).stream().map(x->x.getPseudonyme()).collect(Collectors.toList()).toString();
 			response.getWriter().println("<html><body>"+stringSetup+"</body></html>");
 		} else if (request.getParameter("mode").equals("ajoutSituation")) {
@@ -92,10 +89,8 @@ public class Servlet extends HttpServlet {
 			int idJoueur = (int)(session.getAttribute("idJoueur"));
 			int idAventure = (int)(session.getAttribute("idAventure"));
 			response.getWriter().println("<html><body>"+"id_joueur = "+idJoueur+"\nidAventure = "+idAventure+"</body></html>");
-		}
-		else if (request.getParameter("display").equals("aventure")){
-			request.setAttribute("Aventure", aventureChateauHante);
-			request.getRequestDispatcher("Aventure.jsp").forward(request, response);
+		} else if (request.getParameter("mode").equals("aventure")) {
+			request.getRequestDispatcher("Aventure.html").forward(request, response);
 		}
 	}
 
