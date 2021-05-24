@@ -1,12 +1,7 @@
 package pack;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -69,13 +64,8 @@ public class Servlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-<<<<<<< HEAD
-=======
-		
->>>>>>> d2b44caefbcc42f4dfc2ab32c6ca729cbc96d5bb
 		
 		if(request.getParameter("mode").equals("init")) {
-			Jeu jeu= facade.initJeu();
 			initialiseServlet();
 			String stringSetup = "Setup done !"+facade.getUtilisateurs(id_jeu).stream().map(x->x.getPseudonyme()).collect(Collectors.toList()).toString();
 			response.getWriter().println("<html><body>"+stringSetup+"</body></html>");
