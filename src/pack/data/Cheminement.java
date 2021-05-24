@@ -15,7 +15,7 @@ public class Cheminement {
 	Situation position;
 	
 	@OneToMany(fetch = FetchType.EAGER)
-	Collection<SituationClasse> parcours;
+	Collection<SituationClasse> parcours = new LinkedList<SituationClasse>();
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	Aventure aventure;
@@ -57,6 +57,7 @@ public class Cheminement {
 	}
 
 	public Collection<SituationClasse> getParcours() {
+		setParcours(new HashSet<SituationClasse>(parcours));
 		return parcours;
 	}
 

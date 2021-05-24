@@ -1,5 +1,7 @@
 package pack.data;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedList;
 
 import javax.persistence.*;
 @Entity
@@ -18,10 +20,10 @@ public class Utilisateur {
 	String mdp;
 	
 	@OneToMany(fetch = FetchType.EAGER)
-	Collection<Cheminement> cheminements;
+	Collection<Cheminement> cheminements = new LinkedList<Cheminement>();
 	
 	@OneToMany(fetch = FetchType.EAGER)
-	Collection<Accomplissement> accomplissements;
+	Collection<Accomplissement> accomplissements = new LinkedList<Accomplissement>();
 	
 	public Utilisateur() {}
 
@@ -85,6 +87,7 @@ public class Utilisateur {
 	}
 
 	public Collection<Cheminement> getCheminements() {
+		setCheminements(new HashSet<Cheminement>(cheminements));
 		return cheminements;
 	}
 
@@ -93,6 +96,7 @@ public class Utilisateur {
 	}
 
 	public Collection<Accomplissement> getAccomplissements() {
+		setAccomplissements(new HashSet<Accomplissement>(accomplissements));
 		return accomplissements;
 	}
 

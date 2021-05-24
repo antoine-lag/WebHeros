@@ -1,6 +1,9 @@
 package pack.data;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedList;
+
 import javax.persistence.*;
 
 @Entity
@@ -13,7 +16,7 @@ public class Moderation {
 	Utilisateur createur;
 	
 	@OneToMany(fetch = FetchType.EAGER)
-	Collection<Vote> votes;
+	Collection<Vote> votes = new LinkedList<Vote>();
 	
 	Boolean validee;
 	
@@ -53,6 +56,7 @@ public class Moderation {
 	}
 
 	public Collection<Vote> getVotes() {
+		setVotes(new HashSet<Vote>(votes));
 		return votes;
 	}
 

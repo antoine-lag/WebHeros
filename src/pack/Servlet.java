@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.ejb.EJB;
 import javax.servlet.RequestDispatcher;
@@ -20,6 +21,7 @@ import javax.servlet.http.HttpSession;
 
 import pack.data.Jeu;
 import pack.data.Utilisateur;
+import pack.data.Aventure;
 
 /**
  * Servlet implementation class Servlet
@@ -31,25 +33,51 @@ public class Servlet extends HttpServlet {
 	@EJB
 	Facade facade;
 	
-	//Temporairement on utilise un seul joueur
+	Jeu jeuPrincipal;
+	Utilisateur bob;
+	Utilisateur tom;
+	Utilisateur pierre;
+	Aventure aventureChateauHante;
+	
+	//Temporairement on utilise un seul jeu
 	int id_jeu;
 
     /**
      * Default constructor. 
      */
     public Servlet() {
-        // TODO Auto-generated constructor stub
+    	
+    }
+    
+    public void initialiseServlet() throws ServletException{
+    	/*INITIALISATION
+    	 * Un seul jeu. 3 utilisateurs (nom, mdp): (Bob, mdpbob) (Tom, tomi) (Pierre, pauljack).
+    	 * Une aventure: chateau hanté
+    	 * Une situation initiale: "Tout commence dans ..." + 3 choix
+    	 */
+    	jeuPrincipal = facade.initJeu();
+    	id_jeu = jeuPrincipal.getId();
+    	bob = facade.ajouterUtilisateur("Bob", "boby@neutronMail.com", id_jeu, "mdpbob");
+    	tom = facade.ajouterUtilisateur("Tom", "tomi@quarkMail.com", id_jeu, "tomi");
+    	pierre = facade.ajouterUtilisateur("Pierre", "boby@electronMail.com", id_jeu, "pauljack");
+    	List<String> choix = Arrays.asList("Vous sortez du chateau.", "Vous allez dans la cave.", "Vous allez dans la tour pour voir l'extérieur.");
+		aventureChateauHante = facade.ajouterAventure("Creepy castle", "Tout commence dans le chateau du Duc de Normandie...", choix, bob.getId(), id_jeu);
+		System.out.println("\nServlet initialised !");
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+<<<<<<< HEAD
+=======
+		
+>>>>>>> d2b44caefbcc42f4dfc2ab32c6ca729cbc96d5bb
 		
 		if(request.getParameter("mode").equals("init")) {
 			Jeu jeu= facade.initJeu();
-			id_jeu = jeu.getId();
-			String stringSetup = "Setup done !";
+			initialiseServlet();
+			String stringSetup = "Setup done !"+facade.getUtilisateurs(id_jeu).stream().map(x->x.getPseudonyme()).collect(Collectors.toList()).toString();
 			response.getWriter().println("<html><body>"+stringSetup+"</body></html>");
 		} else if (request.getParameter("mode").equals("ajoutSituation")) {
 			HttpSession session = request.getSession(false);
@@ -68,6 +96,10 @@ public class Servlet extends HttpServlet {
 			int idJoueur = (int)(session.getAttribute("idJoueur"));
 			int idAventure = (int)(session.getAttribute("idAventure"));
 			response.getWriter().println("<html><body>"+"id_joueur = "+idJoueur+"\nidAventure = "+idAventure+"</body></html>");
+		}
+		else if (request.getParameter("display").equals("aventure")){
+			request.setAttribute("Aventure", aventureChateauHante);
+			request.getRequestDispatcher("Aventure.jsp").forward(request, response);
 		}
 	}
 

@@ -17,7 +17,7 @@ public class Evenement {
 	String type;
 	
 	@OneToMany(fetch = FetchType.EAGER)
-	Collection<Utilisateur> participants;
+	Collection<Utilisateur> participants = new LinkedList<Utilisateur>();
 		
 	public Evenement() {}
 	
@@ -60,6 +60,7 @@ public class Evenement {
 	}
 
 	public Collection<Utilisateur> getParticipants() {
+		setParticipants(new HashSet<Utilisateur>(participants));
 		return participants;
 	}
 

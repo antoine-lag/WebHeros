@@ -13,7 +13,7 @@ public class Situation {
 	String texte;
 	
 	@OneToMany(fetch = FetchType.EAGER)
-	Collection<Choix> choix;
+	Collection<Choix> choix = new LinkedList<Choix>();
 	
 	@OneToOne(fetch = FetchType.EAGER)
 	Moderation moderation;
@@ -54,6 +54,7 @@ public class Situation {
 	}
 
 	public Collection<Choix> getChoix() {
+		setChoix(new HashSet<Choix>(choix));
 		return choix;
 	}
 
