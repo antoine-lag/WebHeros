@@ -1,13 +1,31 @@
 @charset "UTF-8";
 
-a.button {
-	color: black;
-	background-color: white;
-	text-decoration: none;
-	text-align: center;
-	padding: 5px;
-	border-width: 1px;
-	border-color: grey;
-	border-style: solid;
-	border-radius: 5px;
+body {
+    background-color: green;
+}
+
+#formulaire {
+    width: 50%;
+    margin: 0 auto;
+    margin-top: 10%;
+}
+
+form {
+    width: 100%;
+    padding: 25px;
+    border: 1px solid #f1f1f1;
+    background: white;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+}
+
+a.button { 
+	color: black; 
+	background-color: white; 
+	text-decoration: none; 
+	text-align: center; 
+	padding: 5px; 
+	border-width: 1px; 
+	border-color: grey; 
+	border-style: solid; 
+	border-radius: 5px; 
 }

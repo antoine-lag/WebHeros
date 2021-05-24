@@ -2,18 +2,20 @@
 <html>
 	<head>
 		<meta charset="UTF-8"/>
-		<link rel="stylesheet" href="connexion.css"/>
+		<link rel="stylesheet" type="text/css" href="connexion.css"/>
 		<title>Page Connexion</title>
 	</head>
 	<body>
 		<h1>Bienvenue sur WebHeros</h1>
 		<h3>Connexion</h3>
-		<form action="Servlet" method="post">
-			<input type="hidden" name="mode" value = "connexion">	
-			<p>Pseudo <input type="text" name="pseudo" required/></p>
-			<p>Password <input type="password" name="pwd" required/></p>
-			<p><input type="submit" name="connexion" value="Connexion"/></p>
-		</form>
+		<div id="formulaire">
+			<form action="Servlet" method="post">
+				<input type="hidden" name="mode" value = "connexion">	
+				<p>Pseudo <input type="text" name="pseudo" placeholder="Entrer le pseuo" required/></p>
+				<p>Mot de passe <input type="password" name="pwd" placeholder="Entrer le mot de passe" required/></p>
+				<p><input type="submit" name="connexion" value="Connexion"/></p>
+			</form>
+		</div>
 		<h3>Inscription</h3>
 		<a href="inscription.html" class="button">Inscription</a>
 	</body>
