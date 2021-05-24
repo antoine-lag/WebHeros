@@ -86,6 +86,15 @@ public class Servlet extends HttpServlet {
 			response.getWriter().println("<html><body>"+"id_joueur = "+idJoueur+"\nidAventure = "+idAventure+"</body></html>");
 		} else if (request.getParameter("mode").equals("aventure")) {
 			request.getRequestDispatcher("Aventure.html").forward(request, response);
+		} else if (request.getParameter("mode").equals("accueil")) {
+			HttpSession session = request.getSession(false);
+			if (session!=null) {
+				// id de l'aventure comme attribut de la session
+				// redirectionne la requête vers la page aventure
+			} else {
+				RequestDispatcher disp = request.getRequestDispatcher("connexion.html");
+				disp.forward(request, response);
+			}
 		}
 	}
 
@@ -135,7 +144,6 @@ public class Servlet extends HttpServlet {
 					// creer une session
 					HttpSession session = request.getSession(true);
 					session.setAttribute("idJoueur", facade.getIDJoueur(pseudo, id_jeu));
-					session.setAttribute("idAventure", id_jeu);
 					RequestDispatcher disp = request.getRequestDispatcher("tableau_de_bord.html");
 					disp.forward(request, response);
 				}
