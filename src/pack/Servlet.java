@@ -90,8 +90,9 @@ public class Servlet extends HttpServlet {
 		} else if (request.getParameter("mode").equals("accueil")) {
 			HttpSession session = request.getSession(false);
 			if (session!=null) {
-				// id de l'aventure comme attribut de la session
-				// redirectionne la requête vers la page aventure
+				session.setAttribute("idAventure", Integer.parseInt(request.getParameter("aventure")));
+				RequestDispatcher disp = request.getRequestDispatcher("aventure.html");
+				disp.forward(request, response);
 			} else {
 				RequestDispatcher disp = request.getRequestDispatcher("connexion.html");
 				disp.forward(request, response);
@@ -114,7 +115,7 @@ public class Servlet extends HttpServlet {
 				HttpSession session = request.getSession(true);
 				session.setAttribute("idJoueur", facade.getIDJoueur(pseudo, id_jeu));
 				session.setAttribute("idAventure", id_jeu);
-				RequestDispatcher disp = request.getRequestDispatcher("tableau_de_bord.html");
+				RequestDispatcher disp = request.getRequestDispatcher("tableau_de_bord.jsp");
 				disp.forward(request, response);
 			} else if(vrai_mdp.equals("")) {
 				// pseudo existe pas
@@ -145,7 +146,7 @@ public class Servlet extends HttpServlet {
 					// creer une session
 					HttpSession session = request.getSession(true);
 					session.setAttribute("idJoueur", facade.getIDJoueur(pseudo, id_jeu));
-					RequestDispatcher disp = request.getRequestDispatcher("tableau_de_bord.html");
+					RequestDispatcher disp = request.getRequestDispatcher("tableau_de_bord.jsp");
 					disp.forward(request, response);
 				}
 			}
