@@ -83,7 +83,7 @@ public class Servlet extends HttpServlet {
 			HttpSession session = request.getSession(false);
 			if (session!=null) {
 				session.setAttribute("idAventure", Integer.parseInt(request.getParameter("aventure")));
-				RequestDispatcher disp = request.getRequestDispatcher("aventure.html");
+				RequestDispatcher disp = request.getRequestDispatcher("Aventure.html");
 				disp.forward(request, response);
 			} else {
 				RequestDispatcher disp = request.getRequestDispatcher("connexion.html");

@@ -17,7 +17,8 @@
 		
 		</div ng-show="showChoicesList">
 			<ul>
-				<li ng-repeat="c in situation.choix">{{c.text}}
+				<li ng-repeat="c in situation.choixList">
+					<button ng-click="selectChoice('c.num')">{{c.text}}</button>
 				</li>
 			</ul>
 		</div>
@@ -25,6 +26,11 @@
 		
 		<div ng-show="showAddSituation">
 			<a href="/AjoutSitutation.html">Ajouter une situation</a>
+		</div>
+		
+		<div ng-show="showVoteButtons">
+			<button ng-click="doClick('upVote')">Up Vote</button>
+			<button ng-click="doClick('downVote')">Down vote</button>
 		</div>
 		
 		<a href="/index.html">Accueil</a>
@@ -37,7 +43,8 @@
 <script>
 function initVars(scope) {
 	scope.situation = new Object();//Not sure
-	scope.aventure = new Object();
+	scope.user = new Object();
+	//scope.aventure = new Object();
 	scope.message = "___";
 	scope.aventureName = "Loading...";
 }
@@ -47,32 +54,45 @@ function initView(scope) {
 	scope.showAddSituation = false;
 	scope.showMessage = false;
 }
-function initSituation(scope, http){
+function initAventure(scope, http){
 	http.get("rest/getAventureName").then(function(response) {
 		if (response.status == 200) {
-			console.log(response);
 			scope.aventureName = response.data.aventureName;
 		} else {
-			scope.message = "failed to get list of persons";
+			scope.message = "Failed to get aventure name";
 			scope.showMessage = true;
 		}
 	});
 }
 
-function selectChoice(button, scope, http) {
-	initView(scope);
-	initVars(scope);
-	switch (button) {
-		case "addPerson" :
-			scope.showAddPerson = true;
+function initSituation(scope, http){
+	http.get("rest/getSituation").then(function(response) {
+		if (response.status == 200) {
+			scope.aventureName = response.data.aventureName;
+		} else {
+			scope.message = "Failed to get aventure name";
+			scope.showMessage = true;
+		}
+	});
+}
+
+function doClick(action, scope, http){
+	//Add disable button when clicked or already voted
+	switch(action){
+		case "upVote":
+			console.log("upVote clicked");
 			break;
-		case "addAddress" :
-			scope.showAddAddress = true;
-			break;
-		case "associate" :
-			
+		case "downVote":
+			console.log("downVote clicked");
 			break;
 	}
+}
+
+function selectChoice(idChoice, scope, http) {
+	initView(scope);
+	initVars(scope);
+	console.log("Choice "+idChoice+" selected");
+	//Envoyer requette http get pour modifier la situation et l'affichage
 }
 
 
@@ -80,8 +100,9 @@ var app = angular.module('webHerosApp', []);
 app.controller('webHerosCtrl', function($scope,$http) {
 	initVars($scope);
  	initView($scope);
- 	initSituation($scope, $http);
-    $scope.doChoice=function(button) {selectChoice(button,$scope,$http);}
+ 	initAventure($scope, $http);
+    $scope.doChoice=function(idChoice) {selectChoice(idChoice,$scope,$http);}
+    $scope.doClick=function(action) {click(action, $scope, $http);}
 });
 	
 </script>
