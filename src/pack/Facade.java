@@ -39,6 +39,10 @@ public class Facade {
 		return avName;
 	}
 	
+	/*Fonctions à faire pour angular:
+	 * String getSituation(String idAventure, String idSituation) : renvoie la situation correspondant à l'ID sous forme JSON à partir de l'ID d'une aventure
+	 */
+	
 	///___________________________________///
 	
 	//Initialise une instance de jeu

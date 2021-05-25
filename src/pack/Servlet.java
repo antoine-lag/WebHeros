@@ -79,10 +79,24 @@ public class Servlet extends HttpServlet {
 		}  
 		else if (request.getParameter("mode").equals("aventure")) {
 			request.getRequestDispatcher("Aventure.html").forward(request, response);
+		
+		/*
+		 * CONTRAT: données à fournir à Aventure.jsp:
+		 * userId : l'id de l'user connecté sous forme de string
+		 * aventureId : l'id de l'aventure choisie en string
+		 * aventureName: son nom en string
+		 */
+		}else if (request.getParameter("mode").equals("aventureJsp")) {
+			request.setAttribute("userId", "1");
+			request.setAttribute("aventureId", "1");
+			request.setAttribute("aventureName", "Here goes the aventure name");
+			request.getRequestDispatcher("Aventure.jsp").forward(request, response);
 		} else if (request.getParameter("mode").equals("accueil")) {
 			HttpSession session = request.getSession(false);
 			if (session!=null) {
 				session.setAttribute("idAventure", Integer.parseInt(request.getParameter("aventure")));
+				//session.setAttribute("userId", Integer.parseInt(request.getParameter("user")));
+				//Il faudrait arriver à ajouter l'ID de l'utilisateur en attribute (en tant que string)
 				RequestDispatcher disp = request.getRequestDispatcher("Aventure.html");
 				disp.forward(request, response);
 			} else {

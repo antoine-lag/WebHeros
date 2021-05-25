@@ -11,29 +11,31 @@
 		<h1>Vous naviguez dans l'aventure {{aventureName}}</h1>
 		
 		<div ng-show="showSituationText">
-			<h3>{{situation.text}}</h3>
+			<h3>{{situationText}}</h3>
 		</div>
 		<br>
 		
 		</div ng-show="showChoicesList">
 			<ul>
-				<li ng-repeat="c in situation.choixList">
-					<button ng-click="selectChoice('c.num')">{{c.text}}</button>
+				<li ng-repeat="c in choicesList">
+					<button ng-click="selectChoice('c.id')">{{c.text}}</button>
 				</li>
 			</ul>
 		</div>
 		<br>
 		
-		<div ng-show="showAddSituation">
-			<a href="/AjoutSitutation.html">Ajouter une situation</a>
-		</div>
-		
 		<div ng-show="showVoteButtons">
-			<button ng-click="doClick('upVote')">Up Vote</button>
-			<button ng-click="doClick('downVote')">Down vote</button>
+			<button ng-click="doVote('up')">Up Vote</button>
+			<button ng-click="doVote('down')">Down vote</button>
 		</div>
 		
-		<a href="/index.html">Accueil</a>
+		<div ng-show="showAddSituation">
+			<a href="AjoutSitutation.html">Ajouter une situation</a>
+		</div>
+		
+		
+		
+		<a href="index.html">Accueil</a>
 		
 		<div ng-show="showMessage">
 			{{message}}
@@ -41,20 +43,29 @@
 	</div>
 	
 <script>
+//1 - get user from server with user ID taken from ??
+//2 - get situation (Root to begin with)
+//3 - display 1 button for each choice
+//4 - redirect to addSituation
+//5 - Set up vote buttons.
+//6 - set restriction for voting depending on the user logged in
+//
 function initVars(scope) {
-	scope.situation = new Object();//Not sure
-	scope.user = new Object();
-	//scope.aventure = new Object();
+	//scope.situation = new Object();//Not sure
+	//scope.user = new Object();
 	scope.message = "___";
 	scope.aventureName = "Loading...";
+	scope.situationText = "";
 }
 function initView(scope) {
-	scope.showSituationText = true;
-	scope.showChoicesList = true;
+	scope.showSituationText = false;
+	scope.showChoicesList = false;
+	scope.showVoteButtons = true;
 	scope.showAddSituation = false;
 	scope.showMessage = false;
 }
 function initAventure(scope, http){
+	initView(scope);
 	http.get("rest/getAventureName").then(function(response) {
 		if (response.status == 200) {
 			scope.aventureName = response.data.aventureName;
@@ -66,6 +77,7 @@ function initAventure(scope, http){
 }
 
 function initSituation(scope, http){
+	initView(scope);
 	http.get("rest/getSituation").then(function(response) {
 		if (response.status == 200) {
 			scope.aventureName = response.data.aventureName;
@@ -76,13 +88,13 @@ function initSituation(scope, http){
 	});
 }
 
-function doClick(action, scope, http){
+function vote(action, scope, http){
 	//Add disable button when clicked or already voted
 	switch(action){
-		case "upVote":
+		case "up":
 			console.log("upVote clicked");
 			break;
-		case "downVote":
+		case "down":
 			console.log("downVote clicked");
 			break;
 	}
@@ -102,7 +114,7 @@ app.controller('webHerosCtrl', function($scope,$http) {
  	initView($scope);
  	initAventure($scope, $http);
     $scope.doChoice=function(idChoice) {selectChoice(idChoice,$scope,$http);}
-    $scope.doClick=function(action) {click(action, $scope, $http);}
+    $scope.doVote=function(action) {vote(action, $scope, $http);}
 });
 	
 </script>
