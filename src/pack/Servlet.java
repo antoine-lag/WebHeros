@@ -65,27 +65,19 @@ public class Servlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		if(request.getParameter("mode").equals("init")) {
-			String stringSetup = "Setup done !"+facade.getUtilisateurs(id_jeu).stream().map(x->x.getPseudonyme()).collect(Collectors.toList()).toString();
-			response.getWriter().println("<html><body>"+stringSetup+"</body></html>");
-		} else if (request.getParameter("mode").equals("ajoutSituation")) {
+		if (request.getParameter("mode").equals("initAjoutSituation")) {
 			HttpSession session = request.getSession(false);
-			int idJoueur = (int)(session.getAttribute("idJoueur"));
-			int idAventure = (int)(session.getAttribute("idAventure"));
-			int idChoixSoure = (int)(session.getAttribute("idChoixSource"));
-			String texteSituation = request.getParameter("texteSituation");
-		
-			List<String> textesOptions = Arrays.asList(request.getParameter("choixSuite"));
-			
-			facade.affilierSituationFille(idChoixSoure, texteSituation, textesOptions, idJoueur, idAventure);
-			String stringSetup = "Situation ajoutee";
-			response.getWriter().println("<html><body>"+stringSetup+"</body></html>");
-		} else if (request.getParameter("mode").equals("test")) {
-			HttpSession session = request.getSession(false);
-			int idJoueur = (int)(session.getAttribute("idJoueur"));
-			int idAventure = (int)(session.getAttribute("idAventure"));
-			response.getWriter().println("<html><body>"+"id_joueur = "+idJoueur+"\nidAventure = "+idAventure+"</body></html>");
-		} else if (request.getParameter("mode").equals("aventure")) {
+			if(session != null) {
+			int idChoix = Integer.parseInt(request.getParameter("idChoix"));
+			session.setAttribute("idChoixSource", idChoix);
+			RequestDispatcher disp = request.getRequestDispatcher("AjoutSituation.html");
+			disp.forward(request, response);
+			} else {
+				RequestDispatcher disp = request.getRequestDispatcher("connexion.html");
+				disp.forward(request, response);
+			}
+		}  
+		else if (request.getParameter("mode").equals("aventure")) {
 			request.getRequestDispatcher("Aventure.html").forward(request, response);
 		} else if (request.getParameter("mode").equals("accueil")) {
 			HttpSession session = request.getSession(false);
@@ -114,7 +106,6 @@ public class Servlet extends HttpServlet {
 				// creer une session
 				HttpSession session = request.getSession(true);
 				session.setAttribute("idJoueur", facade.getIDJoueur(pseudo, id_jeu));
-				session.setAttribute("idAventure", id_jeu);
 				RequestDispatcher disp = request.getRequestDispatcher("tableau_de_bord.jsp");
 				disp.forward(request, response);
 			} else if(vrai_mdp.equals("")) {
@@ -149,6 +140,23 @@ public class Servlet extends HttpServlet {
 					RequestDispatcher disp = request.getRequestDispatcher("tableau_de_bord.jsp");
 					disp.forward(request, response);
 				}
+			}
+		}else if (request.getParameter("mode").equals("ajoutSituation")) {
+			HttpSession session = request.getSession(false);
+			if(session != null) {
+			int idJoueur = (int)(session.getAttribute("idJoueur"));
+			int idAventure = (int)(session.getAttribute("idAventure"));
+			int idChoixSoure = (int)(session.getAttribute("idChoixSource"));
+			String texteSituation = request.getParameter("texteSituation");
+		
+			List<String> textesOptions = Arrays.asList(request.getParameter("choixSuite"));
+			
+			facade.affilierSituationFille(idChoixSoure, texteSituation, textesOptions, idJoueur, idAventure);
+			RequestDispatcher disp = request.getRequestDispatcher("tableau_de_bord.jsp");
+			disp.forward(request, response);
+			} else {
+				RequestDispatcher disp = request.getRequestDispatcher("connexion.html");
+				disp.forward(request, response);
 			}
 		}
 	}

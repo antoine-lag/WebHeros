@@ -87,9 +87,12 @@ public class Facade {
 	//affilier une nouvelle situation comme découlant d'un choix
 	public void affilierSituationFille(int id_choix,String texte,List<String> textesChoix, int id_utilisateur,int id_aventure)
 	{
-		Situation nouvelle = ajouterSituation(texte,textesChoix,id_utilisateur,id_aventure);
 		Choix source = em.find(Choix.class, id_choix);
-		source.setSituation(nouvelle);
+		if(source.getSituation() ==null)
+		{
+			Situation nouvelle = ajouterSituation(texte,textesChoix,id_utilisateur,id_aventure);
+			source.setSituation(nouvelle);
+		}
 	}
 	//affilier une nouvelle situation comme etant la premiere d'une aventure
 	public void affilierSituationInitiale(String texte,List<String> textesChoix, int id_utilisateur,int id_aventure)
