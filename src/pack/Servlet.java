@@ -139,6 +139,8 @@ public class Servlet extends HttpServlet {
 			// creer une session
 			HttpSession session = request.getSession(true);
 			session.setAttribute("idJoueur", facade.getIDJoueur(pseudo, id_jeu));
+			session.setAttribute("pseudoJoueur", pseudo);
+			session.setAttribute("infoTableauBord", facade.getInfoTableauBord(id_jeu));
 			RequestDispatcher disp = request.getRequestDispatcher("tableau_de_bord.jsp");
 			disp.forward(request, response);
 		} else if(vrai_mdp.equals("")) {
@@ -173,6 +175,7 @@ public class Servlet extends HttpServlet {
 				// creer une session
 				HttpSession session = request.getSession(true);
 				session.setAttribute("idJoueur", facade.getIDJoueur(pseudo, id_jeu));
+				session.setAttribute("pseudoJoueur", pseudo);
 				RequestDispatcher disp = request.getRequestDispatcher("tableau_de_bord.jsp");
 				disp.forward(request, response);
 			}

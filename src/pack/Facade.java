@@ -13,6 +13,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
+import pack.aux.InfoTableauBord;
 import pack.data.*;
 
 @Singleton
@@ -49,6 +50,18 @@ public class Facade {
 		Jeu jeu = new Jeu();
 		em.persist(jeu);
 		return jeu;
+	}
+	public InfoTableauBord getInfoTableauBord(int idJeu)
+	{
+		List<String> nomsAventures = new LinkedList<String>();
+		List<Integer> idsAventures = new LinkedList<Integer>();
+		Jeu jeu = (Jeu)em.find(Jeu.class, idJeu);
+		for(Aventure av : jeu.getAventure())
+		{
+			nomsAventures.add(av.getNom());
+			idsAventures.add(av.getId());
+		}
+		return new InfoTableauBord(nomsAventures, idsAventures);
 	}
 	//Ajoute une situation et sa modération vide, ses options de choix ,puis ajoute cette situation a l'aventure
 	public Situation ajouterSituation(String texte,List<String> textesChoix, int id_utilisateur,int id_aventure)
