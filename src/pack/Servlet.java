@@ -118,7 +118,7 @@ public class Servlet extends HttpServlet {
 		RequestDispatcher disp = request.getRequestDispatcher("AjoutSituation.html");
 		disp.forward(request, response);
 		} else {
-			RequestDispatcher disp = request.getRequestDispatcher("connexion.html");
+			RequestDispatcher disp = request.getRequestDispatcher("index.html");
 			disp.forward(request, response);
 		}
 	}
