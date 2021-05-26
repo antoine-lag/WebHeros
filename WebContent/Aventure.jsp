@@ -17,7 +17,7 @@
 		<div ng-show="showChoicesList">
 			<ul>
 				<li ng-repeat="c in choicesList">
-					<button id="btn1" ng-click="doChoice(c.id)">{{c.text}}</button>
+					<button id="btn1" ng-click="doChoice({{c.id}})">{{c.text}}</button>
 				</li>
 			</ul>
 		</div>
@@ -46,13 +46,12 @@
 	</div>
 	
 <script>
-//2 - get situation (Root to begin with)
-//1 - get choices
-//
-//3 - display 1 button for each choice
-//4 - redirect to addSituation
-//5 - Set up vote buttons.
-//6 - set restriction for voting depending on the user logged in
+//- get situation (Root to begin with)
+//- get choices; do the function in facade & manage params
+//- display 1 button for each choice
+//- redirect to addSituation
+//- Set up vote buttons.
+//- set restriction for voting depending on the user logged in
 //PROBLEMES
 //PB1 - Faire un GET + POST simultané
 
@@ -63,9 +62,10 @@ function initVars(scope) {
 	scope.aventureName = "<%= (String) request.getSession(false).getAttribute("nomAventure") %>"
 	scope.situationText = "";
 	scope.situationId = "1";
-	scope.aventureId = "<%= String.valueOf(request.getSession(false).getAttribute("idAventure")) %>"
-	scope.userId = "<%= String.valueOf(request.getSession(false).getAttribute("idJoueur")) %>"
-	//scope.choicesList = [{"id": "1", "text": "choix1"}, {"id": "2", "text": "choix2"}];
+	scope.aventureId = "<%= String.valueOf(request.getSession(false).getAttribute("idAventure")) %>";
+	scope.userId = "<%= String.valueOf(request.getSession(false).getAttribute("idJoueur")) %>";
+	//scope.cheminementId = "<%= String.valueOf(request.getSession(false).getAttribute("idCheminement")) %>";
+	scope.choicesList = [{"id": "1", "text": "choix1"}, {"id": "2", "text": "choix2"}];
 }
 function initView(scope) {
 	scope.showSituationText = false;
@@ -80,12 +80,32 @@ function getSituation(idSituation, scope, http){
 		if (response.status == 200) {
 			scope.situationText = response.data.text;
 			scope.showSituationText = true;
+			scope.choicesList = response.data.choices;
+			scope.showChoicesList = true;
+			//String sJsonData = "{\"text\": \"" + situtationName + "\","+"\"choices\": [{\"id\": \"1\", \"text\":\"La réponse D\"}]}";
 		} else {
-			scope.message = "Failed to get situation";
+			scope.message = "Failed to get situation data from situation Id";
 			scope.showMessage = true;
 		}
 	});
 }
+
+function selectChoice(idChoice, scope, http) {
+	initView(scope);
+	console.log("Choice = "+idChoice+" selected =)");
+	//Envoyer requette http get pour modifier avoir l'id de la situation correspondante et appel getSituation
+	http.get("rest/selectchoice?idChoice"+idChoice).then(function(response) {
+		if (response.status == 200) {
+			scope.showSituationText = false;
+			scope.showChoicesList = false;
+			scope.situationId = response.data.situationId;
+		} else {
+			scope.message = "Failed to get situation Id from choice Id";
+			scope.showMessage = true;
+		}
+	});
+}
+
 
 function vote(action, scope, http){
 	//Add disable button when clicked or already voted
@@ -98,13 +118,6 @@ function vote(action, scope, http){
 			break;
 	}
 }
-
-function selectChoice(idChoice, scope, http) {
-	initView(scope);
-	console.log("Choice "+idChoice+" selected");
-	//Envoyer requette http get pour modifier avoir l'id de la situation correspondante et appel getSituation
-}
-
 
 var app = angular.module('webHerosApp', []);
 app.controller('webHerosCtrl', function($scope,$http) {

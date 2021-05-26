@@ -62,7 +62,8 @@ public class Facade {
 			choicesList = "[]";
 		}
 		//Formatting to json
-		String sJsonData = "{\"text\": \"" + situtationName + "\", \"choicesList\": []}";
+		String sJsonData = "{\"text\": \"" + situtationName + "\","+
+							"\"choices\": [{\"id\": \"1\", \"text\":\"La réponse D\"}]}";
 		return sJsonData;
 	}
 	//---------------------------------------------
