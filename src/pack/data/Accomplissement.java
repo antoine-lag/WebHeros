@@ -13,8 +13,11 @@ public class Accomplissement {
 	
 	String nom;
 	
-	@OneToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER)
 	Utilisateur titulaire;
+	
+	
+	 
 	
 	public Accomplissement(int id, String date, String nom, Utilisateur titulaire) {
 		super();

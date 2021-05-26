@@ -3,11 +3,20 @@ package pack.aux;
 import java.io.Serializable;
 import java.util.List;
 
+import pack.data.StatistiqueUtilisateur;
+
 public class InfoTableauBord implements Serializable{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	StatistiqueUtilisateur stats;
+	public StatistiqueUtilisateur getStats() {
+		return stats;
+	}
+	public void setStats(StatistiqueUtilisateur stats) {
+		this.stats = stats;
+	}
 	public List<String> getNomsAventures() {
 		return nomsAventures;
 	}
@@ -23,14 +32,20 @@ public class InfoTableauBord implements Serializable{
 	List<String> nomsAventures ;
 	List<Integer> idsAventures;
 	List<Integer> idsCheminements;
-	public InfoTableauBord(List<String> nomsAventures, List<Integer> idsAventures, List<Integer> idsCheminements,
-			List<String> textesCheminements) {
-		super();
-		this.nomsAventures = nomsAventures;
-		this.idsAventures = idsAventures;
-		this.idsCheminements = idsCheminements;
-		this.textesCheminements = textesCheminements;
+	List<String> textesAccomplissements;
+	public List<String> getTextesAccomplissements() {
+		return textesAccomplissements;
 	}
+	public void setTextesAccomplissements(List<String> textesAccomplissements) {
+		this.textesAccomplissements = textesAccomplissements;
+	}
+	public List<String> getDatesAccomplissements() {
+		return datesAccomplissements;
+	}
+	public void setDatesAccomplissements(List<String> datesAccomplissements) {
+		this.datesAccomplissements = datesAccomplissements;
+	}
+	List<String> datesAccomplissements;
 	List<String> textesCheminements;
 	public List<Integer> getIdsCheminements() {
 		return idsCheminements;

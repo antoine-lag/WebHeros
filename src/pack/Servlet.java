@@ -78,16 +78,16 @@ public class Servlet extends HttpServlet {
 
 	public void choixAventureFait(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
-		System.out.println("__________________SESSION_________");
+
 		HttpSession session = request.getSession(false);
 		if (session!=null) {
-			System.out.println("__________________SESSION NOT NULL_________");
+
 			RequestDispatcher disp;
 			if(request.getParameter("creation") == null || request.getParameter("creation").equals("nouveau"))
 			{
 				int idAventure = Integer.parseInt(request.getParameter("aventure"));
 				Aventure av = facade.getAventure(idAventure);
-				Cheminement ch = facade.visiter((int)session.getAttribute("idJoueur"), av.getDebut().getId(), av.getId());
+				Cheminement ch = facade.nouveauCheminement((int)session.getAttribute("idJoueur"), av.getId());
 				session.setAttribute("idAventure", idAventure);
 				session.setAttribute("nomAventure",facade.getAventureName(idAventure));
 				session.setAttribute("idCheminement",ch.getId());
@@ -103,7 +103,6 @@ public class Servlet extends HttpServlet {
 			}
 			disp.forward(request, response);
 		} else {
-			System.out.println("__________________SESSION NULL_________");
 			RequestDispatcher disp = request.getRequestDispatcher("connexion.html");
 			disp.forward(request, response);
 		}
@@ -144,14 +143,7 @@ public class Servlet extends HttpServlet {
 		if (vrai_mdp.equals(mdp)) {
 			// identification reussie
 			// creer une session
-			HttpSession session = request.getSession(true);
-			int idJoueur = facade.getIDJoueur(pseudo, id_jeu);
-			session.setAttribute("idJoueur", idJoueur);
-			session.setAttribute("pseudoJoueur", pseudo);
-			
-			session.setAttribute("infoTableauBord", facade.getInfoTableauBord(id_jeu,idJoueur));
-			RequestDispatcher disp = request.getRequestDispatcher("tableau_de_bord.jsp");
-			disp.forward(request, response);
+			connexionOuInsriptionReussie(request,response,id_jeu,pseudo);
 		} else if(vrai_mdp.equals("")) {
 			// pseudo existe pas
 			RequestDispatcher disp = request.getRequestDispatcher("connexion.html");
@@ -183,13 +175,7 @@ public class Servlet extends HttpServlet {
 			} else {
 				// inscription reussie
 				// creer une session
-				HttpSession session = request.getSession(true);
-				int idJ = facade.getIDJoueur(pseudo, id_jeu);
-				session.setAttribute("idJoueur", idJ);
-				session.setAttribute("pseudoJoueur", pseudo);
-				session.setAttribute("infoTableauBord", facade.getInfoTableauBord(id_jeu,idJ));
-				RequestDispatcher disp = request.getRequestDispatcher("tableau_de_bord.jsp");
-				disp.forward(request, response);
+				connexionOuInsriptionReussie(request,response,id_jeu,pseudo);
 			}
 		}
 	}
@@ -212,5 +198,22 @@ public class Servlet extends HttpServlet {
 			RequestDispatcher disp = request.getRequestDispatcher("connexion.html");
 			disp.forward(request, response);
 		}
+	}
+	//Renvoie vers le tableau de bord
+	public void renvoyerVersTableauBord(HttpServletRequest request, HttpServletResponse response, int id_jeu) throws ServletException, IOException
+	{
+		HttpSession session = request.getSession(false);
+		int idJoueur = (int)session.getAttribute("idJoueur" );
+		session.setAttribute("infoTableauBord", facade.getInfoTableauBord(id_jeu,idJoueur));
+		RequestDispatcher disp = request.getRequestDispatcher("tableau_de_bord.jsp");
+		disp.forward(request, response);
+	}
+	public void connexionOuInsriptionReussie(HttpServletRequest request, HttpServletResponse response, int id_jeu, String pseudo) throws ServletException, IOException
+	{
+		HttpSession session = request.getSession(true);
+		int idJ = facade.getIDJoueur(pseudo, id_jeu);
+		session.setAttribute("idJoueur", idJ);
+		session.setAttribute("pseudoJoueur", pseudo);
+		renvoyerVersTableauBord(request,response, id_jeu);
 	}
 }

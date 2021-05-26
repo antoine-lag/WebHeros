@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javax.ejb.Singleton;
@@ -85,6 +86,8 @@ public class Facade {
 		List<Integer> idsAventures = new LinkedList<Integer>();
 		List<String> textesCheminements = new LinkedList<String>();
 		List<Integer> idsCheminements = new LinkedList<Integer>();
+		List<String> textesAccomplissements = new LinkedList<String>();
+		List<String> datesAccomplissements = new LinkedList<String>();
 		Jeu jeu = (Jeu)em.find(Jeu.class, idJeu);
 		Utilisateur utilisateur = (Utilisateur)em.find(Utilisateur.class, idJoueur);
 		for(Aventure av : jeu.getAventure())
@@ -97,7 +100,20 @@ public class Facade {
 			textesCheminements.add(GestionnaireCheminement.getTexteCheminement(em, ch.getId()));
 			idsCheminements.add(ch.getId());
 		}
-		return new InfoTableauBord(nomsAventures, idsAventures, idsCheminements, textesCheminements);
+		for(Accomplissement ac : utilisateur.getAccomplissements())
+		{
+			textesAccomplissements.add(ac.getNom());
+			datesAccomplissements.add(ac.getDate());
+		}
+		InfoTableauBord tableau = new InfoTableauBord();
+		tableau.setIdsAventures(idsAventures);
+		tableau.setNomsAventures(nomsAventures);
+		tableau.setIdsCheminements(idsCheminements);
+		tableau.setTextesCheminements(textesCheminements);
+		tableau.setDatesAccomplissements(datesAccomplissements);
+		tableau.setTextesAccomplissements(textesAccomplissements);
+		tableau.setStats(utilisateur.getStatistiques());
+		return tableau;
 	}
 	//Ajoute une situation et sa modération vide, ses options de choix ,puis ajoute cette situation a l'aventure
 	public Situation ajouterSituation(String texte,List<String> textesChoix, int id_utilisateur,int id_aventure)
@@ -124,6 +140,8 @@ public class Facade {
 		Aventure aventure = em.find(Aventure.class, id_aventure);
 		aventure.getSituations().add(situation);
 		em.merge(situation);
+		
+		utilisateur.getStatistiques().setNbSituationsCrees(utilisateur.getStatistiques().getNbSituationsCrees());
 		return situation;
 		
 	}
@@ -182,6 +200,11 @@ public class Facade {
 		return GestionnaireCheminement.visiter(em, id_joueur, id_situation, id_aventure);
 		
 	}
+	public Cheminement nouveauCheminement(int id_joueur, int id_aventure)
+	{
+		return GestionnaireCheminement.nouveauCheminement(em, id_joueur, id_aventure);
+		
+	}
 	public Cheminement getCheminement( int id_cheminement)
 	{
 		return em.find(Cheminement.class, id_cheminement);
@@ -193,6 +216,14 @@ public class Facade {
 	{
 		int scoreValidation = 3;
 		Utilisateur joueur = em.find(Utilisateur.class, id_joueur);
+		if(note>0)
+		{
+			joueur.getStatistiques().setNbVotesPositifs(joueur.getStatistiques().getNbVotesPositifs()+1);
+		}else if(note<0)
+		{
+			joueur.getStatistiques().setNbVotesNegatifs(joueur.getStatistiques().getNbVotesNegatifs()+1);
+		}
+		joueur.getStatistiques().setNbVotes(joueur.getStatistiques().getNbVotes()+1);
 		Situation sit = em.find(Situation.class, id_situation);
 		Vote vote = new Vote();
 		em.persist(vote);
@@ -205,7 +236,14 @@ public class Facade {
 			if((!mod.getValidee()) && calculerScore(mod.getId())>scoreValidation)
 			{
 				mod.setValidee(true);
+				mod.getCreateur().getStatistiques().
+				setNbSituationsCreeesValidees(mod.getCreateur().getStatistiques()
+						.getNbSituationsCreeesValidees()+1);
 			}
+			mod.getCreateur().getStatistiques().setVotesTotalRecus(mod.getCreateur().getStatistiques()
+					.getVotesTotalRecus()+note);
+			mod.getCreateur().getStatistiques().setNbVotesRecus(mod.getCreateur().getStatistiques()
+					.getNbVotesRecus()+1);
 		}
 		return vote;
 	}
@@ -261,6 +299,9 @@ public class Facade {
 	public Utilisateur ajouterUtilisateur(String pseudo,String email, int id_jeu, String mdp)
 	{
 		Utilisateur utilisateur = new Utilisateur();
+		StatistiqueUtilisateur stat = new StatistiqueUtilisateur();
+		em.persist(stat);
+		utilisateur.setStatistiques(stat);
 		utilisateur.setPremium(false);
 		utilisateur.setMail(email);
 		utilisateur.setPseudonyme(pseudo);
@@ -334,5 +375,31 @@ public class Facade {
 
         return hexString.toString();
     }
+	
+	public boolean doitCreerNouvelleSituation(int id_choix)
+	{
+		Choix cx = em.find(Choix.class, id_choix);
+		return cx.getSituation() == null;
+	}
+	//Donne une recompense a un utilisateur
+	public void distribuerRecompense(int id_utilisateur, String type)
+	{
+		
+		Utilisateur utilisateur = em.find(Utilisateur.class, id_utilisateur);
+		
+		if(!utilisateur.getAccomplissements().stream().anyMatch(a->a.getNom().equals(type)))
+		{
+			Accomplissement accomplissement = new Accomplissement();
+			em.persist(accomplissement);
+			accomplissement.setNom(type);
+			accomplissement.setTitulaire(utilisateur);
+			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");  
+		    Date date = new Date();
+			accomplissement.setDate(formatter.format(date));
+			utilisateur.getStatistiques().setNbAccomplissementsRecus(utilisateur.getStatistiques().getNbAccomplissementsRecus()+1);
+		}
+		
+	}
+
 
 }

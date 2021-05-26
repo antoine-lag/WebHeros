@@ -13,32 +13,18 @@ import pack.data.Utilisateur;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 public class GestionnaireCheminement {
 
 	public static Cheminement visiter(EntityManager em, int id_joueur, int id_situation, int id_aventure)
 	{
 		int idChem = trouverCheminementDonnantSur(em,id_joueur,id_situation);
-		Situation situation = em.find(Situation.class, id_situation);
-		
 		//Todo
 		if(idChem == -1)
 		{
 			//nouveau depart
-			Utilisateur utilisateur = em.find(Utilisateur.class, id_joueur);
-			Aventure aventure = em.find(Aventure.class, id_aventure);
-			Cheminement cheminement = new Cheminement();
-			em.persist(cheminement);
-			cheminement.setActif(true);
-			cheminement.setAventure(aventure);
-			cheminement.setPosition(situation);
-			utilisateur.getCheminements().add(cheminement);
-			SituationClasse sc = new SituationClasse();
-			sc.setOrdre(0);
-			sc.setSituation(situation);
-			em.persist(sc);
-			cheminement.getParcours().add(sc);
-			return cheminement;
+			return nouveauCheminement(em,id_joueur,id_aventure);
 			
 		}else if(idChem==-2)
 		{
@@ -46,15 +32,7 @@ public class GestionnaireCheminement {
 			return null;
 		}
 		else {
-			//Etendre le cheminement
-			Cheminement cheminement = em.find(Cheminement.class, idChem);
-			cheminement.setPosition(situation);
-			SituationClasse sc = new SituationClasse();
-			sc.setOrdre(getOrdreMax(em,idChem)+1);
-			sc.setSituation(situation);
-			em.persist(sc);
-			cheminement.getParcours().add(sc);
-			return cheminement;
+			return etendreCheminement(em,idChem,id_joueur,id_situation);
 		}
 	}
 	public static int trouverCheminementDonnantSur(EntityManager em, int id_joueur, int id_situation)
@@ -110,11 +88,62 @@ public class GestionnaireCheminement {
 		texte += cheminement.getAventure().getNom()+"\n";
 		List<SituationClasse> chem = cheminement.getParcours().stream()
 				.sorted(Comparator.comparingInt(SituationClasse::getOrdre)).collect(Collectors.toList());
-		for(SituationClasse s : chem)
+		for(int i=0;i<chem.size();i++)
 		{
-			texte += s.getSituation().getTexte()+"\n\n";
+			Situation s = chem.get(i).getSituation();
+			if(i<chem.size()-1)
+			{
+				Situation sNext = chem.get(i+1).getSituation();
+				texte += "-> "+getTexteChoixLien(em,s.getId(),sNext.getId())+"\n";
+			}
+			texte += s.getTexte()+"\n\n";
 		}
 		return texte;
+	}
+	public static String getTexteChoixLien(EntityManager em, int id_situationA, int id_situationB)
+	{
+		Situation sa = em.find(Situation.class, id_situationA);
+		Situation sb = em.find(Situation.class, id_situationB);
+		Optional<Choix> chx = sa.getChoix().stream().filter(c->c.getSituation().getId()==sb.getId()).findFirst();
+		if(chx.isPresent())
+		{
+			return chx.get().getString_texte();
+		}
+		return "";
+	}
+	public static Cheminement nouveauCheminement(EntityManager em, int id_joueur, int id_aventure)
+	{
+		Utilisateur utilisateur = em.find(Utilisateur.class, id_joueur);
+		Aventure aventure = em.find(Aventure.class, id_aventure);
+		Situation situation = aventure.getDebut();
+		Cheminement cheminement = new Cheminement();
+		em.persist(cheminement);
+		cheminement.setActif(true);
+		cheminement.setAventure(aventure);
+		cheminement.setPosition(situation);
+		utilisateur.getCheminements().add(cheminement);
+		SituationClasse sc = new SituationClasse();
+		sc.setOrdre(0);
+		sc.setSituation(situation);
+		em.persist(sc);
+		cheminement.getParcours().add(sc);
+		utilisateur.getStatistiques().setNbSituationsVisitees(utilisateur.getStatistiques().getNbSituationsVisitees()+1);
+		utilisateur.getStatistiques().setNbAventuresCommencees(utilisateur.getStatistiques().getNbAventuresCommencees()+1);
+		return cheminement;
+	}
+	public static Cheminement etendreCheminement(EntityManager em,int idChem, int id_joueur, int id_situation)
+	{
+		Utilisateur utilisateur = em.find(Utilisateur.class, id_joueur);
+		Situation situation = em.find(Situation.class, id_situation);
+		Cheminement cheminement = em.find(Cheminement.class, idChem);
+		cheminement.setPosition(situation);
+		SituationClasse sc = new SituationClasse();
+		sc.setOrdre(getOrdreMax(em,idChem)+1);
+		sc.setSituation(situation);
+		em.persist(sc);
+		cheminement.getParcours().add(sc);
+		utilisateur.getStatistiques().setNbSituationsVisitees(utilisateur.getStatistiques().getNbSituationsVisitees()+1);
+		return cheminement;
 	}
 	
 }
