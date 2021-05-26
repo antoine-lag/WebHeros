@@ -54,7 +54,7 @@
 //5 - Set up vote buttons.
 //6 - set restriction for voting depending on the user logged in
 //PROBLEMES
-//PB1 - les show à false s'affichent quand même
+//PB1 - Faire un GET + POST simultané
 
 function initVars(scope) {
 	//scope.situation = new Object();//Not sure
@@ -63,8 +63,8 @@ function initVars(scope) {
 	scope.aventureName = "<%= (String) request.getSession(false).getAttribute("nomAventure") %>"
 	scope.situationText = "";
 	scope.situationId = "1";
-	scope.aventureId = "<%= (String) request.getSession(false).getAttribute("idAventure") %>"
-	scope.userId = "<%= (String) request.getSession(false).getAttribute("idJoueur") %>"
+	scope.aventureId = "<%= String.valueOf(request.getSession(false).getAttribute("idAventure")) %>"
+	scope.userId = "<%= String.valueOf(request.getSession(false).getAttribute("idJoueur")) %>"
 	//scope.choicesList = [{"id": "1", "text": "choix1"}, {"id": "2", "text": "choix2"}];
 }
 function initView(scope) {
@@ -76,11 +76,10 @@ function initView(scope) {
 }
 
 function getSituation(idSituation, scope, http){
-	initView(scope);
-	http.get("rest/getsituation", scope.situationId).then(function(response) {
+	http.get("rest/getsituation?idSituation="+idSituation).then(function(response) {
 		if (response.status == 200) {
 			scope.situationText = response.data.text;
-			scope.showSituationText = false;
+			scope.showSituationText = true;
 		} else {
 			scope.message = "Failed to get situation";
 			scope.showMessage = true;
