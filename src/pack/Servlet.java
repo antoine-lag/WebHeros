@@ -78,8 +78,10 @@ public class Servlet extends HttpServlet {
 
 	public void choixAventureFait(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
+		System.out.println("__________________SESSION_________");
 		HttpSession session = request.getSession(false);
 		if (session!=null) {
+			System.out.println("__________________SESSION NOT NULL_________");
 			RequestDispatcher disp;
 			if(request.getParameter("creation") != null && request.getParameter("creation").equals("nouveau"))
 			{
@@ -101,6 +103,7 @@ public class Servlet extends HttpServlet {
 			}
 			disp.forward(request, response);
 		} else {
+			System.out.println("__________________SESSION NULL_________");
 			RequestDispatcher disp = request.getRequestDispatcher("connexion.html");
 			disp.forward(request, response);
 		}
