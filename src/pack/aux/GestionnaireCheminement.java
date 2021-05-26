@@ -12,6 +12,8 @@ import pack.data.SituationClasse;
 import pack.data.Utilisateur;
 
 import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 public class GestionnaireCheminement {
 
 	public static void visiter(EntityManager em, int id_joueur, int id_situation, int id_aventure)
@@ -76,4 +78,40 @@ public class GestionnaireCheminement {
 		Cheminement cheminement = em.find(Cheminement.class, id_cheminement);
 		return cheminement.getParcours().stream().max(Comparator.comparingInt(SituationClasse::getOrdre)).get().getOrdre();
 	}
+	
+	public static int getIdSituationActuelle(EntityManager em, int id_cheminement)
+	{
+		Cheminement cheminement = em.find(Cheminement.class, id_cheminement);
+		return cheminement.getPosition().getId();
+	}
+	
+	public static int getIdAventureActuelle(EntityManager em, int id_cheminement)
+	{
+		Cheminement cheminement = em.find(Cheminement.class, id_cheminement);
+		return cheminement.getAventure().getId();
+	}
+	public static String getTexteCheminement(EntityManager em, int id_cheminement)
+	{
+		Cheminement cheminement = em.find(Cheminement.class, id_cheminement);
+		String texte = cheminement.getAventure().getNom();
+		String hist = cheminement.getPosition().getTexte();
+		int tailleParcours = cheminement.getParcours().size();
+		String resume = hist.substring(0,Math.min(hist.length()-1, 10));
+		texte += " : "+resume + " ... ( " +tailleParcours+" situations visitées )" ;
+		return texte;
+	}
+	public static String getTexteCompletCheminement(EntityManager em, int id_cheminement)
+	{
+		String texte = "";
+		Cheminement cheminement = em.find(Cheminement.class, id_cheminement);
+		texte += cheminement.getAventure().getNom()+"\n";
+		List<SituationClasse> chem = cheminement.getParcours().stream()
+				.sorted(Comparator.comparingInt(SituationClasse::getOrdre)).collect(Collectors.toList());
+		for(SituationClasse s : chem)
+		{
+			texte += s.getSituation().getTexte()+"\n\n";
+		}
+		return texte;
+	}
+	
 }
