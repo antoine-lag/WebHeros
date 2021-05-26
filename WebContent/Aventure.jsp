@@ -64,6 +64,7 @@ function initVars(scope) {
 	scope.situationText = "";
 	scope.userId = "<%= (String) request.getAttribute("userId") %>"
 	
+	
 }
 function initView(scope) {
 	scope.showSituationText = false;
