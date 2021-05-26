@@ -38,7 +38,7 @@ public class GestionnaireCheminement {
 	public static int trouverCheminementDonnantSur(EntityManager em, int id_joueur, int id_situation)
 	{
 		Utilisateur utilisateur = em.find(Utilisateur.class, id_joueur);
-		Collection<Cheminement> cheminements = utilisateur.getCheminements();
+		Collection<Cheminement> cheminements = utilisateur.getCheminements().stream().filter(c->c.isActif()).collect(Collectors.toSet());
 		for(Cheminement ch : cheminements)
 		{
 			Situation position = ch.getPosition();
