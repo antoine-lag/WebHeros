@@ -80,6 +80,7 @@ public class Servlet extends HttpServlet {
 	{
 		HttpSession session = request.getSession(false);
 		if (session!=null) {
+			RequestDispatcher disp;
 			if(request.getParameter("creation") != null && request.getParameter("creation").equals("nouveau"))
 			{
 				int idAventure = Integer.parseInt(request.getParameter("aventure"));
@@ -88,7 +89,7 @@ public class Servlet extends HttpServlet {
 				session.setAttribute("idAventure", idAventure);
 				session.setAttribute("nomAventure",facade.getAventureName(idAventure));
 				session.setAttribute("idCheminement",ch.getId());
-				RequestDispatcher disp = request.getRequestDispatcher("Aventure.jsp");
+				disp = request.getRequestDispatcher("Aventure.jsp");
 			}else
 			{
 				int idCheminement = Integer.parseInt(request.getParameter("cheminement"));
@@ -96,7 +97,7 @@ public class Servlet extends HttpServlet {
 				session.setAttribute("idAventure", ch.getAventure().getId());
 				session.setAttribute("nomAventure",ch.getAventure().getNom());
 				session.setAttribute("idCheminement",ch.getId());
-				RequestDispatcher disp = request.getRequestDispatcher("Aventure.jsp");
+				disp = request.getRequestDispatcher("Aventure.jsp");
 			}
 			disp.forward(request, response);
 		} else {
