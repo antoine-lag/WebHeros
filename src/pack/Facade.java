@@ -14,6 +14,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
+import pack.aux.GestionnaireCheminement;
 import pack.aux.InfoTableauBord;
 import pack.data.*;
 
@@ -77,17 +78,25 @@ public class Facade {
 		em.persist(jeu);
 		return jeu;
 	}
-	public InfoTableauBord getInfoTableauBord(int idJeu)
+	public InfoTableauBord getInfoTableauBord(int idJeu, int idJoueur)
 	{
 		List<String> nomsAventures = new LinkedList<String>();
 		List<Integer> idsAventures = new LinkedList<Integer>();
+		List<String> textesCheminements = new LinkedList<String>();
+		List<Integer> idsCheminements = new LinkedList<Integer>();
 		Jeu jeu = (Jeu)em.find(Jeu.class, idJeu);
+		Utilisateur utilisateur = (Utilisateur)em.find(Utilisateur.class, idJoueur);
 		for(Aventure av : jeu.getAventure())
 		{
 			nomsAventures.add(av.getNom());
 			idsAventures.add(av.getId());
 		}
-		return new InfoTableauBord(nomsAventures, idsAventures);
+		for(Cheminement ch : utilisateur.getCheminements())
+		{
+			textesCheminements.add(GestionnaireCheminement.getTexteCheminement(em, ch.getId()));
+			idsCheminements.add(ch.getId());
+		}
+		return new InfoTableauBord(nomsAventures, idsAventures, idsCheminements, textesCheminements);
 	}
 	//Ajoute une situation et sa modération vide, ses options de choix ,puis ajoute cette situation a l'aventure
 	public Situation ajouterSituation(String texte,List<String> textesChoix, int id_utilisateur,int id_aventure)
@@ -162,7 +171,21 @@ public class Facade {
 		return aventure;
 		
 	}
-	
+	public Aventure getAventure(int id_aventure)
+	{
+		return em.find(Aventure.class, id_aventure);
+		
+	}
+	public Cheminement visiter(int id_joueur,int id_situation, int id_aventure)
+	{
+		return GestionnaireCheminement.visiter(em, id_joueur, id_situation, id_aventure);
+		
+	}
+	public Cheminement getCheminement( int id_cheminement)
+	{
+		return em.find(Cheminement.class, id_cheminement);
+		
+	}
 	///Votes ///
 	//Ajoute un vote du joueur sur la situation, et la valide si elle passe un certain score
 	public Vote voter(int id_joueur, int id_situation, int note)

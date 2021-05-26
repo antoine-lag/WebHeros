@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 public class GestionnaireCheminement {
 
-	public static void visiter(EntityManager em, int id_joueur, int id_situation, int id_aventure)
+	public static Cheminement visiter(EntityManager em, int id_joueur, int id_situation, int id_aventure)
 	{
 		int idChem = trouverCheminementDonnantSur(em,id_joueur,id_situation);
 		Situation situation = em.find(Situation.class, id_situation);
@@ -38,10 +38,12 @@ public class GestionnaireCheminement {
 			sc.setSituation(situation);
 			em.persist(sc);
 			cheminement.getParcours().add(sc);
+			return cheminement;
 			
 		}else if(idChem==-2)
 		{
 			//Rien a faire, on est deja sur une feuille
+			return null;
 		}
 		else {
 			//Etendre le cheminement
@@ -52,6 +54,7 @@ public class GestionnaireCheminement {
 			sc.setSituation(situation);
 			em.persist(sc);
 			cheminement.getParcours().add(sc);
+			return cheminement;
 		}
 	}
 	public static int trouverCheminementDonnantSur(EntityManager em, int id_joueur, int id_situation)

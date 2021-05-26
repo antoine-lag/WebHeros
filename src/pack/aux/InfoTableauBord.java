@@ -22,9 +22,27 @@ public class InfoTableauBord implements Serializable{
 	}
 	List<String> nomsAventures ;
 	List<Integer> idsAventures;
-	public InfoTableauBord(List<String> nomsAventures, List<Integer> idsAventures) {
+	List<Integer> idsCheminements;
+	public InfoTableauBord(List<String> nomsAventures, List<Integer> idsAventures, List<Integer> idsCheminements,
+			List<String> textesCheminements) {
 		super();
 		this.nomsAventures = nomsAventures;
 		this.idsAventures = idsAventures;
+		this.idsCheminements = idsCheminements;
+		this.textesCheminements = textesCheminements;
 	}
+	List<String> textesCheminements;
+	public List<Integer> getIdsCheminements() {
+		return idsCheminements;
+	}
+	public void setIdsCheminements(List<Integer> idsCheminements) {
+		this.idsCheminements = idsCheminements;
+	}
+	public List<String> getTextesCheminements() {
+		return textesCheminements;
+	}
+	public void setTextesCheminements(List<String> textesCheminements) {
+		this.textesCheminements = textesCheminements;
+	}
+
 }
