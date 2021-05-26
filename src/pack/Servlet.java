@@ -17,6 +17,7 @@ import javax.servlet.http.HttpSession;
 import pack.data.Jeu;
 import pack.data.Utilisateur;
 import pack.data.Aventure;
+import pack.data.Cheminement;
 
 /**
  * Servlet implementation class Servlet
@@ -71,18 +72,32 @@ public class Servlet extends HttpServlet {
 			request.setAttribute("aventureName", "Here goes the aventure name");
 			request.getRequestDispatcher("Aventure.jsp").forward(request, response);
 		} else if (request.getParameter("mode").equals("accueil")) {
-			choixAvntureFait(request,response);
+			choixAventureFait(request,response);
 		}
 	}
 
-	public void choixAvntureFait(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	public void choixAventureFait(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 		HttpSession session = request.getSession(false);
 		if (session!=null) {
-			int idAventure = Integer.parseInt(request.getParameter("aventure"));
-			session.setAttribute("idAventure", idAventure);
-			session.setAttribute("nomAventure",facade.getAventureName(idAventure));
-			RequestDispatcher disp = request.getRequestDispatcher("Aventure.jsp");
+			if(request.getParameter("creation") != null && request.getParameter("creation").equals("nouveau"))
+			{
+				int idAventure = Integer.parseInt(request.getParameter("aventure"));
+				Aventure av = facade.getAventure(idAventure);
+				Cheminement ch = facade.visiter((int)session.getAttribute("idJoueur"), av.getDebut().getId(), av.getId());
+				session.setAttribute("idAventure", idAventure);
+				session.setAttribute("nomAventure",facade.getAventureName(idAventure));
+				session.setAttribute("idCheminement",ch.getId());
+				RequestDispatcher disp = request.getRequestDispatcher("Aventure.jsp");
+			}else
+			{
+				int idCheminement = Integer.parseInt(request.getParameter("cheminement"));
+				Cheminement ch = facade.getCheminement(idCheminement);
+				session.setAttribute("idAventure", ch.getAventure().getId());
+				session.setAttribute("nomAventure",ch.getAventure().getNom());
+				session.setAttribute("idCheminement",ch.getId());
+				RequestDispatcher disp = request.getRequestDispatcher("Aventure.jsp");
+			}
 			disp.forward(request, response);
 		} else {
 			RequestDispatcher disp = request.getRequestDispatcher("connexion.html");
@@ -126,9 +141,11 @@ public class Servlet extends HttpServlet {
 			// identification reussie
 			// creer une session
 			HttpSession session = request.getSession(true);
-			session.setAttribute("idJoueur", facade.getIDJoueur(pseudo, id_jeu));
+			int idJoueur = facade.getIDJoueur(pseudo, id_jeu);
+			session.setAttribute("idJoueur", idJoueur);
 			session.setAttribute("pseudoJoueur", pseudo);
-			session.setAttribute("infoTableauBord", facade.getInfoTableauBord(id_jeu));
+			
+			session.setAttribute("infoTableauBord", facade.getInfoTableauBord(id_jeu,idJoueur));
 			RequestDispatcher disp = request.getRequestDispatcher("tableau_de_bord.jsp");
 			disp.forward(request, response);
 		} else if(vrai_mdp.equals("")) {
@@ -163,9 +180,10 @@ public class Servlet extends HttpServlet {
 				// inscription reussie
 				// creer une session
 				HttpSession session = request.getSession(true);
-				session.setAttribute("idJoueur", facade.getIDJoueur(pseudo, id_jeu));
+				int idJ = facade.getIDJoueur(pseudo, id_jeu);
+				session.setAttribute("idJoueur", idJ);
 				session.setAttribute("pseudoJoueur", pseudo);
-				session.setAttribute("infoTableauBord", facade.getInfoTableauBord(id_jeu));
+				session.setAttribute("infoTableauBord", facade.getInfoTableauBord(id_jeu,idJ));
 				RequestDispatcher disp = request.getRequestDispatcher("tableau_de_bord.jsp");
 				disp.forward(request, response);
 			}
