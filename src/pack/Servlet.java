@@ -66,16 +66,7 @@ public class Servlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		if (request.getParameter("mode").equals("initAjoutSituation")) {
-			HttpSession session = request.getSession(false);
-			if(session != null) {
-			int idChoix = Integer.parseInt(request.getParameter("idChoix"));
-			session.setAttribute("idChoixSource", idChoix);
-			RequestDispatcher disp = request.getRequestDispatcher("AjoutSituation.html");
-			disp.forward(request, response);
-			} else {
-				RequestDispatcher disp = request.getRequestDispatcher("connexion.html");
-				disp.forward(request, response);
-			}
+			initAjoutSituation(request,response);
 		}  
 		else if (request.getParameter("mode").equals("aventure")) {
 			request.getRequestDispatcher("Aventure.html").forward(request, response);
@@ -92,86 +83,119 @@ public class Servlet extends HttpServlet {
 			request.setAttribute("aventureName", "Here goes the aventure name");
 			request.getRequestDispatcher("Aventure.jsp").forward(request, response);
 		} else if (request.getParameter("mode").equals("accueil")) {
-			HttpSession session = request.getSession(false);
-			if (session!=null) {
-				session.setAttribute("idAventure", Integer.parseInt(request.getParameter("aventure")));
-				//session.setAttribute("userId", Integer.parseInt(request.getParameter("user")));
-				//Il faudrait arriver à ajouter l'ID de l'utilisateur en attribute (en tant que string)
-				RequestDispatcher disp = request.getRequestDispatcher("Aventure.html");
-				disp.forward(request, response);
-			} else {
-				RequestDispatcher disp = request.getRequestDispatcher("connexion.html");
-				disp.forward(request, response);
-			}
+			choixAvntureFait(request,response);
 		}
 	}
 
+	public void choixAvntureFait(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	{
+		HttpSession session = request.getSession(false);
+		if (session!=null) {
+			int idAventure = Integer.parseInt(request.getParameter("aventure"));
+			session.setAttribute("idAventure", idAventure);
+			session.setAttribute("nomAventure",facade.getAventureName(idAventure));
+			RequestDispatcher disp = request.getRequestDispatcher("Aventure.html");
+			disp.forward(request, response);
+		} else {
+			RequestDispatcher disp = request.getRequestDispatcher("connexion.html");
+			disp.forward(request, response);
+		}
+	}
+	//Get pour obtenir la page d'ajout de situation
+	public void initAjoutSituation(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	{
+		HttpSession session = request.getSession(false);
+		if(session != null) {
+		int idChoix = Integer.parseInt(request.getParameter("idChoix"));
+		session.setAttribute("idChoixSource", idChoix);
+		RequestDispatcher disp = request.getRequestDispatcher("AjoutSituation.html");
+		disp.forward(request, response);
+		} else {
+			RequestDispatcher disp = request.getRequestDispatcher("connexion.html");
+			disp.forward(request, response);
+		}
+	}
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		if (request.getParameter("mode").equals("connexion")) {
-			// tentative de connexion
-			String pseudo = request.getParameter("pseudo");
-			String mdp = facade.hasher(pseudo + request.getParameter("pwd"));
-			String vrai_mdp = facade.getMdp(pseudo, id_jeu);
-			if (vrai_mdp.equals(mdp)) {
-				// identification reussie
+			connexion(request,response);
+		} else if (request.getParameter("mode").equals("inscription")) {
+			inscription(request,response);
+		}else if (request.getParameter("mode").equals("ajoutSituation")) {
+			postSituation(request,response);
+		}
+	}
+	//Connecte le joueur
+	public void connexion(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	{
+		// tentative de connexion
+		String pseudo = request.getParameter("pseudo");
+		String mdp = facade.hasher(pseudo + request.getParameter("pwd"));
+		String vrai_mdp = facade.getMdp(pseudo, id_jeu);
+		if (vrai_mdp.equals(mdp)) {
+			// identification reussie
+			// creer une session
+			HttpSession session = request.getSession(true);
+			session.setAttribute("idJoueur", facade.getIDJoueur(pseudo, id_jeu));
+			RequestDispatcher disp = request.getRequestDispatcher("tableau_de_bord.jsp");
+			disp.forward(request, response);
+		} else if(vrai_mdp.equals("")) {
+			// pseudo existe pas
+			RequestDispatcher disp = request.getRequestDispatcher("connexion.html");
+			disp.forward(request, response);
+		} else {
+			// mot de passe mauvais
+			RequestDispatcher disp = request.getRequestDispatcher("connexion.html");
+			disp.forward(request, response);
+		}
+	}
+	//Inscrit le joueur dans la bdd
+	public void inscription(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	{
+		// tentative inscription
+		String pseudo = request.getParameter("pseudo");
+		String mdp = facade.hasher(pseudo + request.getParameter("pwd"));
+		String confirmation = facade.hasher(pseudo + request.getParameter("confirmation"));
+		String email = request.getParameter("email");
+		if (!mdp.equals(confirmation)) {
+			// les deux mots de passes sont differents
+			RequestDispatcher disp = request.getRequestDispatcher("inscription.html");
+			disp.forward(request, response);
+		} else {
+			if (facade.ajouterUtilisateur(pseudo, email, id_jeu, mdp) == null) {
+				// le pseudo existe deja
+				RequestDispatcher disp = request.getRequestDispatcher("inscription.html");
+				disp.forward(request, response);
+			} else {
+				// inscription reussie
 				// creer une session
 				HttpSession session = request.getSession(true);
 				session.setAttribute("idJoueur", facade.getIDJoueur(pseudo, id_jeu));
 				RequestDispatcher disp = request.getRequestDispatcher("tableau_de_bord.jsp");
 				disp.forward(request, response);
-			} else if(vrai_mdp.equals("")) {
-				// pseudo existe pas
-				RequestDispatcher disp = request.getRequestDispatcher("connexion.html");
-				disp.forward(request, response);
-			} else {
-				// mot de passe mauvais
-				RequestDispatcher disp = request.getRequestDispatcher("connexion.html");
-				disp.forward(request, response);
 			}
-		} else if (request.getParameter("mode").equals("inscription")) {
-			// tentative inscription
-			String pseudo = request.getParameter("pseudo");
-			String mdp = facade.hasher(pseudo + request.getParameter("pwd"));
-			String confirmation = facade.hasher(pseudo + request.getParameter("confirmation"));
-			String email = request.getParameter("email");
-			if (!mdp.equals(confirmation)) {
-				// les deux mots de passes sont differents
-				RequestDispatcher disp = request.getRequestDispatcher("inscription.html");
-				disp.forward(request, response);
-			} else {
-				if (facade.ajouterUtilisateur(pseudo, email, id_jeu, mdp) == null) {
-					// le pseudo existe deja
-					RequestDispatcher disp = request.getRequestDispatcher("inscription.html");
-					disp.forward(request, response);
-				} else {
-					// inscription reussie
-					// creer une session
-					HttpSession session = request.getSession(true);
-					session.setAttribute("idJoueur", facade.getIDJoueur(pseudo, id_jeu));
-					RequestDispatcher disp = request.getRequestDispatcher("tableau_de_bord.jsp");
-					disp.forward(request, response);
-				}
-			}
-		}else if (request.getParameter("mode").equals("ajoutSituation")) {
-			HttpSession session = request.getSession(false);
-			if(session != null) {
-			int idJoueur = (int)(session.getAttribute("idJoueur"));
-			int idAventure = (int)(session.getAttribute("idAventure"));
-			int idChoixSoure = (int)(session.getAttribute("idChoixSource"));
-			String texteSituation = request.getParameter("texteSituation");
+		}
+	}
+	//Ajoute la situation dans la bdd
+	public void postSituation(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	{
+		HttpSession session = request.getSession(false);
+		if(session != null) {
+		int idJoueur = (int)(session.getAttribute("idJoueur"));
+		int idAventure = (int)(session.getAttribute("idAventure"));
+		int idChoixSoure = (int)(session.getAttribute("idChoixSource"));
+		String texteSituation = request.getParameter("texteSituation");
+	
+		List<String> textesOptions = Arrays.asList(request.getParameter("choixSuite"));
 		
-			List<String> textesOptions = Arrays.asList(request.getParameter("choixSuite"));
-			
-			facade.affilierSituationFille(idChoixSoure, texteSituation, textesOptions, idJoueur, idAventure);
-			RequestDispatcher disp = request.getRequestDispatcher("tableau_de_bord.jsp");
+		facade.affilierSituationFille(idChoixSoure, texteSituation, textesOptions, idJoueur, idAventure);
+		RequestDispatcher disp = request.getRequestDispatcher("tableau_de_bord.jsp");
+		disp.forward(request, response);
+		} else {
+			RequestDispatcher disp = request.getRequestDispatcher("connexion.html");
 			disp.forward(request, response);
-			} else {
-				RequestDispatcher disp = request.getRequestDispatcher("connexion.html");
-				disp.forward(request, response);
-			}
 		}
 	}
 }

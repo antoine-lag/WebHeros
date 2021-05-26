@@ -23,22 +23,20 @@ public class Facade {
 	private EntityManager em;
 	
 	
-	@GET
-	@Path("/getAventureName")
-    @Produces({ "application/json" })
-	public String getAventureName() {
-		int id_aventure = 1;//HARDCODDED FOR NOW
+	
+	public String getAventureName(int id_aventure) {
 		Aventure av = em.find(Aventure.class, id_aventure);
 		String avName;
 		if(av == null) {
-			avName = "Aventure not found... Debug again !";
+			avName = null;
 		}else {
 			avName = av.getNom();
 		}
-		avName = "{\"aventureName\": \"" + avName + "\"}"; //JSON formatting
 		return avName;
 	}
-	
+	@GET
+	@Path("/getAventureName")
+    @Produces({ "application/json" })
 	/*Fonctions à faire pour angular:
 	 * String getSituation(String idAventure, String idSituation) : renvoie la situation correspondant à l'ID sous forme JSON à partir de l'ID d'une aventure
 	 */
