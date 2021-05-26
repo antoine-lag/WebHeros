@@ -83,7 +83,7 @@ public class Servlet extends HttpServlet {
 		if (session!=null) {
 			System.out.println("__________________SESSION NOT NULL_________");
 			RequestDispatcher disp;
-			if(request.getParameter("creation") != null && request.getParameter("creation").equals("nouveau"))
+			if(request.getParameter("creation") == null || request.getParameter("creation").equals("nouveau"))
 			{
 				int idAventure = Integer.parseInt(request.getParameter("aventure"));
 				Aventure av = facade.getAventure(idAventure);
