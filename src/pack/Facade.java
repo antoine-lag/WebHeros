@@ -10,6 +10,7 @@ import javax.ejb.Singleton;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.GET;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
@@ -23,8 +24,6 @@ public class Facade {
 	@PersistenceContext(unitName = "MaPU")
 	private EntityManager em;
 	
-	
-	
 	public String getAventureName(int id_aventure) {
 		Aventure av = em.find(Aventure.class, id_aventure);
 		String avName;
@@ -35,12 +34,28 @@ public class Facade {
 		}
 		return avName;
 	}
-	@GET
-	@Path("/getAventureName")
-    @Produces({ "application/json" })
+	
 	/*Fonctions à faire pour angular:
 	 * String getSituation(String idAventure, String idSituation) : renvoie la situation correspondant à l'ID sous forme JSON à partir de l'ID d'une aventure
 	 */
+	//-------------------A METTRE DANS FACADE-----------
+	@GET
+	@Path("/getsituation")
+	@Consumes({ "application/json" })
+	@Produces({ "application/json" })
+	public String getSituation(String idSituation) {
+		System.out.println("getSituation called: " + idSituation);
+		Situation s = em.find(Situation.class, idSituation);
+		String sData;
+		if(s == null) {
+			sData = "Situation not found";
+		}else {
+			sData = "{'text': '" + s.getTexte() + "'}";
+		}
+		return sData;
+	}
+	//---------------------------------------------
+
 	
 	///___________________________________///
 	

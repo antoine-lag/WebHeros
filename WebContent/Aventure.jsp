@@ -11,20 +11,23 @@
 </head>
 <body>
 	<div ng-app="webHerosApp" ng-controller="webHerosCtrl"> 
+		<a href="index.html">Accueil</a>
 		<h1>Vous naviguez dans l'aventure {{aventureName}}</h1>
+		
+		<div ng-show="showChoicesList">
+			<ul>
+				<li ng-repeat="c in choicesList">
+					<button id="btn1" ng-click="doChoice(c.id)">{{c.text}}</button>
+				</li>
+			</ul>
+		</div>
 		
 		<div ng-show="showSituationText">
 			<h3>{{situationText}}</h3>
 		</div>
 		<br>
 		
-		</div ng-show="showChoicesList">
-			<ul>
-				<li ng-repeat="c in choicesList">
-					<button ng-click="selectChoice('c.id')">{{c.text}}</button>
-				</li>
-			</ul>
-		</div>
+		
 		<br>
 		
 		<div ng-show="showVoteButtons">
@@ -37,17 +40,15 @@
 		</div>
 		
 		
-		
-		<a href="index.html">Accueil</a>
-		
 		<div ng-show="showMessage">
 			{{message}}
 		</div>
 	</div>
 	
 <script>
-//1 - get user from server with user ID taken from ??
 //2 - get situation (Root to begin with)
+//1 - get choices
+//
 //3 - display 1 button for each choice
 //4 - redirect to addSituation
 //5 - Set up vote buttons.
@@ -59,38 +60,26 @@ function initVars(scope) {
 	//scope.situation = new Object();//Not sure
 	//scope.user = new Object();
 	scope.message = "___";
-	scope.aventureName = "<%= (String) request.getAttribute("aventureName") %>"
-	scope.aventureId = "<%= (String) request.getAttribute("aventureId") %>"
+	scope.aventureName = "<%= (String) request.getSession(false).getAttribute("nomAventure") %>"
 	scope.situationText = "";
-	scope.userId = "<%= (String) request.getAttribute("userId") %>"
-	
-	
+	scope.situationId = "1";
+	scope.aventureId = "<%= (String) request.getSession(false).getAttribute("idAventure") %>"
+	scope.userId = "<%= (String) request.getSession(false).getAttribute("idJoueur") %>"
+	//scope.choicesList = [{"id": "1", "text": "choix1"}, {"id": "2", "text": "choix2"}];
 }
 function initView(scope) {
 	scope.showSituationText = false;
-	scope.showChoicesList = false;
+	scope.showChoicesList = true;
 	scope.showVoteButtons = true;
 	scope.showAddSituation = false;
 	scope.showMessage = false;
 }
-function initAventure(scope, http){
-	initView(scope);
-	http.get("rest/getAventureName").then(function(response) {
-		if (response.status == 200) {
-			scope.aventureName = response.data.aventureName;
-		} else {
-			scope.message = "Failed to get aventure name";
-			scope.showMessage = true;
-		}
-	});
-}
 
-
-function initSituation(scope, http){
+function getSituation(idSituation, scope, http){
 	initView(scope);
-	http.get("rest/getSituation", scope.aventureName).then(function(response) {
+	http.get("rest/getsituation", scope.situationId).then(function(response) {
 		if (response.status == 200) {
-			scope.situation = response.data.situation;
+			scope.situationText = response.data.text;
 		} else {
 			scope.message = "Failed to get situation";
 			scope.showMessage = true;
@@ -112,9 +101,8 @@ function vote(action, scope, http){
 
 function selectChoice(idChoice, scope, http) {
 	initView(scope);
-	initVars(scope);
 	console.log("Choice "+idChoice+" selected");
-	//Envoyer requette http get pour modifier la situation et l'affichage
+	//Envoyer requette http get pour modifier avoir l'id de la situation correspondante et appel getSituation
 }
 
 
@@ -122,6 +110,7 @@ var app = angular.module('webHerosApp', []);
 app.controller('webHerosCtrl', function($scope,$http) {
 	initVars($scope);
  	initView($scope);
+ 	getSituation("1", $scope, $http);
     $scope.doChoice=function(idChoice) {selectChoice(idChoice,$scope,$http);}
     $scope.doVote=function(action) {vote(action, $scope, $http);}
 });
