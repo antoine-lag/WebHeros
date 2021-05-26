@@ -36,12 +36,12 @@ public class Facade {
 	}
 	
 	/*Fonctions à faire pour angular:
-	 * String getSituation(String idAventure, String idSituation) : renvoie la situation correspondant à l'ID sous forme JSON à partir de l'ID d'une aventure
+	 * String getSituation(String idAventure, String idSituation) : 
+	 * renvoie la situation correspondant à l'ID sous forme JSON à partir de l'ID d'une aventure
 	 */
-	//-------------------A METTRE DANS FACADE-----------
 	@GET
 	@Path("/getsituation")
-	//@Consumes({ "application/json" })
+	//Recup parametres get
 	@Produces({ "application/json" })
 	public String getSituation() {
 		String idSituation = "1";
@@ -62,7 +62,7 @@ public class Facade {
 			choicesList = "[]";
 		}
 		//Formatting to json
-		String sJsonData = "{\"text\": \"" + situtationName + "\" }";
+		String sJsonData = "{\"text\": \"" + situtationName + "\", \"choicesList\": []}";
 		return sJsonData;
 	}
 	//---------------------------------------------

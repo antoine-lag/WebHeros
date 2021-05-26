@@ -52,9 +52,7 @@ public class Servlet extends HttpServlet {
     	 */
     	jeuPrincipal = facade.initJeu();
     	id_jeu = jeuPrincipal.getId();
-    	bob = facade.ajouterUtilisateur("Bob", "boby@neutronMail.com", id_jeu, "mdpbob");
-    	tom = facade.ajouterUtilisateur("Tom", "tomi@quarkMail.com", id_jeu, "tomi");
-    	pierre = facade.ajouterUtilisateur("Pierre", "boby@electronMail.com", id_jeu, "pauljack");
+    	bob = facade.ajouterUtilisateur("Bob", "boby@neutronMail.com", id_jeu, "d0d95333b78031a3abe404609bd9af42a2bd22e6b6ab812465710acb90b6b138");//Hash of "mdp"
     	List<String> choix = Arrays.asList("Vous sortez du chateau.", "Vous allez dans la cave.", "Vous allez dans la tour pour voir l'extérieur.");
 		aventureChateauHante = facade.ajouterAventure("Creepy castle", "Tout commence dans le chateau du Duc de Normandie...", choix, bob.getId(), id_jeu);
 		System.out.println("\nID aventure: "+aventureChateauHante.getId());
@@ -67,19 +65,9 @@ public class Servlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		if (request.getParameter("mode").equals("initAjoutSituation")) {
 			initAjoutSituation(request,response);
-		}  
-		else if (request.getParameter("mode").equals("aventure")) {
-			request.getRequestDispatcher("Aventure.html").forward(request, response);
-		
-		/*
-		 * CONTRAT: données à fournir à Aventure.jsp:
-		 * userId : l'id de l'user connecté sous forme de string
-		 * aventureId : l'id de l'aventure choisie en string
-		 * aventureName: son nom en string
-		 */
 		}else if (request.getParameter("mode").equals("aventureJsp")) {
-			request.setAttribute("userId", "1");
-			request.setAttribute("aventureId", "1");
+			request.setAttribute("userId", 1);
+			request.setAttribute("aventureId", 1);
 			request.setAttribute("aventureName", "Here goes the aventure name");
 			request.getRequestDispatcher("Aventure.jsp").forward(request, response);
 		} else if (request.getParameter("mode").equals("accueil")) {
@@ -94,7 +82,7 @@ public class Servlet extends HttpServlet {
 			int idAventure = Integer.parseInt(request.getParameter("aventure"));
 			session.setAttribute("idAventure", idAventure);
 			session.setAttribute("nomAventure",facade.getAventureName(idAventure));
-			RequestDispatcher disp = request.getRequestDispatcher("Aventure.html");
+			RequestDispatcher disp = request.getRequestDispatcher("Aventure.jsp");
 			disp.forward(request, response);
 		} else {
 			RequestDispatcher disp = request.getRequestDispatcher("connexion.html");
@@ -159,6 +147,7 @@ public class Servlet extends HttpServlet {
 		// tentative inscription
 		String pseudo = request.getParameter("pseudo");
 		String mdp = facade.hasher(pseudo + request.getParameter("pwd"));
+		System.out.println("_______MDP: " + mdp + "_______________");
 		String confirmation = facade.hasher(pseudo + request.getParameter("confirmation"));
 		String email = request.getParameter("email");
 		if (!mdp.equals(confirmation)) {
