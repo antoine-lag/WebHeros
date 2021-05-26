@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import pack.data.Jeu;
+import pack.data.Situation;
 import pack.data.Utilisateur;
 import pack.data.Aventure;
 import pack.data.Cheminement;
@@ -187,13 +188,13 @@ public class Servlet extends HttpServlet {
 		int idJoueur = (int)(session.getAttribute("idJoueur"));
 		int idAventure = (int)(session.getAttribute("idAventure"));
 		int idChoixSoure = (int)(session.getAttribute("idChoixSource"));
+		
 		String texteSituation = request.getParameter("texteSituation");
 	
 		List<String> textesOptions = Arrays.asList(request.getParameter("choixSuite"));
-		
 		facade.affilierSituationFille(idChoixSoure, texteSituation, textesOptions, idJoueur, idAventure);
-		RequestDispatcher disp = request.getRequestDispatcher("tableau_de_bord.jsp");
-		disp.forward(request, response);
+
+		renvoyerVersTableauBord(request,response, id_jeu);
 		} else {
 			RequestDispatcher disp = request.getRequestDispatcher("connexion.html");
 			disp.forward(request, response);

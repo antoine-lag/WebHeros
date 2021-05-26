@@ -47,6 +47,20 @@ public class InfoTableauBord implements Serializable{
 	}
 	List<String> datesAccomplissements;
 	List<String> textesCheminements;
+	List<String> textesCompletsCheminements;
+	List<Boolean> isActiveCheminements;
+	public List<String> getTextesCompletsCheminements() {
+		return textesCompletsCheminements;
+	}
+	public void setTextesCompletsCheminements(List<String> textesCompletsCheminements) {
+		this.textesCompletsCheminements = textesCompletsCheminements;
+	}
+	public List<Boolean> getIsActiveCheminements() {
+		return isActiveCheminements;
+	}
+	public void setIsActiveCheminements(List<Boolean> isActiveCheminements) {
+		this.isActiveCheminements = isActiveCheminements;
+	}
 	public List<Integer> getIdsCheminements() {
 		return idsCheminements;
 	}

@@ -88,6 +88,8 @@ public class Facade {
 		List<Integer> idsCheminements = new LinkedList<Integer>();
 		List<String> textesAccomplissements = new LinkedList<String>();
 		List<String> datesAccomplissements = new LinkedList<String>();
+		List<String> textesCompletsCheminements= new LinkedList<String>();
+		List<Boolean> isActiveCheminements= new LinkedList<Boolean>();
 		Jeu jeu = (Jeu)em.find(Jeu.class, idJeu);
 		Utilisateur utilisateur = (Utilisateur)em.find(Utilisateur.class, idJoueur);
 		for(Aventure av : jeu.getAventure())
@@ -98,6 +100,8 @@ public class Facade {
 		for(Cheminement ch : utilisateur.getCheminements())
 		{
 			textesCheminements.add(GestionnaireCheminement.getTexteCheminement(em, ch.getId()));
+			textesCompletsCheminements.add(GestionnaireCheminement.getTexteCompletCheminement(em, ch.getId()));
+			isActiveCheminements.add(ch.isActif());
 			idsCheminements.add(ch.getId());
 		}
 		for(Accomplissement ac : utilisateur.getAccomplissements())
@@ -140,8 +144,8 @@ public class Facade {
 		Aventure aventure = em.find(Aventure.class, id_aventure);
 		aventure.getSituations().add(situation);
 		em.merge(situation);
-		
-		utilisateur.getStatistiques().setNbSituationsCrees(utilisateur.getStatistiques().getNbSituationsCrees());
+		visiter(id_utilisateur, situation.getId(), id_aventure,true);
+		utilisateur.getStatistiques().setNbSituationsCrees(utilisateur.getStatistiques().getNbSituationsCrees()+1);
 		return situation;
 		
 	}
@@ -154,22 +158,26 @@ public class Facade {
 		return choix;
 	}
 	//affilier une nouvelle situation comme découlant d'un choix
-	public void affilierSituationFille(int id_choix,String texte,List<String> textesChoix, int id_utilisateur,int id_aventure)
+	public Situation affilierSituationFille(int id_choix,String texte,List<String> textesChoix, int id_utilisateur,int id_aventure)
 	{
 		Choix source = em.find(Choix.class, id_choix);
 		if(source.getSituation() ==null)
 		{
 			Situation nouvelle = ajouterSituation(texte,textesChoix,id_utilisateur,id_aventure);
 			source.setSituation(nouvelle);
+			return nouvelle;
 		}
+		return null;
 	}
 	//affilier une nouvelle situation comme etant la premiere d'une aventure
-	public void affilierSituationInitiale(String texte,List<String> textesChoix, int id_utilisateur,int id_aventure)
+	public Situation affilierSituationInitiale(String texte,List<String> textesChoix, int id_utilisateur,int id_aventure)
 	{
 		Situation nouvelle = ajouterSituation(texte,textesChoix,id_utilisateur,id_aventure);
 		Aventure aventure = em.find(Aventure.class, id_aventure);
 		aventure.setDebut(nouvelle);
 		em.merge(nouvelle);
+		
+		return nouvelle;
 	}
 	//Indique si un choix mene vers une situation qui n'existe pas encore
 	public boolean situationDoitEtreCree(int id_choix)
@@ -195,9 +203,20 @@ public class Facade {
 		return em.find(Aventure.class, id_aventure);
 		
 	}
-	public Cheminement visiter(int id_joueur,int id_situation, int id_aventure)
+	public Cheminement visiter(int id_joueur,int id_situation, int id_aventure, boolean clore)
 	{
-		return GestionnaireCheminement.visiter(em, id_joueur, id_situation, id_aventure);
+		Cheminement chem = GestionnaireCheminement.visiter(em, id_joueur, id_situation, id_aventure);
+		if(chem != null)
+		{
+			if(chem.isActif())
+			{
+				if(clore)
+				{
+					chem.setActif(false);
+				}
+			}
+		}
+		return chem;
 		
 	}
 	public Cheminement nouveauCheminement(int id_joueur, int id_aventure)
