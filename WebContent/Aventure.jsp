@@ -80,6 +80,7 @@ function getSituation(idSituation, scope, http){
 	http.get("rest/getsituation", scope.situationId).then(function(response) {
 		if (response.status == 200) {
 			scope.situationText = response.data.text;
+			scope.showSituationText = false;
 		} else {
 			scope.message = "Failed to get situation";
 			scope.showMessage = true;

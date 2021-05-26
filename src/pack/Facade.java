@@ -41,18 +41,29 @@ public class Facade {
 	//-------------------A METTRE DANS FACADE-----------
 	@GET
 	@Path("/getsituation")
-	@Consumes({ "application/json" })
+	//@Consumes({ "application/json" })
 	@Produces({ "application/json" })
-	public String getSituation(String idSituation) {
-		System.out.println("getSituation called: " + idSituation);
-		Situation s = em.find(Situation.class, idSituation);
-		String sData;
+	public String getSituation() {
+		String idSituation = "1";
+		System.out.println("___________getSituation called__________: " + idSituation);
+		Situation s = em.find(Situation.class, Integer.parseInt(idSituation));
+		
+		String situtationName;
+		String choicesList;
 		if(s == null) {
-			sData = "Situation not found";
+			situtationName = "Situation not found";
+			choicesList = "[]";
 		}else {
-			sData = "{'text': '" + s.getTexte() + "'}";
+			//Getting situation name
+			situtationName =  s.getTexte();
+			
+			//Retrieving choices list
+			Collection<Choix> choix = s.getChoix();
+			choicesList = "[]";
 		}
-		return sData;
+		//Formatting to json
+		String sJsonData = "{\"text\": \"" + situtationName + "\" }";
+		return sJsonData;
 	}
 	//---------------------------------------------
 
