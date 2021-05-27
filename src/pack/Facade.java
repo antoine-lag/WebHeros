@@ -283,6 +283,10 @@ public class Facade {
 	{
 		return moderation.getVotes().stream().anyMatch(x->(x.getVotant().getId() == id_joueur));
 	}
+	public boolean estPremium(int id_joueur)
+	{
+		return em.find(Utilisateur.class, id_joueur).getPremium();
+	}
 	
 	//Indique si une situation est validee et peut etre poursuivie
 	public boolean estValidee(int id_situation)

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Ajout de Situations</title>
+</head>
+<body>
+	<form action = "Servlet" method = "post" id="formAjout">
+		<input type="hidden" id="modeSend" name="mode" value = "ajoutAventure">
+		<label for="nAv">Nom de l'aventure :</label>
+		<p></p>
+		<input type="text" id="nAv" name="nomAventure">
+		<p>
+    	<br/><br/>
+    	</p>
+		
+		<div>
+    		<textarea rows="10" cols="30" wrap = "hard" id="inputTexte" name="texteSituation">Texte de la situation</textarea>
+    	</div>
+    	<p>
+    	<br/><br/>
+    	</p>
+   		<div class="button" id="boutonAjout">
+    		<button type="button" onclick="myFunction()">Nouveau Choix</button>
+    	</div>
+  	    <p>
+    	
+    	</p>
+    	<label for="nouvellesSituations">Options de choix :</label>
+ 		<div id = "nouvellesSituations">
+    	</div>
+    	<input type="text" id="n1" name="choixSuite">
+    	<div id="nouvSitu">
+    	</div>
+    	<p>
+    	<br/><br/>
+    	</p>
+   	    <div class="button" id="boutonSend">
+        	<button type="submit">Envoyer</button>
+    	</div>
+	</form>
+	
+	<script>
+	function myFunction() {
+	  var x = document.createElement("INPUT");
+	  x.setAttribute("name", "choixSuite");
+	  document.getElementById("formAjout").insertBefore(x,document.getElementById("nouvSitu"));
+	}
+	</script>
+</body>
+</html>
