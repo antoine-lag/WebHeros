@@ -267,7 +267,7 @@ public class Servlet extends HttpServlet {
 		HttpSession session = request.getSession(false);
 		int idJoueur = (int)session.getAttribute("idJoueur" );
 		session.setAttribute("infoTableauBord", facade.getInfoTableauBord(id_jeu,idJoueur));
-		RequestDispatcher disp = request.getRequestDispatcher("tableau_de_bord.jsp");
+		RequestDispatcher disp = request.getRequestDispatcher("accueil.html");
 		disp.forward(request, response);
 	}
 	public void connexionOuInsriptionReussie(HttpServletRequest request, HttpServletResponse response, int id_jeu, String pseudo) throws ServletException, IOException
