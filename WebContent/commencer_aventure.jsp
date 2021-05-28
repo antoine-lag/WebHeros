@@ -9,14 +9,14 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<link rel="stylesheet" type="text/css" href="commencer_aventure.jsp"/>
+		<link rel="stylesheet" type="text/css" href="commencer_aventure.css"/>
 		<title>Commencer Aventure</title>
 	</head>
 	<body>
 		<h1>Mon tableau de Bord</h1>
 		<form action="Servlet" method="get">
 			<h4>Démarrer une aventure :</h4>
-			<input type="hidden" name="mode" value = "accueil">	
+			<input type="hidden" name="mode" value = "idAventure">	
 			<%InfoTableauBord infos = (InfoTableauBord) request.getSession().getAttribute("infoTableauBord");%>
 			<% listeIdAventure = infos.getIdsAventures();%>
 			<% listeNomAventure = infos.getNomsAventures();%>
