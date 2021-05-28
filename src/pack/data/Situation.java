@@ -12,10 +12,10 @@ public class Situation {
 	
 	String texte;
 	
-	@OneToMany(fetch = FetchType.EAGER)
+	@OneToMany
 	Collection<Choix> choix = new LinkedList<Choix>();
 	
-	@OneToOne(fetch = FetchType.EAGER)
+	@OneToOne
 	Moderation moderation;
 	
 	public Situation() {}

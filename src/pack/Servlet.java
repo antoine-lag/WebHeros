@@ -34,7 +34,7 @@ public class Servlet extends HttpServlet {
 	Utilisateur bob;
 	Utilisateur tom;
 	Utilisateur pierre;
-	Aventure aventureChateauHante;
+	int aventureChateauHante;
 	
 	//Temporairement on utilise un seul jeu
 	int id_jeu;
@@ -57,7 +57,7 @@ public class Servlet extends HttpServlet {
     	bob = facade.ajouterUtilisateur("Bob", "boby@neutronMail.com", id_jeu, "d0d95333b78031a3abe404609bd9af42a2bd22e6b6ab812465710acb90b6b138");//Hash of "mdp"
     	List<String> choix = Arrays.asList("Vous sortez du chateau.", "Vous allez dans la cave.", "Vous allez dans la tour pour voir l'extérieur.");
 		aventureChateauHante = facade.ajouterAventure("Creepy castle", "Tout commence dans le chateau du Duc de Normandie...", choix, bob.getId(), id_jeu);
-		System.out.println("\nID aventure: "+aventureChateauHante.getId());
+		System.out.println("\nID aventure: "+aventureChateauHante);
 		System.out.println("\nServlet initialised !");
     }
 
@@ -101,11 +101,10 @@ public class Servlet extends HttpServlet {
 		HttpSession session = request.getSession(false);
 		if (session!=null) {
 			int idAventure = Integer.parseInt(request.getParameter("idAventure"));
-			Aventure av = facade.getAventure(idAventure);
-			Cheminement ch = facade.nouveauCheminement((int)session.getAttribute("idJoueur"), av.getId());
+			int ch_id = facade.nouveauCheminement((int)session.getAttribute("idJoueur"), idAventure);
 			session.setAttribute("idAventure", idAventure);
 			session.setAttribute("nomAventure",facade.getAventureName(idAventure));
-			session.setAttribute("idCheminement",ch.getId());
+			session.setAttribute("idCheminement",ch_id);
 			renvoiAAventure(request,response);
 		} else {
 			renvoiALaConnexion(request,response);
@@ -116,10 +115,10 @@ public class Servlet extends HttpServlet {
 		HttpSession session = request.getSession(false);
 		if (session!=null) {
 			int idCheminement = Integer.parseInt(request.getParameter("idCheminement"));
-			Cheminement ch = facade.getCheminement(idCheminement);
-			session.setAttribute("idAventure", ch.getAventure().getId());
-			session.setAttribute("nomAventure",ch.getAventure().getNom());
-			session.setAttribute("idCheminement",ch.getId());
+
+			session.setAttribute("idAventure", facade.getIdAventureCheminement(idCheminement));
+			session.setAttribute("nomAventure",facade.getNomAventureCheminement(idCheminement));
+			session.setAttribute("idCheminement",idCheminement);
 			renvoiAAventure(request,response);
 		} else {
 			renvoiALaConnexion(request,response);
@@ -234,9 +233,9 @@ public class Servlet extends HttpServlet {
 				String nomAventure = request.getParameter("nomAventure");
 			
 				List<String> textesOptions = Arrays.asList(request.getParameter("choixSuite"));
-				Aventure av = facade.ajouterAventure(nomAventure, texteSituation, textesOptions, idJoueur, id_jeu);
-				request.setAttribute("idAventure", av.getId());
-				session.setAttribute("idAventure", av.getId());
+				int av_id = facade.ajouterAventure(nomAventure, texteSituation, textesOptions, idJoueur, id_jeu);
+				request.setAttribute("idAventure", av_id);
+				session.setAttribute("idAventure", av_id);
 			}
 			nouveauCheminement(request,response);
 		} else {

@@ -12,10 +12,10 @@ public class Moderation {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	int id;
 	
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne
 	Utilisateur createur;
 	
-	@OneToMany(fetch = FetchType.EAGER)
+	@OneToMany
 	Collection<Vote> votes = new LinkedList<Vote>();
 	
 	Boolean validee;

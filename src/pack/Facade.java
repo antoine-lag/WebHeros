@@ -1,19 +1,24 @@
 package pack;
-
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.ejb.Singleton;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.GET;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+
+import com.github.cliftonlabs.json_simple.JsonArray;
+import com.github.cliftonlabs.json_simple.JsonObject;
 
 import pack.aux.GestionnaireCheminement;
 import pack.aux.InfoTableauBord;
@@ -37,41 +42,57 @@ public class Facade {
 		return avName;
 	}
 	
-	/*Fonctions à faire pour angular:
-	 * String getSituation(String idAventure, String idSituation) : 
-	 * renvoie la situation correspondant à l'ID sous forme JSON à partir de l'ID d'une aventure
-	 */
 	@GET
 	@Path("/getsituation")
 	//Recup parametres get
 	@Produces({ "application/json" })
-	public String getSituation() {
-		String idSituation = "1";
-		System.out.println("___________getSituation called__________: " + idSituation);
-		Situation s = em.find(Situation.class, Integer.parseInt(idSituation));
+	public String getSituation(@DefaultValue("-1") @QueryParam("idSituation") int idSituation) {
+		Situation s = em.find(Situation.class, idSituation);
 		
 		String situtationName;
-		String choicesList;
+		List<String>choicesList = new ArrayList<String>();
+		List<Integer>indChoicesList = new ArrayList<Integer>();
 		if(s == null) {
 			situtationName = "Situation not found";
-			choicesList = "[]";
 		}else {
 			//Getting situation name
 			situtationName =  s.getTexte();
 			
 			//Retrieving choices list
-			Collection<Choix> choix = s.getChoix();
-			choicesList = "[]";
+			choicesList = s.getChoix().stream().map(x->x.getString_texte()).collect(Collectors.toList());
+			indChoicesList = s.getChoix().stream().map(x->x.getId()).collect(Collectors.toList());
 		}
 		//Formatting to json
-		String sJsonData = "{\"text\": \"" + situtationName + "\","+
-							"\"choices\": [{\"id\": \"1\", \"text\":\"La réponse D\"}]}";
+		//Todo boolean pour chaque coix si doit etre cree
+		JsonObject envoi = new JsonObject();
+		envoi.put("situationName", situtationName);
+		JsonArray JchoicesList = new JsonArray();
+		JsonArray JindChoicesList = new JsonArray();
+		for(int i=0;i<choicesList.size();i++)
+		{
+			JchoicesList.add(choicesList.get(i));
+			JindChoicesList.add(indChoicesList.get(i));
+		}
+		envoi.put("choicesList", JchoicesList);
+		envoi.put("indChoicesList",JindChoicesList);
+		String sJsonData = envoi.toJson();
 		return sJsonData;
+	}
+	
+	@GET
+	@Path("/getsituationchoix")
+		@Produces({ "application/json" })
+	public String getSituationChoix(@DefaultValue("-1") @QueryParam("idChoix") int idChoix,
+			@DefaultValue("-1") @QueryParam("idJoueur") int idJoueur,
+			@DefaultValue("-1") @QueryParam("idAventure") int idAventure) {
+		Choix c = em.find(Choix.class, idChoix);
+		Situation s = c.getSituation();
+		visiter(idJoueur,s.getId(),idAventure,false);
+		return getSituation(s.getId());
 	}
 	//---------------------------------------------
 
 	
-	///___________________________________///
 	
 	//Initialise une instance de jeu
 	public Jeu initJeu()
@@ -186,7 +207,7 @@ public class Facade {
 		return source.getSituation() != null;
 	}
 	//Cree une aventure avec une unique situation et ses choix
-	public Aventure ajouterAventure(String nom, String texteSituation, List<String> textesChoix, int id_utilisateur,int id_jeu)
+	public int ajouterAventure(String nom, String texteSituation, List<String> textesChoix, int id_utilisateur,int id_jeu)
 	{
 		Aventure aventure = new Aventure();
 		aventure.setNom(nom);
@@ -195,7 +216,7 @@ public class Facade {
 		Jeu jeu = em.find(Jeu.class, id_jeu);
 		jeu.getAventure().add(aventure);
 		em.merge(aventure);
-		return aventure;
+		return aventure.getId();
 		
 	}
 	public Aventure getAventure(int id_aventure)
@@ -219,9 +240,9 @@ public class Facade {
 		return chem;
 		
 	}
-	public Cheminement nouveauCheminement(int id_joueur, int id_aventure)
+	public int nouveauCheminement(int id_joueur, int id_aventure)
 	{
-		return GestionnaireCheminement.nouveauCheminement(em, id_joueur, id_aventure);
+		return GestionnaireCheminement.nouveauCheminement(em, id_joueur, id_aventure).getId();
 		
 	}
 	public Cheminement getCheminement( int id_cheminement)
@@ -229,6 +250,17 @@ public class Facade {
 		return em.find(Cheminement.class, id_cheminement);
 		
 	}
+	public int getIdAventureCheminement( int id_cheminement)
+	{
+		return em.find(Cheminement.class, id_cheminement).getAventure().getId();
+		
+	}
+	public String getNomAventureCheminement( int id_cheminement)
+	{
+		return em.find(Cheminement.class, id_cheminement).getAventure().getNom();
+		
+	}
+	
 	///Votes ///
 	//Ajoute un vote du joueur sur la situation, et la valide si elle passe un certain score
 	public Vote voter(int id_joueur, int id_situation, int note)

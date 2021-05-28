@@ -13,7 +13,7 @@ public class Vote {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	int id;
 	
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne
 	Utilisateur votant;
 	
 	int score;

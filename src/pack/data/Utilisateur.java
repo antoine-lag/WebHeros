@@ -19,7 +19,7 @@ public class Utilisateur {
 	
 	String mdp;
 	
-	@OneToOne(fetch = FetchType.EAGER)
+	@OneToOne
 	StatistiqueUtilisateur statistiques;
 	
 	
@@ -31,10 +31,10 @@ public class Utilisateur {
 		this.statistiques = statistiques;
 	}
 
-	@OneToMany(fetch = FetchType.EAGER)
+	@OneToMany
 	Collection<Cheminement> cheminements = new LinkedList<Cheminement>();
 	
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "titulaire")
+	@OneToMany(mappedBy = "titulaire")
 	Collection<Accomplissement> accomplissements = new LinkedList<Accomplissement>();
 	
 	public Utilisateur() {}

@@ -11,13 +11,13 @@ public class Cheminement {
 	
 	boolean actif;
 	
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne
 	Situation position;
 	
-	@OneToMany(fetch = FetchType.EAGER)
+	@OneToMany
 	Collection<SituationClasse> parcours = new LinkedList<SituationClasse>();
 	
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne
 	Aventure aventure;
 	
 	public Cheminement() {}

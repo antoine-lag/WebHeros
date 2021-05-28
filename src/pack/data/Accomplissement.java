@@ -13,7 +13,7 @@ public class Accomplissement {
 	
 	String nom;
 	
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne
 	Utilisateur titulaire;
 	
 	

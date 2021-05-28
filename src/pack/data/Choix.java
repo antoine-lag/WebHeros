@@ -11,7 +11,7 @@ public class Choix {
 
 	String string_texte;
 	
-	@OneToOne(fetch = FetchType.EAGER)
+	@OneToOne
 	Situation situation;
 	
 	public Choix() {}

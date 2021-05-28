@@ -11,7 +11,7 @@ public class SituationClasse {
 	
 	int ordre;
 	
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne
 	Situation situation;
 	
 	public SituationClasse() {}

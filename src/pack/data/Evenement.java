@@ -16,7 +16,7 @@ public class Evenement {
 	
 	String type;
 	
-	@OneToMany(fetch = FetchType.EAGER)
+	@OneToMany
 	Collection<Utilisateur> participants = new LinkedList<Utilisateur>();
 		
 	public Evenement() {}

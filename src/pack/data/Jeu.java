@@ -10,13 +10,13 @@ public class Jeu {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	int id;
 	
-	@OneToMany(fetch = FetchType.EAGER)
+	@OneToMany
 	Collection<Utilisateur> utilisateurs = new LinkedList<Utilisateur>();
 	
-	@OneToMany(fetch = FetchType.EAGER)
+	@OneToMany
 	Collection<Aventure> aventure = new LinkedList<Aventure>();
 
-	@OneToMany(fetch = FetchType.EAGER)
+	@OneToMany
 	Collection<Evenement> evenement = new LinkedList<Evenement>();
 	
 	public Jeu() {}
