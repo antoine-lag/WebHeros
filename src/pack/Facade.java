@@ -132,6 +132,7 @@ public class Facade {
 		tableau.setDatesAccomplissements(datesAccomplissements);
 		tableau.setTextesAccomplissements(textesAccomplissements);
 		tableau.setStats(utilisateur.getStatistiques());
+		tableau.setPremium(utilisateur.getPremium());
 		return tableau;
 	}
 	//Ajoute une situation et sa modération vide, ses options de choix ,puis ajoute cette situation a l'aventure
@@ -316,6 +317,10 @@ public class Facade {
 	public boolean estPremium(int id_joueur)
 	{
 		return em.find(Utilisateur.class, id_joueur).getPremium();
+	}
+	public void setPremium(int id_joueur)
+	{
+		em.find(Utilisateur.class, id_joueur).setPremium(true);
 	}
 	
 	//Indique si une situation est validee et peut etre poursuivie

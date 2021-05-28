@@ -67,13 +67,11 @@ public class Servlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		if (request.getParameter("mode").equals("initAjoutSituation")) {
 			initAjoutSituation(request,response);
-		}else if (request.getParameter("mode").equals("aventureJsp")) {
-			request.setAttribute("userId", 1);
-			request.setAttribute("aventureId", 1);
-			request.setAttribute("aventureName", "Here goes the aventure name");
-			request.getRequestDispatcher("Aventure.jsp").forward(request, response);
-		} else if (request.getParameter("mode").equals("accueil")) {
+		}else if (request.getParameter("mode").equals("accueil")) {
 			choixAventureFait(request,response);
+		}
+		else if (request.getParameter("mode").equals("goPayerPremium")) {
+			renvoiAPremium(request,response);
 		}
 	}
 
@@ -159,6 +157,8 @@ public class Servlet extends HttpServlet {
 			postSituation(request,response);
 		}else if (request.getParameter("mode").equals("ajoutAventure")) {
 			postAventure(request,response);
+		}else if (request.getParameter("mode").equals("payerPremium")) {
+			postPremium(request,response);
 		}
 	}
 	//Connecte le joueur
@@ -242,6 +242,25 @@ public class Servlet extends HttpServlet {
 			renvoiALaConnexion(request,response);
 		}
 	}
+	public void postPremium(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	{
+		HttpSession session = request.getSession(false);
+		if(session != null) {
+			int id_jeu = (int)(session.getAttribute("idJeu"));
+			int idJoueur = (int)(session.getAttribute("idJoueur"));
+			if(!facade.estPremium(idJoueur)) {
+				String certif = request.getParameter("certificat");
+				if(certif.equals("vywLyucHFnNecn49"))
+				{
+					facade.setPremium(idJoueur);
+					session.setAttribute("premium", facade.estPremium(idJoueur));
+				}
+			}
+			renvoyerVersTableauBord(request,response,id_jeu);
+		} else {
+			renvoiALaConnexion(request,response);
+		}
+	}
 	//Renvoie vers le tableau de bord
 	public void renvoyerVersTableauBord(HttpServletRequest request, HttpServletResponse response, int id_jeu) throws ServletException, IOException
 	{
@@ -258,6 +277,7 @@ public class Servlet extends HttpServlet {
 		int idJ = facade.getIDJoueur(pseudo, id_jeu);
 		session.setAttribute("idJoueur", idJ);
 		session.setAttribute("pseudoJoueur", pseudo);
+		session.setAttribute("premium", facade.estPremium(idJ));
 		renvoyerVersTableauBord(request,response, id_jeu);
 	}
 	
@@ -284,6 +304,11 @@ public class Servlet extends HttpServlet {
 	public void renvoiAAjoutSituation(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 		RequestDispatcher disp = request.getRequestDispatcher("AjoutSituation.jsp");
+		disp.forward(request, response);
+	}
+	public void renvoiAPremium(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	{
+		RequestDispatcher disp = request.getRequestDispatcher("payerPremium.html");
 		disp.forward(request, response);
 	}
 }

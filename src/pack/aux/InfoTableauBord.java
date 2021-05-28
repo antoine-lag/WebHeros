@@ -11,6 +11,21 @@ public class InfoTableauBord implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	StatistiqueUtilisateur stats;
+	Boolean premium;
+	List<String> datesAccomplissements;
+	List<String> textesCheminements;
+	List<String> textesCompletsCheminements;
+	List<Boolean> isActiveCheminements;
+	List<String> nomsAventures ;
+	List<Integer> idsAventures;
+	List<Integer> idsCheminements;
+	List<String> textesAccomplissements;
+	public Boolean getPremium() {
+		return premium;
+	}
+	public void setPremium(Boolean premium) {
+		this.premium = premium;
+	}
 	public StatistiqueUtilisateur getStats() {
 		return stats;
 	}
@@ -29,10 +44,7 @@ public class InfoTableauBord implements Serializable{
 	public void setIdsAventures(List<Integer> idsAventures) {
 		this.idsAventures = idsAventures;
 	}
-	List<String> nomsAventures ;
-	List<Integer> idsAventures;
-	List<Integer> idsCheminements;
-	List<String> textesAccomplissements;
+
 	public List<String> getTextesAccomplissements() {
 		return textesAccomplissements;
 	}
@@ -45,10 +57,7 @@ public class InfoTableauBord implements Serializable{
 	public void setDatesAccomplissements(List<String> datesAccomplissements) {
 		this.datesAccomplissements = datesAccomplissements;
 	}
-	List<String> datesAccomplissements;
-	List<String> textesCheminements;
-	List<String> textesCompletsCheminements;
-	List<Boolean> isActiveCheminements;
+
 	public List<String> getTextesCompletsCheminements() {
 		return textesCompletsCheminements;
 	}
