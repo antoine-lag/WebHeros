@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import javax.persistence.EntityManager;
 
+import pack.aux.GestionnaireAchivement.TypeAction;
 import pack.data.Aventure;
 import pack.data.Cheminement;
 import pack.data.Choix;
@@ -129,6 +130,8 @@ public class GestionnaireCheminement {
 		cheminement.getParcours().add(sc);
 		utilisateur.getStatistiques().setNbSituationsVisitees(utilisateur.getStatistiques().getNbSituationsVisitees()+1);
 		utilisateur.getStatistiques().setNbAventuresCommencees(utilisateur.getStatistiques().getNbAventuresCommencees()+1);
+		GestionnaireAchivement.testRecompense(em, id_joueur, TypeAction.VISITE);
+		GestionnaireAchivement.testRecompense(em, id_joueur, TypeAction.CREATION);
 		return cheminement;
 	}
 	public static Cheminement etendreCheminement(EntityManager em,int idChem, int id_joueur, int id_situation)
@@ -143,6 +146,7 @@ public class GestionnaireCheminement {
 		em.persist(sc);
 		cheminement.getParcours().add(sc);
 		utilisateur.getStatistiques().setNbSituationsVisitees(utilisateur.getStatistiques().getNbSituationsVisitees()+1);
+		GestionnaireAchivement.testRecompense(em, id_joueur, TypeAction.VISITE);
 		return cheminement;
 	}
 	

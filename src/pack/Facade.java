@@ -20,8 +20,10 @@ import javax.ws.rs.QueryParam;
 import com.github.cliftonlabs.json_simple.JsonArray;
 import com.github.cliftonlabs.json_simple.JsonObject;
 
+import pack.aux.GestionnaireAchivement;
 import pack.aux.GestionnaireCheminement;
 import pack.aux.InfoTableauBord;
+import pack.aux.GestionnaireAchivement.TypeAction;
 import pack.data.*;
 
 @Singleton
@@ -48,40 +50,32 @@ public class Facade {
 	@Produces({ "application/json" })
 	public String getSituation(@DefaultValue("-1") @QueryParam("idSituation") int idSituation) {
 		Situation s = em.find(Situation.class, idSituation);
-		
 		String situtationName;
-		List<String>choicesList = new ArrayList<String>();
-		List<Integer>indChoicesList = new ArrayList<Integer>();
-		if(s == null) {
-			situtationName = "Situation not found";
-		}else {
-			//Getting situation name
-			situtationName =  s.getTexte();
-			
-			//Retrieving choices list
-			choicesList = s.getChoix().stream().map(x->x.getString_texte()).collect(Collectors.toList());
-			indChoicesList = s.getChoix().stream().map(x->x.getId()).collect(Collectors.toList());
-		}
-		//Formatting to json
-		//Todo boolean pour chaque coix si doit etre cree
+		List<Choix>choicesList = new ArrayList<Choix>();
+		//Getting situation name
+		situtationName =  s.getTexte();
+		
+		//Retrieving choices list
+		choicesList = new ArrayList<>(s.getChoix());
 		JsonObject envoi = new JsonObject();
 		envoi.put("situationName", situtationName);
 		JsonArray JchoicesList = new JsonArray();
-		JsonArray JindChoicesList = new JsonArray();
-		for(int i=0;i<choicesList.size();i++)
+		for(Choix c:choicesList)
 		{
-			JchoicesList.add(choicesList.get(i));
-			JindChoicesList.add(indChoicesList.get(i));
+			JsonObject ch = new JsonObject();
+			ch.put("text", c.getString_texte());
+			ch.put("id",c.getId());
+			ch.put("situationExiste",!situationDoitEtreCree(c.getId()));
+			JchoicesList.add(ch);
 		}
 		envoi.put("choicesList", JchoicesList);
-		envoi.put("indChoicesList",JindChoicesList);
 		String sJsonData = envoi.toJson();
 		return sJsonData;
 	}
 	
 	@GET
 	@Path("/getsituationchoix")
-		@Produces({ "application/json" })
+	@Produces({"application/json"})
 	public String getSituationChoix(@DefaultValue("-1") @QueryParam("idChoix") int idChoix,
 			@DefaultValue("-1") @QueryParam("idJoueur") int idJoueur,
 			@DefaultValue("-1") @QueryParam("idAventure") int idAventure) {
@@ -204,7 +198,7 @@ public class Facade {
 	public boolean situationDoitEtreCree(int id_choix)
 	{
 		Choix source = em.find(Choix.class, id_choix);
-		return source.getSituation() != null;
+		return source.getSituation() == null;
 	}
 	//Cree une aventure avec une unique situation et ses choix
 	public int ajouterAventure(String nom, String texteSituation, List<String> textesChoix, int id_utilisateur,int id_jeu)
@@ -267,13 +261,7 @@ public class Facade {
 	{
 		int scoreValidation = 3;
 		Utilisateur joueur = em.find(Utilisateur.class, id_joueur);
-		if(note>0)
-		{
-			joueur.getStatistiques().setNbVotesPositifs(joueur.getStatistiques().getNbVotesPositifs()+1);
-		}else if(note<0)
-		{
-			joueur.getStatistiques().setNbVotesNegatifs(joueur.getStatistiques().getNbVotesNegatifs()+1);
-		}
+
 		joueur.getStatistiques().setNbVotes(joueur.getStatistiques().getNbVotes()+1);
 		Situation sit = em.find(Situation.class, id_situation);
 		Vote vote = new Vote();
@@ -283,6 +271,13 @@ public class Facade {
 		Moderation mod = sit.getModeration();
 		if(!aVote(joueur.getId(),mod))
 		{
+			if(note>0)
+			{
+				joueur.getStatistiques().setNbVotesPositifs(joueur.getStatistiques().getNbVotesPositifs()+1);
+			}else if(note<0)
+			{
+				joueur.getStatistiques().setNbVotesNegatifs(joueur.getStatistiques().getNbVotesNegatifs()+1);
+			}
 			mod.getVotes().add(vote);
 			if((!mod.getValidee()) && calculerScore(mod.getId())>scoreValidation)
 			{
@@ -295,7 +290,10 @@ public class Facade {
 					.getVotesTotalRecus()+note);
 			mod.getCreateur().getStatistiques().setNbVotesRecus(mod.getCreateur().getStatistiques()
 					.getNbVotesRecus()+1);
+			GestionnaireAchivement.testRecompense(em, id_joueur, TypeAction.VOTE);
+			GestionnaireAchivement.testRecompense(em, mod.getCreateur().getId(), TypeAction.MODERATION);
 		}
+		
 		return vote;
 	}
 	//Calcule le score associe a une moderation
@@ -431,30 +429,8 @@ public class Facade {
         return hexString.toString();
     }
 	
-	public boolean doitCreerNouvelleSituation(int id_choix)
-	{
-		Choix cx = em.find(Choix.class, id_choix);
-		return cx.getSituation() == null;
-	}
-	//Donne une recompense a un utilisateur
-	public void distribuerRecompense(int id_utilisateur, String type)
-	{
-		
-		Utilisateur utilisateur = em.find(Utilisateur.class, id_utilisateur);
-		
-		if(!utilisateur.getAccomplissements().stream().anyMatch(a->a.getNom().equals(type)))
-		{
-			Accomplissement accomplissement = new Accomplissement();
-			em.persist(accomplissement);
-			accomplissement.setNom(type);
-			accomplissement.setTitulaire(utilisateur);
-			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");  
-		    Date date = new Date();
-			accomplissement.setDate(formatter.format(date));
-			utilisateur.getStatistiques().setNbAccomplissementsRecus(utilisateur.getStatistiques().getNbAccomplissementsRecus()+1);
-		}
-		
-	}
+
+
 
 
 }
