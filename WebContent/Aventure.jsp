@@ -7,6 +7,7 @@
 
 <head>
 	<meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" href="aventure.css"/>
 	<title>Aventure</title>
 </head>
 <body>
@@ -17,7 +18,7 @@
 		<div ng-show="showChoicesList">
 			<ul>
 				<li ng-repeat="c in choicesList">
-					<button id="btn1" ng-click="doChoice(c.id)">{{c.text}}</button>
+					<button id="btn1" ng-click="doChoice(c)">{{c.text}}</button>
 				</li>
 			</ul>
 		</div>
@@ -54,6 +55,21 @@
 //- set restriction for voting depending on the user logged in
 //PROBLEMES
 //PB1 - Faire un GET + POST simultané
+import { NgModule }             from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+
+const routes: Route = [
+	  { path: 'ajoutSituation', redirectTo: '/AjoutSituation.html', pathMatch: 'full' },
+];
+///redirectTo : Servlet?mode=initAjoutSituation&idChoix=1
+@NgModule({
+	  imports: [ RouterModule.forRoot(routes) ],
+	  exports: [ RouterModule ]
+})
+
+export class AppRoutingModule {
+  constructor(private router: Router)
+}
 
 function initVars(scope) {
 	//scope.situation = new Object();//Not sure
@@ -61,7 +77,6 @@ function initVars(scope) {
 	scope.message = "___";
 	scope.aventureName = "<%= (String) request.getSession(false).getAttribute("nomAventure") %>"
 	scope.situationText = "";
-	scope.situationId = "1";
 	scope.aventureId = "<%= String.valueOf(request.getSession(false).getAttribute("idAventure")) %>";
 	scope.userId = "<%= String.valueOf(request.getSession(false).getAttribute("idJoueur")) %>";
 	//scope.cheminementId = "<%= String.valueOf(request.getSession(false).getAttribute("idCheminement")) %>";
@@ -75,11 +90,14 @@ function initView(scope) {
 	scope.showMessage = false;
 }
 
-//
+//Retrieve the situation data (id+text+choices) determined by the situation's ID
+//OK
 function getSituation(idSituation, scope, http){
 	http.get("rest/getsituation?idSituation="+idSituation).then(function(response) {
 		if (response.status == 200) {
-			console.log("data : " + response.data);
+			console.log("Situation " + idSituation + " loaded successfuly !");
+			console.log(response.data);
+			//Refresh page with new data
 			scope.situationText = response.data.text;
 			scope.showSituationText = true;
 			scope.choicesList = response.data.choicesList;
@@ -92,22 +110,35 @@ function getSituation(idSituation, scope, http){
 }
 
 //Retrieve the situation data (id + text + choices text,id) associated with the choice ID made
-function selectChoice(idChoice, scope, http) {
-	initView(scope);
-	console.log("Choice = "+idChoice+" selected =)");
-	//Envoyer requette http get pour modifier avoir l'id de la situation correspondante et appel getSituation
-	http.get("rest/getsituationchoix?idChoix="+idChoice+
-									"&idJoueur="+scope.userId+
-									"&idAventure="+scope.aventureId).then(function(response) {
+function selectChoice(choice, scope, http) {
+	let idChoice = choice.id;
+	let situationExist = choice.situationExiste;
+	
+	console.log("Choice "+idChoice+" selected !");
+	//If choice has no situation following (is a leaf of the tree) : redirect to addSituation page
+	
+	if(situationExist == "true"){//if situation associated with this choice exist : request it to server
+		http.get("rest/getsituationchoix?idChoix="+idChoice+
+				"&idJoueur="+scope.userId+
+				"&idAventure="+scope.aventureId).then(function(response) {
 		if (response.status == 200) {
-			scope.showSituationText = false;
-			scope.showChoicesList = false;
-			scope.situationId = response.data.situationId;
+			console.log("Situation " + idSituation + " loaded successfuly from choice selected !!");
+			console.log(response.data);
+			//Display new data retrieved from server
+			scope.situationText = response.data.text;
+			scope.showSituationText = true;
+			scope.choicesList = response.data.choicesList;
+			scope.showChoicesList = true;
 		} else {
 			scope.message = "Failed to get situation Id from choice Id";
 			scope.showMessage = true;
-		}
-	});
+			}
+		});
+	}else{//redirect to ajoutSituation page
+		console.log("Choice selected is a leaf ! Redirecting...");
+		
+		router.navigate(['/ajoutSituation']);
+	}
 }
 
 
