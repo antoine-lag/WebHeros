@@ -49,6 +49,9 @@ public class Facade {
 	//Recup parametres get
 	@Produces({ "application/json" })
 	public String getSituation(@DefaultValue("-1") @QueryParam("idSituation") int idSituation) {
+		System.out.println("\n\n\n\n################ rest/getsituation called###############");
+		System.out.println("idSituation = " + idSituation);
+		
 		Situation s = em.find(Situation.class, idSituation);
 		String situtationName;
 		List<Choix>choicesList = new ArrayList<Choix>();
@@ -79,13 +82,15 @@ public class Facade {
 	public String getSituationChoix(@DefaultValue("-1") @QueryParam("idChoix") int idChoix,
 			@DefaultValue("-1") @QueryParam("idJoueur") int idJoueur,
 			@DefaultValue("-1") @QueryParam("idAventure") int idAventure) {
+		System.out.println("\n\n\n\n################ rest/getsituationchoix called###############");
+		System.out.println("idChoix = " + idChoix);
+		System.out.println("idJoueur = " + idJoueur);
+		System.out.println("idAventure = " + idAventure);
 		Choix c = em.find(Choix.class, idChoix);
 		Situation s = c.getSituation();
 		visiter(idJoueur,s.getId(),idAventure,false);
 		return getSituation(s.getId());
 	}
-	//---------------------------------------------
-
 	
 	
 	//Initialise une instance de jeu

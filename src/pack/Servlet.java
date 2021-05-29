@@ -54,7 +54,7 @@ public class Servlet extends HttpServlet {
     	 */
     	jeuPrincipal = facade.initJeu();
     	id_jeu = jeuPrincipal.getId();
-    	bob = facade.ajouterUtilisateur("Bob", "boby@neutronMail.com", id_jeu, "d0d95333b78031a3abe404609bd9af42a2bd22e6b6ab812465710acb90b6b138");//Hash of "mdp"
+    	bob = facade.ajouterUtilisateur("boby", "boby@neutronMail.com", id_jeu, "3500c7baadd59b7db297fc1328d3b9a3a3606198a53e966deba7b91b761fd22d");//Hash of "boby" + "mdp"
     	List<String> choix = Arrays.asList("Vous sortez du chateau.", "Vous allez dans la cave.", "Vous allez dans la tour pour voir l'extérieur.");
 		aventureChateauHante = facade.ajouterAventure("Creepy castle", "Tout commence dans le chateau du Duc de Normandie...", choix, bob.getId(), id_jeu);
 		System.out.println("\nID aventure: "+aventureChateauHante);
@@ -72,6 +72,15 @@ public class Servlet extends HttpServlet {
 		}
 		else if (request.getParameter("mode").equals("goPayerPremium")) {
 			renvoiAPremium(request,response);
+		}
+		//CECI EST UN TEST
+		else if(request.getParameter("mode").equals("aventure")) {
+			request.getSession(true).setAttribute("nomAventure", "Crash test !!");
+			request.getSession(false).setAttribute("idAventure", 1);
+			request.getSession(false).setAttribute("idJoueur", 1);
+			request.getSession(false).setAttribute("idCheminement", 1);
+			RequestDispatcher disp = request.getRequestDispatcher("Aventure.jsp");
+			disp.forward(request, response);
 		}
 	}
 

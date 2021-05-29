@@ -17,7 +17,7 @@
 		<div ng-show="showChoicesList">
 			<ul>
 				<li ng-repeat="c in choicesList">
-					<button id="btn1" ng-click="doChoice({{c.id}})">{{c.text}}</button>
+					<button id="btn1" ng-click="doChoice(c.id)">{{c.text}}</button>
 				</li>
 			</ul>
 		</div>
@@ -75,14 +75,15 @@ function initView(scope) {
 	scope.showMessage = false;
 }
 
+//
 function getSituation(idSituation, scope, http){
 	http.get("rest/getsituation?idSituation="+idSituation).then(function(response) {
 		if (response.status == 200) {
+			console.log("data : " + response.data);
 			scope.situationText = response.data.text;
 			scope.showSituationText = true;
-			scope.choicesList = response.data.choices;
+			scope.choicesList = response.data.choicesList;
 			scope.showChoicesList = true;
-			//String sJsonData = "{\"text\": \"" + situtationName + "\","+"\"choices\": [{\"id\": \"1\", \"text\":\"La réponse D\"}]}";
 		} else {
 			scope.message = "Failed to get situation data from situation Id";
 			scope.showMessage = true;
@@ -90,11 +91,14 @@ function getSituation(idSituation, scope, http){
 	});
 }
 
+//Retrieve the situation data (id + text + choices text,id) associated with the choice ID made
 function selectChoice(idChoice, scope, http) {
 	initView(scope);
 	console.log("Choice = "+idChoice+" selected =)");
 	//Envoyer requette http get pour modifier avoir l'id de la situation correspondante et appel getSituation
-	http.get("rest/selectchoice?idChoice"+idChoice).then(function(response) {
+	http.get("rest/getsituationchoix?idChoix="+idChoice+
+									"&idJoueur="+scope.userId+
+									"&idAventure="+scope.aventureId).then(function(response) {
 		if (response.status == 200) {
 			scope.showSituationText = false;
 			scope.showChoicesList = false;
