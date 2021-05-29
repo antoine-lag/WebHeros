@@ -3,27 +3,24 @@
 <%@ page import="pack.aux.*" %>
 <%@ page import="java.util.List" %>
 <!DOCTYPE html>
-<%! int i; %>
-<%! List<Integer> listeIdAventure; %>
-<%! List<String> listeNomAventure; %>
 <html>
 	<head>
 		<meta charset="UTF-8">
 		<link rel="stylesheet" type="text/css" href="commencer_aventure.css"/>
-		<title>Commencer Aventure</title>
+		<title>Commencer une aventure</title>
 	</head>
 	<body>
-		<h1>Mon tableau de Bord</h1>
+		<%InfoTableauBord infos = (InfoTableauBord) request.getSession().getAttribute("infoTableauBord");%>
+		<%List<Integer> listeIdAventure = infos.getIdsAventures();%>
+		<%List<String> listeNomAventure = infos.getNomsAventures();%>
+		<h1>Démarrer une aventure :</h1>
 		<form action="Servlet" method="get">
-			<h4>Démarrer une aventure :</h4>
-			<input type="hidden" name="mode" value = "idAventure">	
-			<%InfoTableauBord infos = (InfoTableauBord) request.getSession().getAttribute("infoTableauBord");%>
-			<% listeIdAventure = infos.getIdsAventures();%>
-			<% listeNomAventure = infos.getNomsAventures();%>
-			<%for (i=0; i<listeIdAventure.size(); i++) {%>
-				<p><%=listeNomAventure.get(i)%> <input type="radio" name="aventure" value="<%=listeIdAventure.get(i)%>"/><p/>
+			<input type="hidden" name="mode" value = "accueil">	
+			<%for (int i=0; i<listeIdAventure.size(); i++) {%>
+				<p><%=listeNomAventure.get(i)%> <input type="radio" name="idAventure" value="<%=listeIdAventure.get(i)%>"/><p/>
 			<%}%>
-			<input type="submit" value="C'est parti !"/>
+			<input type="submit" value="C'est parti!"/>
 		</form>
+		<a href="accueil.jsp">Retour a l'accueil</a>
 	</body>
 </html>

@@ -140,7 +140,7 @@ public class Servlet extends HttpServlet {
 	{
 		HttpSession session = request.getSession(false);
 		if(session != null) {
-		renvoiAAjoutAventure(request,response);
+			renvoiAAjoutAventure(request,response);
 		} else {
 			renvoiALaConnexion(request,response);
 		}
@@ -267,7 +267,7 @@ public class Servlet extends HttpServlet {
 		HttpSession session = request.getSession(false);
 		int idJoueur = (int)session.getAttribute("idJoueur" );
 		session.setAttribute("infoTableauBord", facade.getInfoTableauBord(id_jeu,idJoueur));
-		RequestDispatcher disp = request.getRequestDispatcher("accueil.html");
+		RequestDispatcher disp = request.getRequestDispatcher("accueil.jsp");
 		disp.forward(request, response);
 	}
 	public void connexionOuInsriptionReussie(HttpServletRequest request, HttpServletResponse response, int id_jeu, String pseudo) throws ServletException, IOException
