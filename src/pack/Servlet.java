@@ -98,7 +98,7 @@ public class Servlet extends HttpServlet {
 	{
 		HttpSession session = request.getSession(false);
 		if (session!=null) {
-			int idAventure = Integer.parseInt(request.getParameter("idAventure"));
+			int idAventure = (int) session.getAttribute("idAventure");
 			int ch_id = facade.nouveauCheminement((int)session.getAttribute("idJoueur"), idAventure);
 			session.setAttribute("idAventure", idAventure);
 			session.setAttribute("nomAventure",facade.getAventureName(idAventure));
@@ -234,10 +234,11 @@ public class Servlet extends HttpServlet {
 			
 				List<String> textesOptions = Arrays.asList(request.getParameter("choixSuite"));
 				int av_id = facade.ajouterAventure(nomAventure, texteSituation, textesOptions, idJoueur, id_jeu);
-				request.setAttribute("idAventure", av_id);
 				session.setAttribute("idAventure", av_id);
+				nouveauCheminement(request,response);				
+			} else {
+				renvoyerVersTableauBord(request, response, id_jeu);
 			}
-			nouveauCheminement(request,response);
 		} else {
 			renvoiALaConnexion(request,response);
 		}
@@ -278,6 +279,7 @@ public class Servlet extends HttpServlet {
 		session.setAttribute("idJoueur", idJ);
 		session.setAttribute("pseudoJoueur", pseudo);
 		session.setAttribute("premium", facade.estPremium(idJ));
+		session.setAttribute("idJeu", id_jeu);
 		renvoyerVersTableauBord(request,response, id_jeu);
 	}
 	
@@ -298,12 +300,12 @@ public class Servlet extends HttpServlet {
 	}
 	public void renvoiAAjoutAventure(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
-		RequestDispatcher disp = request.getRequestDispatcher("AjoutAventure.jsp");
+		RequestDispatcher disp = request.getRequestDispatcher("AjoutAventure.html");
 		disp.forward(request, response);
 	}
 	public void renvoiAAjoutSituation(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
-		RequestDispatcher disp = request.getRequestDispatcher("AjoutSituation.jsp");
+		RequestDispatcher disp = request.getRequestDispatcher("AjoutSituation.html");
 		disp.forward(request, response);
 	}
 	public void renvoiAPremium(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException

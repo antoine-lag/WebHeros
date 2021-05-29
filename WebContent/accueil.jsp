@@ -16,9 +16,10 @@
 		<%if (!infos.getPremium()) {%>
 			<p><a href="payerPremium.html">Devenir PREMIUM!!!</a></p>
 		<%} else {%>
-			<form>
+			<form action="Servlet" method="get">
 				<input type="hidden" name="mode" value="accueil"/>
-				<input type="submit" name="creationAventure" value="true"/>
+				<input type="hidden" name="creationAventure" value="true"/>				
+				<input type="submit" value="Creer aventure"/>
 			</form>
 		<%}%>
 	</body>
