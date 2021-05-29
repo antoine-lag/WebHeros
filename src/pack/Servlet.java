@@ -91,6 +91,8 @@ public class Servlet extends HttpServlet {
 		if (session!=null) {
 			if(request.getParameter("idAventure") != null)
 			{
+				int id_aventure = Integer.parseInt(request.getParameter("idAventure"));
+				session.setAttribute("idAventure", id_aventure);
 				nouveauCheminement(request,response);
 			}else if(request.getParameter("idCheminement") != null)
 			{
