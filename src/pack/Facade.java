@@ -47,6 +47,7 @@ public class Facade {
 	@GET
 	@Path("/getsituation")
 	//Recup parametres get
+	//angular routes : <script src=https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0rc1/angular-route.min.js></script>
 	@Produces({ "application/json" })
 	public String getSituation(@DefaultValue("-1") @QueryParam("idSituation") int idSituation) {
 		System.out.println("\n\n\n\n################ rest/getsituation called###############");

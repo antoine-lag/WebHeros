@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
-
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-route.js"></script>
 <head>
 	<meta charset="UTF-8">
 	<link rel="stylesheet" type="text/css" href="aventure.css"/>
@@ -14,6 +14,12 @@
 	<div ng-app="webHerosApp" ng-controller="webHerosCtrl"> 
 		<a href="index.html">Accueil</a>
 		<h1>Vous naviguez dans l'aventure {{aventureName}}</h1>
+		<br>
+		
+		<div ng-show="showSituationText">
+			<h3>{{situationText}}</h3>
+		</div>
+		<br>
 		
 		<div ng-show="showChoicesList">
 			<ul>
@@ -22,24 +28,13 @@
 				</li>
 			</ul>
 		</div>
-		
-		<div ng-show="showSituationText">
-			<h3>{{situationText}}</h3>
-		</div>
-		<br>
-		
-		
 		<br>
 		
 		<div ng-show="showVoteButtons">
 			<button ng-click="doVote('up')">Up Vote</button>
 			<button ng-click="doVote('down')">Down vote</button>
 		</div>
-		
-		<div ng-show="showAddSituation">
-			<a href="AjoutSitutation.html">Ajouter une situation</a>
-		</div>
-		
+		<br>
 		
 		<div ng-show="showMessage">
 			{{message}}
@@ -54,33 +49,18 @@
 //- Set up vote buttons.
 //- set restriction for voting depending on the user logged in
 //PROBLEMES
-//PB1 - Faire un GET + POST simultané
-import { NgModule }             from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+//
 
-const routes: Route = [
-	  { path: 'ajoutSituation', redirectTo: '/AjoutSituation.html', pathMatch: 'full' },
-];
-///redirectTo : Servlet?mode=initAjoutSituation&idChoix=1
-@NgModule({
-	  imports: [ RouterModule.forRoot(routes) ],
-	  exports: [ RouterModule ]
-})
-
-export class AppRoutingModule {
-  constructor(private router: Router)
-}
 
 function initVars(scope) {
-	//scope.situation = new Object();//Not sure
-	//scope.user = new Object();
 	scope.message = "___";
 	scope.aventureName = "<%= (String) request.getSession(false).getAttribute("nomAventure") %>"
 	scope.situationText = "";
 	scope.aventureId = "<%= String.valueOf(request.getSession(false).getAttribute("idAventure")) %>";
 	scope.userId = "<%= String.valueOf(request.getSession(false).getAttribute("idJoueur")) %>";
 	//scope.cheminementId = "<%= String.valueOf(request.getSession(false).getAttribute("idCheminement")) %>";
-	scope.choicesList = [{"id": "1", "text": "choix1"}, {"id": "2", "text": "choix2"}];
+	scope.choicesList = [];
+	scope.lastChoiceId = "1";
 }
 function initView(scope) {
 	scope.showSituationText = false;
@@ -98,7 +78,7 @@ function getSituation(idSituation, scope, http){
 			console.log("Situation " + idSituation + " loaded successfuly !");
 			console.log(response.data);
 			//Refresh page with new data
-			scope.situationText = response.data.text;
+			scope.situationText = response.data.situationName;
 			scope.showSituationText = true;
 			scope.choicesList = response.data.choicesList;
 			scope.showChoicesList = true;
@@ -110,19 +90,21 @@ function getSituation(idSituation, scope, http){
 }
 
 //Retrieve the situation data (id + text + choices text,id) associated with the choice ID made
-function selectChoice(choice, scope, http) {
+function selectChoice(choice, scope, http, location) {
 	let idChoice = choice.id;
+	scope.lastChoiceId = idChoice;
 	let situationExist = choice.situationExiste;
 	
-	console.log("Choice "+idChoice+" selected !");
+	console.log("Choice "+idChoice+" selected ! Situation exist ? : " + situationExist);
 	//If choice has no situation following (is a leaf of the tree) : redirect to addSituation page
 	
-	if(situationExist == "true"){//if situation associated with this choice exist : request it to server
+	if(situationExist){//if situation associated with this choice exist : request it to server
+		//DEBUG HERE
 		http.get("rest/getsituationchoix?idChoix="+idChoice+
 				"&idJoueur="+scope.userId+
 				"&idAventure="+scope.aventureId).then(function(response) {
 		if (response.status == 200) {
-			console.log("Situation " + idSituation + " loaded successfuly from choice selected !!");
+			console.log("Situation loaded successfuly from choice " + idChoice);
 			console.log(response.data);
 			//Display new data retrieved from server
 			scope.situationText = response.data.text;
@@ -136,8 +118,7 @@ function selectChoice(choice, scope, http) {
 		});
 	}else{//redirect to ajoutSituation page
 		console.log("Choice selected is a leaf ! Redirecting...");
-		
-		router.navigate(['/ajoutSituation']);
+		//window.location.href = 'Servlet?mode=initAjoutSituation&idChoix=' + scope.lastChoiceId;
 	}
 }
 
@@ -162,6 +143,7 @@ app.controller('webHerosCtrl', function($scope,$http) {
     $scope.doChoice=function(idChoice) {selectChoice(idChoice,$scope,$http);}
     $scope.doVote=function(action) {vote(action, $scope, $http);}
 });
+
 	
 </script>
 </body>

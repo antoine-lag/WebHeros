@@ -57,6 +57,10 @@ public class Servlet extends HttpServlet {
     	bob = facade.ajouterUtilisateur("boby", "boby@neutronMail.com", id_jeu, "3500c7baadd59b7db297fc1328d3b9a3a3606198a53e966deba7b91b761fd22d");//Hash of "boby" + "mdp"
     	List<String> choix = Arrays.asList("Vous sortez du chateau.", "Vous allez dans la cave.", "Vous allez dans la tour pour voir l'extérieur.");
 		aventureChateauHante = facade.ajouterAventure("Creepy castle", "Tout commence dans le chateau du Duc de Normandie...", choix, bob.getId(), id_jeu);
+		facade.affilierSituationFille(1, "Après être sorti du chateau vous vous rendez compte que vous avez oublié votre lampe torche dans la chambre du 5 ème étage.", 
+				Arrays.asList("Vous re rentrez dans le chateau.", "Vous continuez sans lampe torche.", "Vous tapez une sieste."),
+				bob.getId(), aventureChateauHante);
+		
 		System.out.println("\nID aventure: "+aventureChateauHante);
 		System.out.println("\nServlet initialised !");
     }
@@ -224,7 +228,8 @@ public class Servlet extends HttpServlet {
 			int idChoixSoure = (int)(session.getAttribute("idChoixSource"));
 			
 			String texteSituation = request.getParameter("texteSituation");
-		
+			System.out.println("############NEW SITUTATION###### : " + id_jeu + ", " + 
+					idJoueur + ", " + idAventure + ", " + idChoixSoure);
 			List<String> textesOptions = Arrays.asList(request.getParameter("choixSuite"));
 			facade.affilierSituationFille(idChoixSoure, texteSituation, textesOptions, idJoueur, idAventure);
 	
