@@ -68,7 +68,8 @@ public class Facade {
 	//Recup parametres get
 	//angular routes : <script src=https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0rc1/angular-route.min.js></script>
 	@Produces({ "application/json" })
-	public String getSituation(@DefaultValue("-1") @QueryParam("idSituation") int idSituation) {
+	public String getSituation(@DefaultValue("-1") @QueryParam("idSituation") int idSituation,
+			@DefaultValue("-1") @QueryParam("idJoueur") int idJoueur) {
 		System.out.println("\n\n\n\n################ rest/getsituation called###############");
 		System.out.println("idSituation = " + idSituation);
 		
@@ -83,6 +84,7 @@ public class Facade {
 		JsonObject envoi = new JsonObject();
 		envoi.put("situationName", situtationName);
 		envoi.put("situationId", s.getId());
+		envoi.put("aVote", aVote(idJoueur,s.getModeration()));
 		envoi.put("situationValidee", s.getModeration().getValidee());
 		JsonArray JchoicesList = new JsonArray();
 		for(Choix c:choicesList)
@@ -111,7 +113,7 @@ public class Facade {
 		Choix c = em.find(Choix.class, idChoix);
 		Situation s = c.getSituation();
 		visiter(idJoueur,s.getId(),idAventure,false);
-		return getSituation(s.getId());
+		return getSituation(s.getId(),idJoueur);
 	}
 	
 	

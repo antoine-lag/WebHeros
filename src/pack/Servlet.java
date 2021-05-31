@@ -76,6 +76,8 @@ public class Servlet extends HttpServlet {
 		}
 		else if (request.getParameter("mode").equals("goPayerPremium")) {
 			renvoiAPremium(request,response);
+		}else if (request.getParameter("mode").equals("goTableauBord")) {
+			renvoyerVersTableauBord(request,response);
 		}
 		//CECI EST UN TEST
 		else if(request.getParameter("mode").equals("aventure")) {
@@ -233,7 +235,7 @@ public class Servlet extends HttpServlet {
 			List<String> textesOptions = Arrays.asList(request.getParameter("choixSuite"));
 			facade.affilierSituationFille(idChoixSoure, texteSituation, textesOptions, idJoueur, idAventure);
 	
-			renvoyerVersTableauBord(request,response, id_jeu);
+			renvoyerVersTableauBord(request,response);
 		} else {
 			renvoiALaConnexion(request,response);
 		}
@@ -253,7 +255,7 @@ public class Servlet extends HttpServlet {
 				session.setAttribute("idAventure", av_id);
 				nouveauCheminement(request,response);				
 			} else {
-				renvoyerVersTableauBord(request, response, id_jeu);
+				renvoyerVersTableauBord(request, response);
 			}
 		} else {
 			renvoiALaConnexion(request,response);
@@ -273,15 +275,16 @@ public class Servlet extends HttpServlet {
 					session.setAttribute("premium", facade.estPremium(idJoueur));
 				}
 			}
-			renvoyerVersTableauBord(request,response,id_jeu);
+			renvoyerVersTableauBord(request,response);
 		} else {
 			renvoiALaConnexion(request,response);
 		}
 	}
 	//Renvoie vers le tableau de bord
-	public void renvoyerVersTableauBord(HttpServletRequest request, HttpServletResponse response, int id_jeu) throws ServletException, IOException
+	public void renvoyerVersTableauBord(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 		HttpSession session = request.getSession(false);
+		int id_jeu = (int)(session.getAttribute("idJeu"));
 		int idJoueur = (int)session.getAttribute("idJoueur" );
 		session.setAttribute("infoTableauBord", facade.getInfoTableauBord(id_jeu,idJoueur));
 		RequestDispatcher disp = request.getRequestDispatcher("accueil.jsp");
@@ -296,7 +299,7 @@ public class Servlet extends HttpServlet {
 		session.setAttribute("pseudoJoueur", pseudo);
 		session.setAttribute("premium", facade.estPremium(idJ));
 		session.setAttribute("idJeu", id_jeu);
-		renvoyerVersTableauBord(request,response, id_jeu);
+		renvoyerVersTableauBord(request,response);
 	}
 	
 	public void renvoiALaConnexion(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
