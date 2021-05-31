@@ -53,6 +53,14 @@ public class Facade {
 		System.out.println("idJoueur = " + idJoueur);
 		System.out.println("idSituation = " + idSituation);
 		System.out.println("voteValue = " + voteValue);
+		if(voteValue.equals("up"))
+		{
+			voter(idJoueur,idSituation,1);
+		}
+		if(voteValue.equals("down"))
+		{
+			voter(idJoueur,idSituation,-1);
+		}
 	}
 	
 	@GET

@@ -20,23 +20,25 @@ public class GestionnaireCheminement {
 
 	public static Cheminement visiter(EntityManager em, int id_joueur, int id_situation, int id_aventure)
 	{
-		int idChem = trouverCheminementDonnantSur(em,id_joueur,id_situation);
+		RechercheCheminement rc = trouverCheminementDonnantSur(em,id_joueur,id_situation);
+
 		//Todo
-		if(idChem == -1)
+		if(rc.getType().equals(TypeRechercheCheminement.NON_TROUVE))
 		{
 			//nouveau depart
 			return nouveauCheminement(em,id_joueur,id_aventure);
 			
-		}else if(idChem==-2)
+		}else if(rc.getType().equals(TypeRechercheCheminement.EXTREMITE))
 		{
 			//Rien a faire, on est deja sur une feuille
-			return null;
+			return em.find(Cheminement.class, rc.getId());
 		}
 		else {
-			return etendreCheminement(em,idChem,id_joueur,id_situation);
+			//Cheminement menant trouve
+			return etendreCheminement(em,rc.getId(),id_joueur,id_situation);
 		}
 	}
-	public static int trouverCheminementDonnantSur(EntityManager em, int id_joueur, int id_situation)
+	public static RechercheCheminement trouverCheminementDonnantSur(EntityManager em, int id_joueur, int id_situation)
 	{
 		Utilisateur utilisateur = em.find(Utilisateur.class, id_joueur);
 		Collection<Cheminement> cheminements = utilisateur.getCheminements().stream().filter(c->c.isActif()).collect(Collectors.toSet());
@@ -45,16 +47,24 @@ public class GestionnaireCheminement {
 			Situation position = ch.getPosition();
 			if(position.getId()==id_situation)
 			{
-				return -2;
+				new RechercheCheminement(ch.getId(),TypeRechercheCheminement.EXTREMITE);
 			}
 			Collection<Choix> choix = position.getChoix();
-			//NULL POINTER EXCEPTION HERE
-			if(choix.stream().anyMatch(c->c.getSituation().getId() == id_situation))
+			if(choix != null)
 			{
-				return ch.getId();
+				for(Choix c : choix)
+				{
+					if(c.getSituation()!= null)
+					{
+						if(c.getSituation().getId() == id_situation)
+						{
+							new RechercheCheminement(ch.getId(),TypeRechercheCheminement.TROUVE);
+						}
+					}
+				}
 			}
 		}
-		return -1;
+		return new RechercheCheminement(0,TypeRechercheCheminement.NON_TROUVE);
 	}
 	public static int getOrdreMax(EntityManager em, int id_cheminement)
 	{
