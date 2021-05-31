@@ -20,10 +20,10 @@ public class GestionnaireCheminement {
 
 	public static Cheminement visiter(EntityManager em, int id_joueur, int id_situation, int id_aventure)
 	{
-		RechercheCheminement rc = trouverCheminementDonnantSur(em,id_joueur,id_situation);
+		RechercheCheminement rc = trouverCheminementDonnantSur(em,id_joueur,id_situation,id_aventure);
 
 		//Todo
-		if(rc.getType().equals(TypeRechercheCheminement.NON_TROUVE))
+		if(rc.getType().equals(TypeRechercheCheminement.NOUVEAU_DEPART))
 		{
 			//nouveau depart
 			return nouveauCheminement(em,id_joueur,id_aventure);
@@ -33,14 +33,19 @@ public class GestionnaireCheminement {
 			//Rien a faire, on est deja sur une feuille
 			return em.find(Cheminement.class, rc.getId());
 		}
-		else {
+		else if(rc.getType().equals(TypeRechercheCheminement.TROUVE)){
 			//Cheminement menant trouve
 			return etendreCheminement(em,rc.getId(),id_joueur,id_situation);
+		}else
+		{
+			//Tente de commencer un cheminement au milieu de l'aventure
+			return null;
 		}
 	}
-	public static RechercheCheminement trouverCheminementDonnantSur(EntityManager em, int id_joueur, int id_situation)
+	public static RechercheCheminement trouverCheminementDonnantSur(EntityManager em, int id_joueur, int id_situation, int id_aventure)
 	{
 		Utilisateur utilisateur = em.find(Utilisateur.class, id_joueur);
+		Aventure av = em.find(Aventure.class, id_aventure);
 		Collection<Cheminement> cheminements = utilisateur.getCheminements().stream().filter(c->c.isActif()).collect(Collectors.toSet());
 		for(Cheminement ch : cheminements)
 		{
@@ -64,7 +69,13 @@ public class GestionnaireCheminement {
 				}
 			}
 		}
-		return new RechercheCheminement(0,TypeRechercheCheminement.NON_TROUVE);
+		if(av.getDebut() == null || av.getDebut().getId() == id_situation)
+		{
+			return new RechercheCheminement(0,TypeRechercheCheminement.NOUVEAU_DEPART);
+		}else
+		{
+			return new RechercheCheminement(0,TypeRechercheCheminement.ERREUR);
+		}
 	}
 	public static int getOrdreMax(EntityManager em, int id_cheminement)
 	{

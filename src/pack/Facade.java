@@ -281,6 +281,11 @@ public class Facade {
 		return em.find(Cheminement.class, id_cheminement).getAventure().getId();
 		
 	}
+	public int getIdPositionCheminement( int id_cheminement)
+	{
+		return em.find(Cheminement.class, id_cheminement).getPosition().getId();
+		
+	}
 	public String getNomAventureCheminement( int id_cheminement)
 	{
 		return em.find(Cheminement.class, id_cheminement).getAventure().getNom();

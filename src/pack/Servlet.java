@@ -101,6 +101,7 @@ public class Servlet extends HttpServlet {
 		}
 		renvoiALaConnexion(request,response);
 	}
+	//(idAventure) ou (idCheminement) ou (creationAventure)
 	public void choixAventureFait(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 
@@ -109,8 +110,7 @@ public class Servlet extends HttpServlet {
 			if(request.getParameter("idAventure") != null)
 			{
 				int id_aventure = Integer.parseInt(request.getParameter("idAventure"));
-				session.setAttribute("idAventure", id_aventure);
-				nouveauCheminement(request,response);
+				nouveauCheminement(request,response,id_aventure);
 			}else if(request.getParameter("idCheminement") != null)
 			{
 				poursuivreCheminement(request,response);
@@ -122,36 +122,32 @@ public class Servlet extends HttpServlet {
 			renvoiALaConnexion(request,response);
 		}
 	}
-	public void nouveauCheminement(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	public void nouveauCheminement(HttpServletRequest request, HttpServletResponse response,int idAventure) throws ServletException, IOException
 	{
 		HttpSession session = request.getSession(false);
 		if (session!=null) {
-			int idAventure = (int) session.getAttribute("idAventure");
-			int ch_id = facade.nouveauCheminement((int)session.getAttribute("idJoueur"), idAventure);
-			session.setAttribute("idAventure", idAventure);
-			session.setAttribute("nomAventure",facade.getAventureName(idAventure));
-			session.setAttribute("idCheminement",ch_id);
+			int ch_id = facade.nouveauCheminement(getIdJoueurSession(request), idAventure);
+			ajoutInformationsPreJeuSession(request,ch_id);
 			renvoiAAventure(request,response);
 		} else {
 			renvoiALaConnexion(request,response);
 		}
 	}
+	//(idCheminement)
 	public void poursuivreCheminement(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 		HttpSession session = request.getSession(false);
 		if (session!=null) {
 			int idCheminement = Integer.parseInt(request.getParameter("idCheminement"));
-
-			session.setAttribute("idAventure", facade.getIdAventureCheminement(idCheminement));
-			session.setAttribute("nomAventure",facade.getNomAventureCheminement(idCheminement));
-			session.setAttribute("idCheminement",idCheminement);
+			ajoutInformationsPreJeuSession(request,idCheminement);
+			
 			renvoiAAventure(request,response);
 		} else {
 			renvoiALaConnexion(request,response);
 		}
 	}
 
-	//Get pour obtenir la page d'ajout de situation
+	//Get pour obtenir la page d'ajout de situation(idChoix)
 	public void initAjoutSituation(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 		HttpSession session = request.getSession(false);
@@ -189,11 +185,14 @@ public class Servlet extends HttpServlet {
 			postPremium(request,response);
 		}
 	}
-	//Connecte le joueur
+	//Connecte le joueur (pseudo,pwd)
 	public void connexion(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 		// tentative de connexion
 		String pseudo = request.getParameter("pseudo");
+		
+		//Provisoire
+		int id_jeu = 1;
 		String mdp = facade.hasher(pseudo + request.getParameter("pwd"));
 		String vrai_mdp = facade.getMdp(pseudo, id_jeu);
 		if (vrai_mdp.equals(mdp)) {
@@ -208,10 +207,12 @@ public class Servlet extends HttpServlet {
 			renvoiALaConnexion(request,response);
 		}
 	}
-	//Inscrit le joueur dans la bdd
+	//Inscrit le joueur dans la bdd(pseudo,pwd,confirmation,email)
 	public void inscription(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 		// tentative inscription
+		//Provisoire
+		int id_jeu = 1;
 		String pseudo = request.getParameter("pseudo");
 		String mdp = facade.hasher(pseudo + request.getParameter("pwd"));
 		String confirmation = facade.hasher(pseudo + request.getParameter("confirmation"));
@@ -230,42 +231,48 @@ public class Servlet extends HttpServlet {
 			}
 		}
 	}
-	//Ajoute la situation dans la bdd
+	//Ajoute la situation dans la bdd(texteSituation,choixSuite[])
 	public void postSituation(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 		HttpSession session = request.getSession(false);
 		if(session != null) {
-			System.out.println("############NEW SITUTATION###### : ");
-			int id_jeu = (int)(session.getAttribute("idJeu"));
-			int idJoueur = (int)(session.getAttribute("idJoueur"));
-			int idAventure = (int)(session.getAttribute("idAventure"));
+			int id_jeu = getIdJeuSession(request);
+			int idJoueur = getIdJoueurSession(request);
+			int idAventure = getIdAventureSession(request);
 			int idChoixSoure = (int)(session.getAttribute("idChoixSource"));
-			
 			String texteSituation = request.getParameter("texteSituation");
 			System.out.println(id_jeu + ", " + 
 					idJoueur + ", " + idAventure + ", " + idChoixSoure);
 			List<String> textesOptions = Arrays.asList(request.getParameter("choixSuite"));
 			facade.affilierSituationFille(idChoixSoure, texteSituation, textesOptions, idJoueur, idAventure);
-	
 			renvoyerVersTableauBord(request,response);
 		} else {
 			renvoiALaConnexion(request,response);
 		}
 	}
+	public void ajoutInformationsPreJeuSession(HttpServletRequest request, int idCheminement)
+	{
+		HttpSession session = request.getSession(false);
+		int idAventure = facade.getIdAventureCheminement(idCheminement);
+		session.setAttribute("idAventure", idAventure);
+		session.setAttribute("nomAventure",facade.getAventureName(idAventure));
+		session.setAttribute("idCheminement",idCheminement);
+		session.setAttribute("idSituation",facade.getIdPositionCheminement(idCheminement));
+		
+	}
+	//Ajoute l'aventure dans la bdd(texteSituation,choixSuite[],nomAventure)
 	public void postAventure(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 		HttpSession session = request.getSession(false);
 		if(session != null) {
-			int id_jeu = (int)(session.getAttribute("idJeu"));
-			int idJoueur = (int)(session.getAttribute("idJoueur"));
+			int id_jeu = getIdJeuSession(request);
+			int idJoueur = getIdJoueurSession(request);
 			if(facade.estPremium(idJoueur)) {
 				String texteSituation = request.getParameter("texteSituation");
 				String nomAventure = request.getParameter("nomAventure");
-			
 				List<String> textesOptions = Arrays.asList(request.getParameter("choixSuite"));
 				int av_id = facade.ajouterAventure(nomAventure, texteSituation, textesOptions, idJoueur, id_jeu);
-				session.setAttribute("idAventure", av_id);
-				nouveauCheminement(request,response);				
+				nouveauCheminement(request,response, av_id);				
 			} else {
 				renvoyerVersTableauBord(request, response);
 			}
@@ -273,12 +280,12 @@ public class Servlet extends HttpServlet {
 			renvoiALaConnexion(request,response);
 		}
 	}
+	//(certificat)
 	public void postPremium(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 		HttpSession session = request.getSession(false);
 		if(session != null) {
-			int id_jeu = (int)(session.getAttribute("idJeu"));
-			int idJoueur = (int)(session.getAttribute("idJoueur"));
+			int idJoueur = getIdJoueurSession(request);
 			if(!facade.estPremium(idJoueur)) {
 				String certif = request.getParameter("certificat");
 				if(certif.equals("vywLyucHFnNecn49"))
@@ -295,10 +302,7 @@ public class Servlet extends HttpServlet {
 	//Renvoie vers le tableau de bord
 	public void renvoyerVersTableauBord(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
-		HttpSession session = request.getSession(false);
-		int id_jeu = (int)(session.getAttribute("idJeu"));
-		int idJoueur = (int)session.getAttribute("idJoueur" );
-		session.setAttribute("infoTableauBord", facade.getInfoTableauBord(id_jeu,idJoueur));
+		remplirTableauBordInfo(request);
 		RequestDispatcher disp = request.getRequestDispatcher("accueil.jsp");
 		disp.forward(request, response);
 	}
@@ -312,6 +316,33 @@ public class Servlet extends HttpServlet {
 		session.setAttribute("premium", facade.estPremium(idJ));
 		session.setAttribute("idJeu", id_jeu);
 		renvoyerVersTableauBord(request,response);
+	}
+	
+	public int getIdJoueurSession(HttpServletRequest request)
+	{
+		HttpSession session = request.getSession(false);
+		int idJoueur = (int)(session.getAttribute("idJoueur"));
+		return idJoueur;
+	}
+	public int getIdJeuSession(HttpServletRequest request)
+	{
+		HttpSession session = request.getSession(false);
+		int id_jeu = (int)(session.getAttribute("idJeu"));
+		return id_jeu;
+	}
+
+	public int getIdAventureSession(HttpServletRequest request)
+	{
+		HttpSession session = request.getSession(false);
+		int id_jeu = (int)(session.getAttribute("idAventure"));
+		return id_jeu;
+	}
+	public void remplirTableauBordInfo(HttpServletRequest request)
+	{
+		HttpSession session = request.getSession(false);
+		int id_jeu = getIdJeuSession(request);
+		int idJoueur = getIdJoueurSession(request);
+		session.setAttribute("infoTableauBord", facade.getInfoTableauBord(id_jeu,idJoueur));
 	}
 	
 	public void renvoiALaConnexion(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
