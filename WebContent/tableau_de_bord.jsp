@@ -9,6 +9,7 @@
 		<link rel="stylesheet" type="text/css" href="tableau_de_bord.css"/>
 		<title>Tableau de bord</title>
 	</head>
+	<h1>Tableau de Bord :</h1>
 	<body>
 		<%InfoTableauBord infos = (InfoTableauBord) request.getSession().getAttribute("infoTableauBord");%>
 		<%List<String> listeTexteAccomplissement = infos.getTextesAccomplissements();%>
