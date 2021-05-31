@@ -70,6 +70,7 @@ public class Servlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		if (request.getParameter("mode").equals("initAjoutSituation")) {
+			//get parameter idChoix
 			initAjoutSituation(request,response);
 		}else if (request.getParameter("mode").equals("accueil")) {
 			choixAventureFait(request,response);
@@ -145,9 +146,9 @@ public class Servlet extends HttpServlet {
 	{
 		HttpSession session = request.getSession(false);
 		if(session != null) {
-		int idChoix = Integer.parseInt(request.getParameter("idChoix"));
-		session.setAttribute("idChoixSource", idChoix);
-		renvoiAAjoutSituation(request,response);
+			int idChoix = Integer.parseInt(request.getParameter("idChoix"));
+			session.setAttribute("idChoixSource", idChoix);
+			renvoiAAjoutSituation(request,response);
 		} else {
 			renvoiALaConnexion(request,response);
 		}
@@ -224,13 +225,14 @@ public class Servlet extends HttpServlet {
 	{
 		HttpSession session = request.getSession(false);
 		if(session != null) {
+			System.out.println("############NEW SITUTATION###### : ");
 			int id_jeu = (int)(session.getAttribute("idJeu"));
 			int idJoueur = (int)(session.getAttribute("idJoueur"));
 			int idAventure = (int)(session.getAttribute("idAventure"));
 			int idChoixSoure = (int)(session.getAttribute("idChoixSource"));
 			
 			String texteSituation = request.getParameter("texteSituation");
-			System.out.println("############NEW SITUTATION###### : " + id_jeu + ", " + 
+			System.out.println(id_jeu + ", " + 
 					idJoueur + ", " + idAventure + ", " + idChoixSoure);
 			List<String> textesOptions = Arrays.asList(request.getParameter("choixSuite"));
 			facade.affilierSituationFille(idChoixSoure, texteSituation, textesOptions, idJoueur, idAventure);

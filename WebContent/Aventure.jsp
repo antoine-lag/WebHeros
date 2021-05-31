@@ -113,10 +113,12 @@ function selectChoice(choice, scope, http, location) {
 	
 	console.log("Choice "+idChoice+" selected ! Situation exist ? : " + situationExist);
 	//If choice has no situation following (is a leaf of the tree) : redirect to addSituation page
-	if(scope.validatedSituation){
+	
+	//A DECOMMENTER POUR LA RELEASE
+	/*if(!scope.validatedSituation){
 		window.location.href = 'Servlet?mode=goTableauBord';
 	}
-	else if(situationExist){//if situation associated with this choice exist : request it to server
+	else */if(situationExist){//if situation associated with this choice exist : request it to server
 		http.get("rest/getsituationchoix?idChoix="+idChoice+
 				"&idJoueur="+scope.userId+
 				"&idAventure="+scope.aventureId).then(function(response) {
@@ -156,17 +158,19 @@ function vote(action, scope, http){
 			console.log("upVote clicked");
 			//DEBUG HERE ALSO
 			http.post("rest/vote",scope.userId, scope.situationId, "up").then(function(response) {
-				if (response.status == 204) scope.message = "person was added";
-				else scope.message = "failed to add a person";
-				scope.showMessage = true;
+				if (response.status != 204){
+					scope.message = "failed to add a person";
+					scope.showMessage = true;
+				}
 			});
 			break;
 		case "down":
 			console.log("downVote clicked");
 			http.post("rest/vote",scope.userId, scope.situationId, "down").then(function(response) {
-				if (response.status == 204) scope.message = "person was added";
-				else scope.message = "failed to add a person";
-				scope.showMessage = true;
+				if (response.status != 204){
+					scope.message = "failed to add a person";
+					scope.showMessage = true;
+				}
 			});
 			break;
 	}
@@ -176,6 +180,7 @@ var app = angular.module('webHerosApp', []);
 app.controller('webHerosCtrl', function($scope,$http) {
 	initVars($scope);
  	initView($scope);
+ 	console.log($scope.showRedirectMsg);
  	getSituation("1", $scope, $http);
     $scope.doChoice=function(idChoice) {selectChoice(idChoice,$scope,$http);}
     $scope.doVote=function(action) {vote(action, $scope, $http);}
