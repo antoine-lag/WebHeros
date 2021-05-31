@@ -88,4 +88,13 @@ public class Securite {
 			}
 		}
 	}
+	public static void deconnexion(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	{
+		HttpSession session = request.getSession(false);
+		if(session != null)
+		{
+			session.invalidate();
+		}
+		Routeur.renvoiALaConnexion(request,response);
+	}
 }

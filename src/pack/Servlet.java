@@ -79,7 +79,7 @@ public class Servlet extends HttpServlet {
 		}else if (request.getParameter("mode").equals("accueil")) {
 			Creation.choixAventureFait(request,response,facade);
 		}else if (request.getParameter("mode").equals("deco")) {
-			deconnexion(request,response);
+			Securite.deconnexion(request,response);
 		}
 		else if (request.getParameter("mode").equals("goPayerPremium")) {
 			Routeur.renvoiAPremium(request,response);
@@ -96,15 +96,7 @@ public class Servlet extends HttpServlet {
 			disp.forward(request, response);
 		}
 	}
-	public void deconnexion(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-	{
-		HttpSession session = request.getSession(false);
-		if(session != null)
-		{
-			session.invalidate();
-		}
-		Routeur.renvoiALaConnexion(request,response);
-	}
+
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
