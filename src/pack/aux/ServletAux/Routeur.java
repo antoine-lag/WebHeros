@@ -12,7 +12,7 @@ import pack.Facade;
 public class Routeur {
 	public static void renvoiALaConnexion(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
-		RequestDispatcher disp = request.getRequestDispatcher("connexion.html");
+		RequestDispatcher disp = request.getRequestDispatcher("index.html");
 		disp.forward(request, response);
 	}
 	public static void renvoiALInscription(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
