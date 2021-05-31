@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import pack.Facade;
+import pack.aux.SecurBack;
 
 public class Securite {
 	//(certificat)
@@ -50,7 +51,7 @@ public class Securite {
 		
 		//Provisoire
 		int id_jeu = 1;
-		String mdp = facade.hasher(pseudo + request.getParameter("pwd"));
+		String mdp = SecurBack.hasher(pseudo + request.getParameter("pwd"));
 		String vrai_mdp = facade.getMdp(pseudo, id_jeu);
 		if (vrai_mdp.equals(mdp)) {
 			// identification reussie
@@ -71,8 +72,8 @@ public class Securite {
 		//Provisoire
 		int id_jeu = 1;
 		String pseudo = request.getParameter("pseudo");
-		String mdp = facade.hasher(pseudo + request.getParameter("pwd"));
-		String confirmation = facade.hasher(pseudo + request.getParameter("confirmation"));
+		String mdp = SecurBack.hasher(pseudo + request.getParameter("pwd"));
+		String confirmation = SecurBack.hasher(pseudo + request.getParameter("confirmation"));
 		String email = request.getParameter("email");
 		if (!mdp.equals(confirmation)) {
 			// les deux mots de passes sont differents

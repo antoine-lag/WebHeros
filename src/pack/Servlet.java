@@ -3,7 +3,7 @@ package pack;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 import javax.ejb.EJB;
 import javax.servlet.RequestDispatcher;
@@ -12,17 +12,15 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+
 
 import pack.data.Jeu;
-import pack.data.Situation;
+
 import pack.data.Utilisateur;
 import pack.aux.ServletAux.Creation;
 import pack.aux.ServletAux.Routeur;
-import pack.aux.ServletAux.Scribe;
 import pack.aux.ServletAux.Securite;
-import pack.data.Aventure;
-import pack.data.Cheminement;
+
 
 /**
  * Servlet implementation class Servlet
