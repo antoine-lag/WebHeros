@@ -16,6 +16,11 @@
 		<h1>Vous naviguez dans l'aventure {{aventureName}}</h1>
 		<br>
 		
+		<div ng-show="showRedirectMsg">
+			Attention cette situation n'est pas validée par la communauté. Tout les choix vous redirigerons vers le tableau de bords.
+		</div>
+		<br>
+		
 		<div ng-show="showSituationText">
 			<h3>{{situationText}}</h3>
 		</div>
@@ -62,6 +67,8 @@ function initVars(scope) {
 	//scope.cheminementId = "<%= String.valueOf(request.getSession(false).getAttribute("idCheminement")) %>";
 	scope.choicesList = [];
 	scope.lastChoiceId = "1";
+	scope.validatedSituation = "true";//Si la situation a atteint un nombre de upvote
+	scope.alreadyVoted = "false";
 }
 function initView(scope) {
 	scope.showSituationText = false;
@@ -69,6 +76,7 @@ function initView(scope) {
 	scope.showVoteButtons = true;
 	scope.showAddSituation = false;
 	scope.showMessage = false;
+	scope.showRedirectMsg = false;
 }
 
 //Retrieve the situation data (id+text+choices) determined by the situation's ID
@@ -80,10 +88,16 @@ function getSituation(idSituation, scope, http){
 			console.log(response.data);
 			//Refresh page with new data
 			scope.situationText = response.data.situationName;
-			scope.showSituationText = true;
 			scope.situationId = response.data.situationId;
 			scope.choicesList = response.data.choicesList;
+			scope.validatedSituation = response.data.situationValidee;
+			scope.alreadyVoted = response.data.aVote;
+			
 			scope.showChoicesList = true;
+			scope.showSituationText = true;
+			if(!scope.validatedSituation){
+				scope.showRedirectMsg = true;
+			}
 		} else {
 			scope.message = "Failed to get situation data from situation Id";
 			scope.showMessage = true;
@@ -99,9 +113,10 @@ function selectChoice(choice, scope, http, location) {
 	
 	console.log("Choice "+idChoice+" selected ! Situation exist ? : " + situationExist);
 	//If choice has no situation following (is a leaf of the tree) : redirect to addSituation page
-	
-	if(situationExist){//if situation associated with this choice exist : request it to server
-		//DEBUG HERE
+	if(scope.validatedSituation){
+		window.location.href = 'Servlet?mode=goTableauBord';
+	}
+	else if(situationExist){//if situation associated with this choice exist : request it to server
 		http.get("rest/getsituationchoix?idChoix="+idChoice+
 				"&idJoueur="+scope.userId+
 				"&idAventure="+scope.aventureId).then(function(response) {
@@ -109,19 +124,27 @@ function selectChoice(choice, scope, http, location) {
 			console.log("Situation loaded successfuly from choice " + idChoice);
 			console.log(response.data);
 			//Display new data retrieved from server
-			scope.situationText = response.data.text;
-			scope.showSituationText = true;
+			scope.situationText = response.data.situationName;
 			scope.situationId = response.data.situationId;
 			scope.choicesList = response.data.choicesList;
+			scope.validatedSituation = response.data.situationValidee;
+			scope.alreadyVoted = response.data.aVote;
+			
+			scope.showSituationText = true;
 			scope.showChoicesList = true;
+			if(!scope.validatedSituation){
+				scope.showRedirectMsg = true;
+			}
 		} else {
 			scope.message = "Failed to get situation Id from choice Id";
 			scope.showMessage = true;
 			}
 		});
-	}else{//redirect to ajoutSituation page
+	}
+	//Si situation non validé : redirect to tableau bord
+	else{//redirect to ajoutSituation page
 		console.log("Choice selected is a leaf ! Redirecting...");
-		//window.location.href = 'Servlet?mode=initAjoutSituation&idChoix=' + scope.lastChoiceId;
+		window.location.href = 'Servlet?mode=initAjoutSituation&idChoix=' + scope.lastChoiceId;
 	}
 }
 
