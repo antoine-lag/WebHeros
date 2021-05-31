@@ -83,6 +83,7 @@ public class Facade {
 		JsonObject envoi = new JsonObject();
 		envoi.put("situationName", situtationName);
 		envoi.put("situationId", s.getId());
+		envoi.put("situationValidee", s.getModeration().getValidee());
 		JsonArray JchoicesList = new JsonArray();
 		for(Choix c:choicesList)
 		{
