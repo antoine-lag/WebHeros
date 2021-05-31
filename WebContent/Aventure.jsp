@@ -13,6 +13,7 @@
 <body>
 	<div ng-app="webHerosApp" ng-controller="webHerosCtrl"> 
 		<a href="index.html">Accueil</a>
+		<a href="Servlet?mode=goTableauBord">Tableau de bord</a>
 		<h1>Vous naviguez dans l'aventure {{aventureName}}</h1>
 		<br>
 		
@@ -36,8 +37,8 @@
 		<br>
 		
 		<div ng-show="showVoteButtons">
-			<button ng-click="doVote('up')">Up Vote</button>
-			<button ng-click="doVote('down')">Down vote</button>
+			<button ng-click="doVote('up')" ng-disabled="alreadyVoted">Up Vote</button>
+			<button ng-click="doVote('down')" ng-disabled="alreadyVoted">Down vote</button>
 		</div>
 		<br>
 		
@@ -47,16 +48,8 @@
 	</div>
 	
 <script>
-//- get situation (Root to begin with)
-//- get choices; do the function in facade & manage params
-//- display 1 button for each choice
-//- redirect to addSituation
-//- Set up vote buttons.
 //- set restriction for voting depending on the user logged in
 //PROBLEMES
-//
-
-
 function initVars(scope) {
 	scope.message = "___";
 	scope.aventureName = "<%= (String) request.getSession(false).getAttribute("nomAventure") %>"
@@ -68,7 +61,6 @@ function initVars(scope) {
 	scope.choicesList = [];
 	scope.lastChoiceId = "1";
 	scope.validatedSituation = "true";//Si la situation a atteint un nombre de upvote
-	scope.alreadyVoted = "false";
 }
 function initView(scope) {
 	scope.showSituationText = false;
@@ -77,6 +69,8 @@ function initView(scope) {
 	scope.showAddSituation = false;
 	scope.showMessage = false;
 	scope.showRedirectMsg = false;
+	scope.alreadyVoted = false;
+	console.log("initView() : alreadyVoted = " + scope.alreadyVoted);
 }
 
 //Retrieve the situation data (id+text+choices) determined by the situation's ID
@@ -91,7 +85,9 @@ function getSituation(idSituation, scope, http){
 			scope.situationId = response.data.situationId;
 			scope.choicesList = response.data.choicesList;
 			scope.validatedSituation = response.data.situationValidee;
-			scope.alreadyVoted = response.data.aVote;
+			
+			if(response.data.aVote == "true"){scope.alreadyVoted = true;}
+			else{scope.alreadyVoted = false;}
 			
 			scope.showChoicesList = true;
 			scope.showSituationText = true;
@@ -130,7 +126,9 @@ function selectChoice(choice, scope, http, location) {
 			scope.situationId = response.data.situationId;
 			scope.choicesList = response.data.choicesList;
 			scope.validatedSituation = response.data.situationValidee;
-			scope.alreadyVoted = response.data.aVote;
+			
+			if(response.data.aVote == "true"){scope.alreadyVoted = true;}
+			else{scope.alreadyVoted = false;}
 			
 			scope.showSituationText = true;
 			scope.showChoicesList = true;
@@ -153,27 +151,33 @@ function selectChoice(choice, scope, http, location) {
 
 function vote(action, scope, http){
 	//Add disable button when clicked or already voted
+	let param = scope.userId + ";" + scope.situationId;
+	scope.alreadyVoted = true;
 	switch(action){
 		case "up":
+			param = param + ";up";
 			console.log("upVote clicked");
-			//DEBUG HERE ALSO
-			http.post("rest/vote",scope.userId, scope.situationId, "up").then(function(response) {
+			http.post("rest/vote",param).then(function(response) {
 				if (response.status != 204){
 					scope.message = "failed to add a person";
 					scope.showMessage = true;
+					scope.alreadyVoted = false;
 				}
 			});
 			break;
 		case "down":
+			param = param + ";down";
 			console.log("downVote clicked");
-			http.post("rest/vote",scope.userId, scope.situationId, "down").then(function(response) {
+			http.post("rest/vote",param).then(function(response) {
 				if (response.status != 204){
 					scope.message = "failed to add a person";
 					scope.showMessage = true;
+					scope.alreadyVoted = false;
 				}
 			});
 			break;
 	}
+	console.log("vote() : alreadyVoted = " + scope.alreadyVoted);
 }
 
 var app = angular.module('webHerosApp', []);

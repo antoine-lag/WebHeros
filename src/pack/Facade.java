@@ -48,18 +48,20 @@ public class Facade {
 	@POST
 	@Path("/vote")
 	@Consumes({"application/json"})
-	public void voter(int idJoueur, int idSituation, String voteValue) {
-		System.out.println("\n\n\n\n################ rest/voter called###############");
-		System.out.println("idJoueur = " + idJoueur);
-		System.out.println("idSituation = " + idSituation);
-		System.out.println("voteValue = " + voteValue);
-		if(voteValue.equals("up"))
-		{
-			voter(idJoueur,idSituation,1);
-		}
-		if(voteValue.equals("down"))
-		{
-			voter(idJoueur,idSituation,-1);
+	public void voter(String param) {
+		String[] params = param.split(";");
+		if(params.length == 3) {
+			int idJoueur = Integer.valueOf(params[0]);
+			int idSituation = Integer.valueOf(params[1]);
+			String voteValue = params[2];
+			if(voteValue.equals("up"))
+			{
+				voter(idJoueur,idSituation,1);
+			}
+			if(voteValue.equals("down"))
+			{
+				voter(idJoueur,idSituation,-1);
+			}
 		}
 	}
 	
