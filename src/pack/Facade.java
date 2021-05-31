@@ -11,6 +11,7 @@ import javax.ejb.Singleton;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.Path;
@@ -44,6 +45,16 @@ public class Facade {
 		return avName;
 	}
 	
+	@POST
+	@Path("/vote")
+	@Consumes({"application/json"})
+	public void voter(int idJoueur, int idSituation, String voteValue) {
+		System.out.println("\n\n\n\n################ rest/voter called###############");
+		System.out.println("idJoueur = " + idJoueur);
+		System.out.println("idSituation = " + idSituation);
+		System.out.println("voteValue = " + voteValue);
+	}
+	
 	@GET
 	@Path("/getsituation")
 	//Recup parametres get
@@ -63,6 +74,7 @@ public class Facade {
 		choicesList = new ArrayList<>(s.getChoix());
 		JsonObject envoi = new JsonObject();
 		envoi.put("situationName", situtationName);
+		envoi.put("situationId", s.getId());
 		JsonArray JchoicesList = new JsonArray();
 		for(Choix c:choicesList)
 		{

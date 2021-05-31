@@ -48,6 +48,7 @@ public class GestionnaireCheminement {
 				return -2;
 			}
 			Collection<Choix> choix = position.getChoix();
+			//NULL POINTER EXCEPTION HERE
 			if(choix.stream().anyMatch(c->c.getSituation().getId() == id_situation))
 			{
 				return ch.getId();

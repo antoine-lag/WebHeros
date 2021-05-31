@@ -56,6 +56,7 @@ function initVars(scope) {
 	scope.message = "___";
 	scope.aventureName = "<%= (String) request.getSession(false).getAttribute("nomAventure") %>"
 	scope.situationText = "";
+	scope.situationId = "1";
 	scope.aventureId = "<%= String.valueOf(request.getSession(false).getAttribute("idAventure")) %>";
 	scope.userId = "<%= String.valueOf(request.getSession(false).getAttribute("idJoueur")) %>";
 	//scope.cheminementId = "<%= String.valueOf(request.getSession(false).getAttribute("idCheminement")) %>";
@@ -80,6 +81,7 @@ function getSituation(idSituation, scope, http){
 			//Refresh page with new data
 			scope.situationText = response.data.situationName;
 			scope.showSituationText = true;
+			scope.situationId = response.data.situationId;
 			scope.choicesList = response.data.choicesList;
 			scope.showChoicesList = true;
 		} else {
@@ -109,6 +111,7 @@ function selectChoice(choice, scope, http, location) {
 			//Display new data retrieved from server
 			scope.situationText = response.data.text;
 			scope.showSituationText = true;
+			scope.situationId = response.data.situationId;
 			scope.choicesList = response.data.choicesList;
 			scope.showChoicesList = true;
 		} else {
@@ -128,9 +131,20 @@ function vote(action, scope, http){
 	switch(action){
 		case "up":
 			console.log("upVote clicked");
+			//DEBUG HERE ALSO
+			http.post("rest/vote",scope.userId, scope.situationId, "up").then(function(response) {
+				if (response.status == 204) scope.message = "person was added";
+				else scope.message = "failed to add a person";
+				scope.showMessage = true;
+			});
 			break;
 		case "down":
 			console.log("downVote clicked");
+			http.post("rest/vote",scope.userId, scope.situationId, "down").then(function(response) {
+				if (response.status == 204) scope.message = "person was added";
+				else scope.message = "failed to add a person";
+				scope.showMessage = true;
+			});
 			break;
 	}
 }
