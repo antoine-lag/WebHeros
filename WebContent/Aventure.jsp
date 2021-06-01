@@ -14,6 +14,11 @@
 	<div ng-app="webHerosApp" ng-controller="webHerosCtrl"> 
 		<a href="index.html">Accueil</a>
 		<a href="Servlet?mode=goTableauBord">Tableau de bord</a>
+		<form action="Servlet" method="get">
+			<input type="hidden" name="mode" value="deco"/>
+			<input type="submit" value="Deconnexion"/>
+		</form>
+		
 		<h1>Vous naviguez dans l'aventure {{aventureName}}</h1>
 		<br>
 		
@@ -48,13 +53,13 @@
 	</div>
 	
 <script>
-//- set restriction for voting depending on the user logged in
+//- Bouton déco
 //PROBLEMES
 function initVars(scope) {
 	scope.message = "___";
 	scope.aventureName = "<%= (String) request.getSession(false).getAttribute("nomAventure") %>"
 	scope.situationText = "";
-	scope.situationId = "1";
+	scope.situationId = "<%= String.valueOf(request.getSession(false).getAttribute("idSituation")) %>";
 	scope.aventureId = "<%= String.valueOf(request.getSession(false).getAttribute("idAventure")) %>";
 	scope.userId = "<%= String.valueOf(request.getSession(false).getAttribute("idJoueur")) %>";
 	//scope.cheminementId = "<%= String.valueOf(request.getSession(false).getAttribute("idCheminement")) %>";
