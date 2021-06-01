@@ -122,12 +122,13 @@ public class GestionnaireCheminement {
 		for(int i=0;i<chem.size();i++)
 		{
 			Situation s = chem.get(i).getSituation();
+			texte += s.getTexte()+"\n\n";
 			if(i<chem.size()-1)
 			{
 				Situation sNext = chem.get(i+1).getSituation();
 				texte += "-> "+getTexteChoixLien(em,s.getId(),sNext.getId())+"\n";
 			}
-			texte += s.getTexte()+"\n\n";
+			
 		}
 		return texte;
 	}
@@ -135,7 +136,20 @@ public class GestionnaireCheminement {
 	{
 		Situation sa = em.find(Situation.class, id_situationA);
 		Situation sb = em.find(Situation.class, id_situationB);
-		Optional<Choix> chx = sa.getChoix().stream().filter(c->c.getSituation().getId()==sb.getId()).findFirst();
+		
+		Collection<Choix> choixx = sa.getChoix();
+		Choix trouve = null;
+		for(Choix ch : choixx)
+		{
+			if(ch.getSituation()!= null)
+			{
+				if(ch.getSituation().getId() == sb.getId())
+				{
+					trouve = ch;
+				}
+			}
+		}
+		Optional<Choix> chx = Optional.of(trouve);
 		if(chx.isPresent())
 		{
 			return chx.get().getString_texte();

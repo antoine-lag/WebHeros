@@ -27,7 +27,7 @@
 			<input type="submit" value="C'est parti!"/>
 		</form>
 		<h1>Partie finie:</h1>
-		<form action="Servlet" method="get">
+		<form action="Servlet" method="post">
 		<input type="hidden" name="mode" value="afficheurHistoire"/>
 			<%for (int i=0; i<listeIdCheminement.size(); i++) {%>
 				<%if (!listeIsActive.get(i)) {%>

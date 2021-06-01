@@ -1,5 +1,7 @@
 package pack.aux;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,23 +34,36 @@ public class Agregateur {
 		List<Boolean> isActiveCheminements= new LinkedList<Boolean>();
 		Jeu jeu = (Jeu)em.find(Jeu.class, idJeu);
 		Utilisateur utilisateur = (Utilisateur)em.find(Utilisateur.class, idJoueur);
+		System.out.println(">>>>>>>>>>>>>>1<<<<<<<<<<<<<<<<<<<<<");
 		for(Aventure av : jeu.getAventure())
 		{
 			nomsAventures.add(av.getNom());
 			idsAventures.add(av.getId());
 		}
+		System.out.println(">>>>>>>>>>>>>>2<<<<<<<<<<<<<<<<<<<<<");
 		for(Cheminement ch : utilisateur.getCheminements())
 		{
+			try
+			{
 			textesCheminements.add(GestionnaireCheminement.getTexteCheminement(em, ch.getId()));
 			textesCompletsCheminements.add(GestionnaireCheminement.getTexteCompletCheminement(em, ch.getId()));
 			isActiveCheminements.add(ch.isActif());
 			idsCheminements.add(ch.getId());
+			}catch(Exception e)
+			{
+				StringWriter sw = new StringWriter();
+				PrintWriter pw = new PrintWriter(sw);
+				e.printStackTrace(pw);
+				System.out.println(sw.toString());
+			}
 		}
+		System.out.println(">>>>>>>>>>>>>>3<<<<<<<<<<<<<<<<<<<<<");
 		for(Accomplissement ac : utilisateur.getAccomplissements())
 		{
 			textesAccomplissements.add(ac.getNom());
 			datesAccomplissements.add(ac.getDate());
 		}
+		System.out.println(">>>>>>>>>>>>>>4<<<<<<<<<<<<<<<<<<<<<");
 		InfoTableauBord tableau = new InfoTableauBord();
 		tableau.setIdsAventures(idsAventures);
 		tableau.setNomsAventures(nomsAventures);
