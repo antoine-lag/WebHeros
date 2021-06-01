@@ -6,7 +6,6 @@ import java.util.List;
 
 
 import javax.ejb.EJB;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -34,8 +33,6 @@ public class Servlet extends HttpServlet {
 	
 	Jeu jeuPrincipal;
 	Utilisateur bob;
-	Utilisateur tom;
-	Utilisateur pierre;
 	int aventureChateauHante;
 	
 	//Temporairement on utilise un seul jeu
@@ -72,6 +69,10 @@ public class Servlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		if(request.getParameter("mode")==null)
+		{
+			Routeur.renvoyerVersTableauBord(request, response, facade);
+		}
 		if (request.getParameter("mode").equals("initAjoutSituation")) {
 			//get parameter idChoix
 			Creation.initAjoutSituation(request,response);
@@ -85,14 +86,8 @@ public class Servlet extends HttpServlet {
 		}else if (request.getParameter("mode").equals("goTableauBord")) {
 			Routeur.renvoyerVersTableauBord(request,response,facade);
 		}
-		//CECI EST UN TEST
-		else if(request.getParameter("mode").equals("aventure")) {
-			request.getSession(true).setAttribute("nomAventure", "Crash test !!");
-			request.getSession(false).setAttribute("idAventure", 1);
-			request.getSession(false).setAttribute("idJoueur", 1);
-			request.getSession(false).setAttribute("idCheminement", 1);
-			RequestDispatcher disp = request.getRequestDispatcher("Aventure.jsp");
-			disp.forward(request, response);
+		else{
+			Routeur.renvoyerVersTableauBord(request, response, facade);
 		}
 	}
 
@@ -101,6 +96,10 @@ public class Servlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		if(request.getParameter("mode")==null)
+		{
+			Routeur.renvoyerVersTableauBord(request, response, facade);
+		}
 		if (request.getParameter("mode").equals("connexion")) {
 			Securite.connexion(request,response,facade);
 		} else if (request.getParameter("mode").equals("inscription")) {
@@ -113,6 +112,8 @@ public class Servlet extends HttpServlet {
 			Securite.postPremium(request,response,facade);
 		}else if (request.getParameter("mode").equals("afficheurHistoire")) {
 			Routeur.renvoiAAfficheurHistoire(request,response);
+		}else{
+			Routeur.renvoyerVersTableauBord(request, response, facade);
 		}
 	}
 }

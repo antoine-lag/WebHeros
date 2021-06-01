@@ -43,18 +43,18 @@ public class GestionnaireCheminement {
 	}
 	public static RechercheCheminement trouverCheminementDonnantSur(EntityManager em, int id_joueur, int id_situation, int id_aventure)
 	{
-		System.out.println("---------------------Recherche de cheminement pour situation"+id_situation+"---------------");
+		
 		Utilisateur utilisateur = em.find(Utilisateur.class, id_joueur);
 		Aventure av = em.find(Aventure.class, id_aventure);
 		Collection<Cheminement> cheminementsTotaux = utilisateur.getCheminements();
 		Collection<Cheminement> cheminements = cheminementsTotaux.stream().filter(c->c.isActif()).collect(Collectors.toSet());
 		for(Cheminement ch : cheminements)
 		{
-			System.out.println("---------------------Etude cheminement"+ch.getId()+"---------------");
+			
 			Situation position = ch.getPosition();
 			if(position.getId()==id_situation)
 			{
-				System.out.println("---------------------Etude cheminement"+ch.getId()+"----------Position match-----");
+				
 				return new RechercheCheminement(ch.getId(),TypeRechercheCheminement.EXTREMITE);
 			}
 			Collection<Choix> choix = position.getChoix();
@@ -62,13 +62,13 @@ public class GestionnaireCheminement {
 			{
 				for(Choix c : choix)
 				{
-					System.out.println("---------------------Etude du choix"+c.getString_texte()+"---------------");
+					
 					if(c.getSituation()!= null)
 					{
-						System.out.println("---------------------Etude du choix"+c.getString_texte()+"-----Possede situation----------");
+						
 						if(c.getSituation().getId() == id_situation)
 						{
-							System.out.println("---------------------Etude du choix"+c.getString_texte()+"-------Situation match--------");
+							
 							return new RechercheCheminement(ch.getId(),TypeRechercheCheminement.TROUVE);
 						}
 					}
@@ -77,11 +77,11 @@ public class GestionnaireCheminement {
 		}
 		if(av.getDebut() == null || av.getDebut().getId() == id_situation)
 		{
-			System.out.println("---------------------Match depart---------------");
+			
 			return new RechercheCheminement(0,TypeRechercheCheminement.NOUVEAU_DEPART);
 		}else
 		{
-			System.out.println("---------------------Rien de trouve---------------");
+			
 			return new RechercheCheminement(0,TypeRechercheCheminement.ERREUR);
 		}
 	}
@@ -161,7 +161,7 @@ public class GestionnaireCheminement {
 		Utilisateur utilisateur = em.find(Utilisateur.class, id_joueur);
 		Aventure aventure = em.find(Aventure.class, id_aventure);
 		Situation situation = aventure.getDebut();
-		System.out.println("#######ID SITUATION NOUVEAU CHEM##### : " + situation.getId());
+
 		
 		Cheminement cheminement = new Cheminement();
 		em.persist(cheminement);

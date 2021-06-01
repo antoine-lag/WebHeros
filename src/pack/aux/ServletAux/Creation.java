@@ -24,7 +24,7 @@ public class Creation {
 			String texteSituation = request.getParameter("texteSituation");
 			System.out.println(id_jeu + ", " + 
 					idJoueur + ", " + idAventure + ", " + idChoixSoure);
-			List<String> textesOptions = Arrays.asList(request.getParameter("choixSuite"));
+			List<String> textesOptions = Arrays.asList(request.getParameterValues("choixSuite"));
 			facade.affilierSituationFille(idChoixSoure, texteSituation, textesOptions, idJoueur, idAventure);
 			Routeur.renvoyerVersTableauBord(request,response,facade);
 		} else {
@@ -42,7 +42,7 @@ public class Creation {
 			if(facade.estPremium(idJoueur)) {
 				String texteSituation = request.getParameter("texteSituation");
 				String nomAventure = request.getParameter("nomAventure");
-				List<String> textesOptions = Arrays.asList(request.getParameter("choixSuite"));
+				List<String> textesOptions = Arrays.asList(request.getParameterValues("choixSuite"));
 				int av_id = facade.ajouterAventure(nomAventure, texteSituation, textesOptions, idJoueur, id_jeu);
 				nouveauCheminement(request,response, av_id,facade);				
 			} else {
