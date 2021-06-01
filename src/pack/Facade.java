@@ -176,6 +176,11 @@ public class Facade {
 		Situation situation = em.find(Situation.class,id_situation);
 		return situation.getModeration().getValidee();
 	}
+	public void forcerValidee(int id_situation)
+	{
+		Situation situation = em.find(Situation.class,id_situation);
+		situation.getModeration().setValidee(true);
+	}
 	
 	//Joueurs//
 	//Indique si un pseudo existe deja

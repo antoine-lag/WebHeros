@@ -62,6 +62,7 @@ public class Servlet extends HttpServlet {
 		facade.affilierSituationFille(1, "Après être sorti du chateau vous vous rendez compte que vous avez oublié votre lampe torche dans la chambre du 5 ème étage.", 
 				Arrays.asList("Vous re rentrez dans le chateau.", "Vous continuez sans lampe torche.", "Vous tapez une sieste."),
 				bob.getId(), aventureChateauHante);
+		facade.forcerValidee(facade.getAventure(aventureChateauHante).getId());
 		
 		System.out.println("\nID aventure: "+aventureChateauHante);
 		System.out.println("\nServlet initialised !");

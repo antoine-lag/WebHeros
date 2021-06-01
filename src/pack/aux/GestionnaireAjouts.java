@@ -76,7 +76,7 @@ public class GestionnaireAjouts {
 		Situation nouvelle = ajouterSituation(texte,textesChoix,id_utilisateur,id_aventure,em,facade);
 		Aventure aventure = em.find(Aventure.class, id_aventure);
 		aventure.setDebut(nouvelle);
-		facade.visiter(id_utilisateur, nouvelle.getId(), id_aventure,true);
+		facade.visiter(id_utilisateur, nouvelle.getId(), id_aventure,false);
 		em.merge(nouvelle);
 		
 		return nouvelle;
