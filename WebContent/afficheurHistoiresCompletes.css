@@ -1,0 +1,65 @@
+@charset "UTF-8";
+
+body
+{
+  margin: 0;
+  padding: 0 ;
+  text-align: center;
+  background-color : lightblue;
+  font: 1.5em "Bahnschrift", helvetica, sans-serif;
+  opacity : 0.6;
+}
+
+h1 {
+	color: navy;
+}
+
+#separateur {
+	padding: 5%;
+}
+
+#deco {
+	color: white;
+	background-color: navy; 	
+	padding: 10px 10px;
+	border-radius: 30px; 
+	margin-left: auto;
+  	margin-right: auto;
+    width: 15%;	
+    heigth: 10%;
+}
+
+#aventure {
+	color: navy;
+	background-color: #cc0000; 	
+	padding: 10px 0px;
+	border-radius: 5px; 
+	margin-left: auto;
+  	margin-right: auto;
+    width: 20%;	
+    heigth: 5%;
+}
+
+#aventure:hover {
+	background-color : white;
+	color : #cc0000;
+}
+
+a { 
+	color: white; 
+	background-color: navy; 
+	text-decoration: none; 
+	text-align: center; 
+	padding: 10px 0; 
+	border-radius: 5px; 
+	display: block;
+	margin-left: auto;
+  	margin-right: auto;
+    width: 35%;
+}
+
+a:hover{
+	background-color : white;
+	color : navy;
+	text-decoration : none;
+}

@@ -12,24 +12,28 @@
 <body>
 	<div ng-app="webHerosApp" ng-controller="webHerosCtrl"> 
 		
+		
 		<div class="header">
-			<form action="index.html" method="get">
+			<div>
+			<form action="index.html" method="get" id="form1">
 				<input type="submit" value="Accueil"/>
 			</form>
-			<form action="Servlet" method="get">
+			</div>
+			<div>
+			<form action="Servlet" method="get" id="form2">
 				<input type="hidden" name="mode" value="goTableauBord"/>
 				<input type="submit" value="Tableau de bord"/>
 			</form>
-			<form action="Servlet" method="get">
+			</div>
+			<div>
+			<form action="Servlet" method="get" id="form3">
 				<input type="hidden" name="mode" value="deco"/>
 				<input type="submit" value="Deconnexion"/>
 			</form>
+			</div>
 		</div>
 		
-		
-		
 		<h1>Vous naviguez dans l'aventure {{aventureName}}</h1>
-		<br>
 		
 		<div ng-show="showRedirectMsg">
 			Attention cette situation n'est pas validée par la communauté. Tout les choix vous redirigerons vers le tableau de bords.
@@ -37,11 +41,12 @@
 		<br>
 		
 		<div ng-show="showSituationText">
+			<p>Situation :</p>
 			<h3>{{situationText}}</h3>
 		</div>
-		<br>
 		
-		<div ng-show="showChoicesList">
+		<p>Choix :</p>
+		<div ng-show="showChoicesList" id="listchoix">
 			<ul>
 				<li ng-repeat="c in choicesList">
 					<button id="btn1" ng-click="doChoice(c)">{{c.text}}</button>
@@ -51,8 +56,8 @@
 		<br>
 		
 		<div ng-show="showVoteButtons">
-			<button ng-click="doVote('up')" ng-disabled="alreadyVoted">Up Vote</button>
-			<button ng-click="doVote('down')" ng-disabled="alreadyVoted">Down vote</button>
+			<button class="boutonup" ng-click="doVote('up')" ng-disabled="alreadyVoted">Up Vote</button>
+			<button class="boutondown ng-click="doVote('down')" ng-disabled="alreadyVoted">Down vote</button>
 		</div>
 		<br>
 		
