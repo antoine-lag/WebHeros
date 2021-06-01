@@ -39,8 +39,6 @@ public class Scribe {
 		session.setAttribute("idAventure", idAventure);
 		session.setAttribute("nomAventure",facade.getAventureName(idAventure));
 		session.setAttribute("idCheminement",idCheminement);
-		System.out.println("#######ID SITUATION##### : " + facade.getIdPositionCheminement(idCheminement));
 		session.setAttribute("idSituation",facade.getIdPositionCheminement(idCheminement));
-		
 	}
 }

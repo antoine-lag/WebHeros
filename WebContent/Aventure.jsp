@@ -12,12 +12,22 @@
 </head>
 <body>
 	<div ng-app="webHerosApp" ng-controller="webHerosCtrl"> 
-		<a href="index.html">Accueil</a>
-		<a href="Servlet?mode=goTableauBord">Tableau de bord</a>
-		<form action="Servlet" method="get">
-			<input type="hidden" name="mode" value="deco"/>
-			<input type="submit" value="Deconnexion"/>
-		</form>
+		
+		<div class="header">
+			<form action="index.html" method="get">
+				<input type="submit" value="Accueil"/>
+			</form>
+			<form action="Servlet" method="get">
+				<input type="hidden" name="mode" value="goTableauBord"/>
+				<input type="submit" value="Tableau de bord"/>
+			</form>
+			<form action="Servlet" method="get">
+				<input type="hidden" name="mode" value="deco"/>
+				<input type="submit" value="Deconnexion"/>
+			</form>
+		</div>
+		
+		
 		
 		<h1>Vous naviguez dans l'aventure {{aventureName}}</h1>
 		<br>
@@ -54,7 +64,8 @@
 	
 <script>
 //- Bouton déco
-//PROBLEMES
+//<a href="index.html">Accueil</a>
+//			<a href="Servlet?mode=goTableauBord">Tableau de bord</a>
 function initVars(scope) {
 	scope.message = "___";
 	scope.aventureName = "<%= (String) request.getSession(false).getAttribute("nomAventure") %>"
