@@ -22,10 +22,10 @@
 				<input type="submit" value="Creer aventure"/>
 			</form>
 		<%}%>
+		<p id="separateur"></p>
 		<form action="Servlet" method="get">
 			<input type="hidden" name="mode" value="deco"/>
 			<input type="submit" value="Deconnexion"/>
 		</form>
-		<!--<button type="submit" formaction="Servlet" formmethod="get" name="mode" value="deco">Deconnexion</button>-->
 	</body>
 </html>
