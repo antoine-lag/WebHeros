@@ -45,7 +45,6 @@ public class GestionnaireAjouts {
 		Aventure aventure = em.find(Aventure.class, id_aventure);
 		aventure.getSituations().add(situation);
 		em.merge(situation);
-		facade.visiter(id_utilisateur, situation.getId(), id_aventure,true);
 		utilisateur.getStatistiques().setNbSituationsCrees(utilisateur.getStatistiques().getNbSituationsCrees()+1);
 		return situation;
 		
@@ -66,6 +65,7 @@ public class GestionnaireAjouts {
 		{
 			Situation nouvelle = ajouterSituation(texte,textesChoix,id_utilisateur,id_aventure,em,facade);
 			source.setSituation(nouvelle);
+			facade.visiter(id_utilisateur, nouvelle.getId(), id_aventure,true);
 			return nouvelle;
 		}
 		return null;
@@ -76,6 +76,7 @@ public class GestionnaireAjouts {
 		Situation nouvelle = ajouterSituation(texte,textesChoix,id_utilisateur,id_aventure,em,facade);
 		Aventure aventure = em.find(Aventure.class, id_aventure);
 		aventure.setDebut(nouvelle);
+		facade.visiter(id_utilisateur, nouvelle.getId(), id_aventure,true);
 		em.merge(nouvelle);
 		
 		return nouvelle;

@@ -70,8 +70,10 @@ public class Facade {
 	//angular routes : <script src=https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0rc1/angular-route.min.js></script>
 	@Produces({ "application/json" })
 	public String getSituation(@DefaultValue("-1") @QueryParam("idSituation") int idSituation,
-			@DefaultValue("-1") @QueryParam("idJoueur") int idJoueur) {
-		return Agregateur.getJSONSituation(idSituation, idJoueur, em);
+			@DefaultValue("-1") @QueryParam("idJoueur")  int idJoueur, @DefaultValue("-1") @QueryParam("idAventure")  int idAventure) { 
+			String res = Agregateur.getJSONSituation(idSituation, idJoueur, em);
+			visiter(idJoueur, idSituation, idAventure, false);
+			return res;
 	}
 	
 	@GET
@@ -127,6 +129,8 @@ public class Facade {
 				}
 			}
 		}
+		//System.out.println("---------"+em.find(Cheminement.class, chem.getId()).isActif()+"---------");
+		System.out.println("++++++++++++"+chem.isActif()+"+++++++++++++");
 		return chem;
 		
 	}

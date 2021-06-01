@@ -22,7 +22,6 @@ public class GestionnaireCheminement {
 	{
 		RechercheCheminement rc = trouverCheminementDonnantSur(em,id_joueur,id_situation,id_aventure);
 
-		//Todo
 		if(rc.getType().equals(TypeRechercheCheminement.NOUVEAU_DEPART))
 		{
 			//nouveau depart

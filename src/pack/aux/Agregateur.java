@@ -88,6 +88,7 @@ public class Agregateur {
 		}
 		envoi.put("choicesList", JchoicesList);
 		String sJsonData = envoi.toJson();
+		
 		return sJsonData;
 	}
 	//Indique si un choix mene vers une situation qui n'existe pas encore
