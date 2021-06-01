@@ -17,10 +17,17 @@
 		<form action="Servlet" method="get">
 			<input type="hidden" name="mode" value = "accueil">	
 			<%for (int i=0; i<listeIdAventure.size(); i++) {%>
-				<p><%=listeNomAventure.get(i)%> <input type="radio" name="idAventure" value="<%=listeIdAventure.get(i)%>"/><p/>
+				<%if (i==0) {%>
+					<p><%=listeNomAventure.get(i)%> <input type="radio" name="idAventure" 
+					value="<%=listeIdAventure.get(i)%>" checked/><p/>
+				<%} else{%>
+					<p><%=listeNomAventure.get(i)%> <input type="radio" name="idAventure" 
+					value="<%=listeIdAventure.get(i)%>"/><p/>
+				<%}%>
 			<%}%>
 			<input type="submit" value="C'est parti!"/>
 		</form>
+		<p id="seperateur"></p>
 		<a href="accueil.jsp">Retour a l'accueil</a>
 	</body>
 </html>

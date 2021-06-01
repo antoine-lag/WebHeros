@@ -1,63 +1,63 @@
 @charset "UTF-8";
 
 body {
-	margin: 10px 0;
 	text-align: center;
     background-color: lightblue;
-  	font: 1.5em "Bahnschrift", helvetica, sans-serif ;
-	color: $text-color;
+  	font: 1.1em "Bahnschrift", helvetica, sans-serif ;
 	font-size: calc(1em + 1.25vw);
-	opacity : 0.5;
-}
-
-form {
-	width: 100%;
-    padding: 25px;
-    border: 1px solid #f1f1f1;
-    background: white;
-    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
-	display: flex;
-	flex-wrap: wrap;
-	flex-direction: column;
-}
-
-input[type=submit] {
-	color: black;
-	background: rgb(245,245,245);
-	padding: 10px 0px;
-	border-radius: 5px;
-	display: block;
-	margin-left: auto;
-    margin-right: auto;
-    width: 10%;
-}
-
-#global {
-  margin-left: auto;
-  margin-right: auto;
-  width: 50%;
-}
-
-a:linked{
-	color : red;
-	text-decoration: none;
-}
-
-a:visited{
-	color : green;
-}
-
-a:hover{
-	background-color : blue;
-	color : white;
-	font-weight : bold;
-	text-decoration : underline;
-}
-
-a:active{
-	background-color : navy;
+	opacity : 0.6;
 }
 
 h1 {
 	font-family : "Raleway", sans-serif;
+	color: navy;
+}
+
+#separateur {
+	padding: 2%;
+}
+
+p {
+	color: navy;
+}
+
+form {
+	width: 90%;
+	margin-left: auto;
+  	margin-right: auto;
+    padding: 25px 0px;
+    border: 1px solid #f1f1f1;
+    background: white;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+}
+
+input[type=submit] {
+	color: navy;
+	background: #cc0000;
+	padding: 10px 10px;
+	border-radius: 5px;
+	display: block;
+	margin-left: auto;
+    margin-right: auto;
+    width: 15%;
+}
+
+a { 
+	color: white; 
+	background-color: navy; 
+	text-decoration: none; 
+	text-align: center; 
+	padding: 10px 10px;
+	border-radius: 5px; 
+	display: block;
+	margin-left: auto;
+  	margin-right: auto;
+    width: 20%;
+    font-size: 0.7em;
+}
+
+a:hover{
+	background-color : white;
+	color : navy;
+	text-decoration : none;
 }

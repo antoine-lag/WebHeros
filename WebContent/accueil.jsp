@@ -9,6 +9,7 @@
 	<title>Accueil</title>
 </head>
 	<body>
+		<h1>Accueil</h1>
 		<p><a href="commencer_aventure.jsp">Commencer une nouvelle aventure!</a></p>
 		<p><a href="reprendre_aventure.jsp">Reprendre une aventure!</a></p>
 		<p><a href="tableau_de_bord.jsp">Acceder au tableau de bord</a></p>
@@ -19,13 +20,13 @@
 			<form action="Servlet" method="get">
 				<input type="hidden" name="mode" value="accueil"/>
 				<input type="hidden" name="creationAventure" value="true"/>				
-				<input type="submit" value="Creer aventure"/>
+				<input type="submit" value="Creer aventure" id="aventure"/>
 			</form>
 		<%}%>
 		<p id="separateur"></p>
 		<form action="Servlet" method="get">
 			<input type="hidden" name="mode" value="deco"/>
-			<input type="submit" value="Deconnexion"/>
+			<input type="submit" value="Deconnexion" id="deco"/>
 		</form>
 	</body>
 </html>

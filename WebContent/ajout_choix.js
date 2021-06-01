@@ -3,12 +3,10 @@ let max_choix = 4;
 
 function nouveauChoix() {
 	// ajouter un choix
-	if (compteur<max_choix-1) {
-		var x = document.createElement("INPUT");
-		x.setAttribute("name", "choixSuite");
-		x.setAttribute("required", "true");
-		document.getElementById("formAjout").insertBefore(x,document.getElementById("nouvSitu"));
-	}
+	var x = document.createElement("INPUT");
+	x.setAttribute("name", "choixSuite");
+	x.setAttribute("required", "true");
+	document.getElementById("formAjout").insertBefore(x,document.getElementById("nouvSitu"));
 	
 	// griser le bouton
 	if (compteur==max_choix-2) {
