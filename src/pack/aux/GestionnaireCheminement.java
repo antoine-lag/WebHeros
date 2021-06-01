@@ -45,7 +45,8 @@ public class GestionnaireCheminement {
 	{
 		Utilisateur utilisateur = em.find(Utilisateur.class, id_joueur);
 		Aventure av = em.find(Aventure.class, id_aventure);
-		Collection<Cheminement> cheminements = utilisateur.getCheminements().stream().filter(c->c.isActif()).collect(Collectors.toSet());
+		Collection<Cheminement> cheminementsTotaux = utilisateur.getCheminements();
+		Collection<Cheminement> cheminements = cheminementsTotaux.stream().filter(c->c.isActif()).collect(Collectors.toSet());
 		for(Cheminement ch : cheminements)
 		{
 			Situation position = ch.getPosition();

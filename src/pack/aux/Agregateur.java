@@ -47,6 +47,7 @@ public class Agregateur {
 		for(Accomplissement ac : utilisateur.getAccomplissements())
 		{
 			textesAccomplissements.add(ac.getNom());
+			System.out.println("-----------"+ac.getId()+"------------");
 			datesAccomplissements.add(ac.getDate());
 		}
 		InfoTableauBord tableau = new InfoTableauBord();

@@ -34,7 +34,7 @@ public class Utilisateur {
 	@OneToMany
 	Collection<Cheminement> cheminements = new LinkedList<Cheminement>();
 	
-	@OneToMany(mappedBy = "titulaire")
+	@OneToMany(mappedBy = "titulaire", fetch=FetchType.EAGER)
 	Collection<Accomplissement> accomplissements = new LinkedList<Accomplissement>();
 	
 	public Utilisateur() {}

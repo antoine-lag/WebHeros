@@ -2,6 +2,9 @@ package pack.aux;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 
@@ -126,15 +129,15 @@ public class GestionnaireAchivement {
 	//Donne une recompense a un utilisateur
 	public static void distribuerRecompense(EntityManager em, int id_utilisateur, String type)
 	{
-		
 		Utilisateur utilisateur = em.find(Utilisateur.class, id_utilisateur);
-		
-		if(!utilisateur.getAccomplissements().stream().anyMatch(a->a.getNom().equals(type)))
+		if(!utilisateur.getAccomplissements().stream().anyMatch(a->a.getNom().contentEquals(type)))
 		{
 			Accomplissement accomplissement = new Accomplissement();
 			em.persist(accomplissement);
 			accomplissement.setNom(type);
 			accomplissement.setTitulaire(utilisateur);
+			utilisateur.getAccomplissements().add(accomplissement);
+			accomplissement = em.merge(accomplissement);
 			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");  
 		    Date date = new Date();
 			accomplissement.setDate(formatter.format(date));
