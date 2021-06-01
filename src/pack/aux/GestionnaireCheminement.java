@@ -100,7 +100,7 @@ public class GestionnaireCheminement {
 		String texte = cheminement.getAventure().getNom();
 		String hist = cheminement.getPosition().getTexte();
 		int tailleParcours = cheminement.getParcours().size();
-		String resume = hist.substring(0,Math.min(hist.length()-1, 10));
+		String resume = hist.substring(0,Math.min(hist.length()-1, 20));
 		texte += " : "+resume + " ... ( " +tailleParcours+" situations visitées )" ;
 		return texte;
 	}

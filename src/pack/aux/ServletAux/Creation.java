@@ -20,7 +20,7 @@ public class Creation {
 			int id_jeu = Scribe.getIdJeuSession(request);
 			int idJoueur = Scribe.getIdJoueurSession(request);
 			int idAventure = Scribe.getIdAventureSession(request);
-			int idChoixSoure = (int)(session.getAttribute("idChoixSource"));
+			int idChoixSoure = Integer.parseInt(request.getParameter("idChoixSource"));
 			String texteSituation = request.getParameter("texteSituation");
 			System.out.println(id_jeu + ", " + 
 					idJoueur + ", " + idAventure + ", " + idChoixSoure);
@@ -103,8 +103,6 @@ public class Creation {
 	{
 		HttpSession session = request.getSession(false);
 		if(session != null) {
-			int idChoix = Integer.parseInt(request.getParameter("idChoix"));
-			session.setAttribute("idChoixSource", idChoix);
 			Routeur.renvoiAAjoutSituation(request,response);
 		} else {
 			Routeur.renvoiALaConnexion(request,response);

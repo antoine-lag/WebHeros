@@ -1,3 +1,4 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -7,7 +8,9 @@
 	</head>
 	<body>
 		<form action = "Servlet" method = "post" id="formAjout">
-			<input type="hidden" id="modeSend" name="mode" value="ajoutSituation" required/>
+			<input type="hidden" id="modeSend" name="mode" value="ajoutSituation"/>
+			<input type="hidden" name="idChoixSource" value="<%=request.getParameter("idChoixSource")%>"/>
+			
 			
 			<p>
 	    		<textarea rows="10" cols="30" wrap = "hard" id="inputTexte" name="texteSituation" placeholder="Texte de la situation" required></textarea>

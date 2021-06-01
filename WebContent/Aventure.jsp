@@ -149,7 +149,7 @@ function selectChoice(choice, scope, http, location) {
 	//Si situation non validé : redirect to tableau bord
 	else{//redirect to ajoutSituation page
 		console.log("Choice selected is a leaf ! Redirecting...");
-		window.location.href = 'Servlet?mode=initAjoutSituation&idChoix=' + scope.lastChoiceId;
+		window.location.href = 'Servlet?mode=initAjoutSituation&idChoixSource=' + scope.lastChoiceId;
 	}
 }
 

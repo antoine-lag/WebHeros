@@ -58,6 +58,7 @@ public class Agregateur {
 		tableau.setTextesAccomplissements(textesAccomplissements);
 		tableau.setStats(utilisateur.getStatistiques());
 		tableau.setPremium(utilisateur.getPremium());
+		tableau.setIsActiveCheminements(isActiveCheminements);
 		return tableau;
 	}
 	public static String getJSONSituation(int idSituation,

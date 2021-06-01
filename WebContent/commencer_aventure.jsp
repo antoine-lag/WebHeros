@@ -10,7 +10,7 @@
 		<title>Commencer une aventure</title>
 	</head>
 	<body>
-		<%InfoTableauBord infos = (InfoTableauBord) request.getSession().getAttribute("infoTableauBord");%>
+		<%InfoTableauBord infos = (InfoTableauBord) request.getSession(false).getAttribute("infoTableauBord");%>
 		<%List<Integer> listeIdAventure = infos.getIdsAventures();%>
 		<%List<String> listeNomAventure = infos.getNomsAventures();%>
 		<h1>Démarrer une aventure :</h1>

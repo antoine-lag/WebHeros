@@ -10,15 +10,16 @@
 		<title>Reprendre une aventure</title>
 	</head>
 	<body>
-		<%InfoTableauBord infos = (InfoTableauBord) request.getSession().getAttribute("infoTableauBord");%>
+		<%InfoTableauBord infos = (InfoTableauBord) request.getSession(false).getAttribute("infoTableauBord");%>
 		<%List<Integer> listeIdCheminement = infos.getIdsCheminements();%>
-		<%List<String> listeTexteCheminement = infos.getTextesCompletsCheminements();%>
-		<%List<Boolean> listeIsActive = infos.getIsActiveCheminements();%>
+		<%List<String> listeTexteCheminement = infos.getTextesCheminements();%>
+		<%List<Boolean> listeIsActive = infos.getIsActiveCheminements();%> 
 		<h1>Partie en cours:</h1>
 		<form action="Servlet" method="get">
+			<input type="hidden" name="mode" value="accueil"/>
 			<%for (int i=0; i<listeIdCheminement.size(); i++) {%>
 				<%if (listeIsActive.get(i)) {%>
-					<p><%=listeTexteCheminement.get(i)%> <input type="radio" name="idCheminement" 
+					<p><%=listeTexteCheminement.get(i)%><input type="radio" name="idCheminement" 
 					value="<%=listeIdCheminement.get(i)%>"/><p/>
 				<%}%>
 			<%}%>
@@ -30,6 +31,5 @@
 				<p><%=listeTexteCheminement.get(i)%><p/>
 			<%}%>
 		<%}%>
-		<a href="accueil.jsp">Retour a l'accueil</a>
 	</body>
 </html>

@@ -32,7 +32,7 @@ public class Routeur {
 	}
 	public static void renvoiAAjoutSituation(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
-		RequestDispatcher disp = request.getRequestDispatcher("AjoutSituation.html");
+		RequestDispatcher disp = request.getRequestDispatcher("AjoutSituation.jsp");
 		disp.forward(request, response);
 	}
 	public static void renvoiAPremium(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
