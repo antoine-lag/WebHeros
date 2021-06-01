@@ -47,7 +47,6 @@ public class Agregateur {
 		for(Accomplissement ac : utilisateur.getAccomplissements())
 		{
 			textesAccomplissements.add(ac.getNom());
-			System.out.println("-----------"+ac.getId()+"------------");
 			datesAccomplissements.add(ac.getDate());
 		}
 		InfoTableauBord tableau = new InfoTableauBord();
@@ -59,6 +58,7 @@ public class Agregateur {
 		tableau.setTextesAccomplissements(textesAccomplissements);
 		tableau.setStats(utilisateur.getStatistiques());
 		tableau.setPremium(utilisateur.getPremium());
+		tableau.setTextesCompletsCheminements(textesCompletsCheminements);
 		tableau.setIsActiveCheminements(isActiveCheminements);
 		return tableau;
 	}

@@ -83,6 +83,8 @@ public class Servlet extends HttpServlet {
 			Routeur.renvoiAPremium(request,response);
 		}else if (request.getParameter("mode").equals("goTableauBord")) {
 			Routeur.renvoyerVersTableauBord(request,response,facade);
+		}else if (request.getParameter("mode").equals("afficheurHistoire")) {
+			Routeur.renvoiAAfficheurHistoire(request,response);
 		}
 		//CECI EST UN TEST
 		else if(request.getParameter("mode").equals("aventure")) {

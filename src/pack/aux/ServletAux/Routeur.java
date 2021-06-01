@@ -40,6 +40,11 @@ public class Routeur {
 		RequestDispatcher disp = request.getRequestDispatcher("payerPremium.html");
 		disp.forward(request, response);
 	}
+	public static void renvoiAAfficheurHistoire(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	{
+		RequestDispatcher disp = request.getRequestDispatcher("afficheurHistoiresCompletes.jsp");
+		disp.forward(request, response);
+	}
 	public static void renvoyerVersTableauBord(HttpServletRequest request, HttpServletResponse response,Facade facade) throws ServletException, IOException
 	{
 		Scribe.remplirTableauBordInfo(request,facade);
