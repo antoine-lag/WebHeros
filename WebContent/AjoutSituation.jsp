@@ -3,11 +3,15 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
+		<link rel="stylesheet" type="text/css" href="AjoutSituation.css"/>
 		<title>Ajout de Situations</title>
 		<script type="text/javascript" src="ajout_choix.js"></script>
 	</head>
 	<body>
+		<h1>Ajout d'une situation</h1>
+		<h2>Vous voici dans la partie <b>édition</b> de l'histoire. Veuillez renseigner la <b>situation</b> inédite dans laquelle se trouve l'utilisateur ainsi que les <b>choix</b> que se présentent à lui</h2>
 		<form action = "Servlet" method = "post" id="formAjout">
+			<label>Texte de la situation :</label>
 			<input type="hidden" id="modeSend" name="mode" value="ajoutSituation"/>
 			<input type="hidden" name="idChoixSource" value="<%=request.getParameter("idChoixSource")%>"/>
 			
