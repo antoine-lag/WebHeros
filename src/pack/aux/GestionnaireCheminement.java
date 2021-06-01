@@ -139,6 +139,8 @@ public class GestionnaireCheminement {
 		Utilisateur utilisateur = em.find(Utilisateur.class, id_joueur);
 		Aventure aventure = em.find(Aventure.class, id_aventure);
 		Situation situation = aventure.getDebut();
+		System.out.println("#######ID SITUATION NOUVEAU CHEM##### : " + situation.getId());
+		
 		Cheminement cheminement = new Cheminement();
 		em.persist(cheminement);
 		cheminement.setActif(true);

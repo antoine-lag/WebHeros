@@ -61,7 +61,7 @@ public class GestionnaireAjouts {
 	public static Situation affilierSituationFille(int id_choix,String texte,List<String> textesChoix, int id_utilisateur,int id_aventure,EntityManager em, Facade facade)
 	{
 		Choix source = em.find(Choix.class, id_choix);
-		if(source.getSituation() ==null)
+		if(source.getSituation() == null)
 		{
 			Situation nouvelle = ajouterSituation(texte,textesChoix,id_utilisateur,id_aventure,em,facade);
 			source.setSituation(nouvelle);

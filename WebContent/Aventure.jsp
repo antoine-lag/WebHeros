@@ -81,7 +81,9 @@ function initView(scope) {
 //Retrieve the situation data (id+text+choices) determined by the situation's ID
 //OK
 function getSituation(idSituation, scope, http){
-	http.get("rest/getsituation?idSituation="+idSituation).then(function(response) {
+	http.get("rest/getsituation?idSituation="+idSituation+
+			 "&idJoueur="+scope.userId+
+			"&idAventure="+scope.aventureId).then(function(response) {
 		if (response.status == 200) {
 			console.log("Situation " + idSituation + " loaded successfuly !");
 			console.log(response.data);
@@ -190,7 +192,7 @@ app.controller('webHerosCtrl', function($scope,$http) {
 	initVars($scope);
  	initView($scope);
  	console.log($scope.showRedirectMsg);
- 	getSituation("1", $scope, $http);
+ 	getSituation($scope.situationId, $scope, $http);//l'utilisateur reprend là où il en était 
     $scope.doChoice=function(idChoice) {selectChoice(idChoice,$scope,$http);}
     $scope.doVote=function(action) {vote(action, $scope, $http);}
 });

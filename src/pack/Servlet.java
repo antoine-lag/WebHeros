@@ -59,7 +59,7 @@ public class Servlet extends HttpServlet {
     	bob = facade.ajouterUtilisateur("boby", "boby@neutronMail.com", id_jeu, "3500c7baadd59b7db297fc1328d3b9a3a3606198a53e966deba7b91b761fd22d");//Hash of "boby" + "mdp"
     	List<String> choix = Arrays.asList("Vous sortez du chateau.", "Vous allez dans la cave.", "Vous allez dans la tour pour voir l'extérieur.");
 		aventureChateauHante = facade.ajouterAventure("Creepy castle", "Tout commence dans le chateau du Duc de Normandie...", choix, bob.getId(), id_jeu);
-		facade.affilierSituationInitiale("Après être sorti du chateau vous vous rendez compte que vous avez oublié votre lampe torche dans la chambre du 5 ème étage.", 
+		facade.affilierSituationFille(1, "Après être sorti du chateau vous vous rendez compte que vous avez oublié votre lampe torche dans la chambre du 5 ème étage.", 
 				Arrays.asList("Vous re rentrez dans le chateau.", "Vous continuez sans lampe torche.", "Vous tapez une sieste."),
 				bob.getId(), aventureChateauHante);
 		
