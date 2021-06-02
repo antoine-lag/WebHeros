@@ -33,7 +33,7 @@ form {
 
 input[type=submit] {
 	color: white;
-	background: rgba(150,0,0,0.2);
+	background: #cc0000;
 	padding: 10px 10px;
 	border-radius: 5px;
 	display: block;

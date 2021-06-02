@@ -48,5 +48,6 @@
 		</p>
 		
 		<a href="accueil.jsp">Retour a l'accueil</a>
+		<p id="separateur"></p>
 	</body>
 </html>

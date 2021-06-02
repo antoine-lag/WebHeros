@@ -14,22 +14,17 @@
 		
 		
 		<div class="header">
+			<p>
+				<a href="tableau_de_bord.jsp">Tableau de bord</a>
+			</p>
+			<p>
+				<a href="accueil.jsp">Accueil</a>
+			</p>
 			<div>
-			<form action="index.html" method="get" id="form1">
-				<input type="submit" value="Accueil"/>
-			</form>
-			</div>
-			<div>
-			<form action="Servlet" method="get" id="form2">
-				<input type="hidden" name="mode" value="goTableauBord"/>
-				<input type="submit" value="Tableau de bord"/>
-			</form>
-			</div>
-			<div>
-			<form action="Servlet" method="get" id="form3">
-				<input type="hidden" name="mode" value="deco"/>
-				<input type="submit" value="Deconnexion"/>
-			</form>
+				<form action="Servlet" method="get" id="form3">
+					<input type="hidden" name="mode" value="deco"/>
+					<input type="submit" value="Deconnexion"/>
+				</form>
 			</div>
 		</div>
 		

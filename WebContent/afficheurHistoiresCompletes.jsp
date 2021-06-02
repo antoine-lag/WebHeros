@@ -16,5 +16,7 @@
 		<%for (String s : infos_spl) {%>
 			<p><%=s %></p>
 		<%}%>
+		<p id="separateur"></p>
+		<a href="accueil.jsp">Retour a l'accueil</a>
 	</body>
 </html>
