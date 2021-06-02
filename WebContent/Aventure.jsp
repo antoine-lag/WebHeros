@@ -31,7 +31,7 @@
 		<h1>Vous naviguez dans l'aventure {{aventureName}}</h1>
 		
 		<div ng-show="showRedirectMsg">
-			Attention cette situation n'est pas validée par la communauté. Tout les choix vous redirigerons vers le tableau de bords.
+			Attention cette situation n'est pas validée par la communauté. Tous les choix vous redirigeront vers le tableau de bords.
 		</div>
 		<br>
 		

@@ -17,16 +17,16 @@ public class Assesseur {
 	{
 		int scoreValidation = 1;
 		Utilisateur joueur = em.find(Utilisateur.class, id_joueur);
-
 		joueur.getStatistiques().setNbVotes(joueur.getStatistiques().getNbVotes()+1);
 		Situation sit = em.find(Situation.class, id_situation);
-		Vote vote = new Vote();
-		em.persist(vote);
-		vote.setScore(note);
-		vote.setVotant(joueur);
 		Moderation mod = sit.getModeration();
+		Vote vote = new Vote();
 		if(!aVote(joueur.getId(),mod))
 		{
+			em.persist(vote);
+			vote.setScore(note);
+			vote.setVotant(joueur);
+			
 			if(note>0)
 			{
 				joueur.getStatistiques().setNbVotesPositifs(joueur.getStatistiques().getNbVotesPositifs()+1);
