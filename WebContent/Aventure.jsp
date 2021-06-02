@@ -128,10 +128,10 @@ function selectChoice(choice, scope, http, location) {
 	//If choice has no situation following (is a leaf of the tree) : redirect to addSituation page
 	
 	//A DECOMMENTER POUR LA RELEASE
-	/*if(!scope.validatedSituation){
+	if(!scope.validatedSituation){
 		window.location.href = 'Servlet?mode=goTableauBord';
 	}
-	else */if(situationExist){//if situation associated with this choice exist : request it to server
+	else if(situationExist){//if situation associated with this choice exist : request it to server
 		http.get("rest/getsituationchoix?idChoix="+idChoice+
 				"&idJoueur="+scope.userId+
 				"&idAventure="+scope.aventureId).then(function(response) {
