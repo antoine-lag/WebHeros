@@ -58,7 +58,6 @@ public class Creation {
 
 		HttpSession session = request.getSession(false);
 		if (session!=null) {
-			System.out.println("------------------SESSION NOT NULL------------------");
 			if(request.getParameter("idAventure") != null)
 			{
 				int id_aventure = Integer.parseInt(request.getParameter("idAventure"));
@@ -71,7 +70,7 @@ public class Creation {
 				initAjoutAventure(request,response);
 			}
 		} else {
-			System.out.println("------------------SESSION NULL------------------");
+
 			Routeur.renvoiALaConnexion(request,response);
 		}
 	}
@@ -92,13 +91,12 @@ public class Creation {
 		HttpSession session = request.getSession(false);
 		
 		if (session!=null) {
-			System.out.println("------------------SESSION VALIDE------------------");
 			int idCheminement = Integer.parseInt(request.getParameter("idCheminement"));
 			Scribe.ajoutInformationsPreJeuSession(request,idCheminement,facade);
 			
 			Routeur.renvoiAAventure(request,response);
 		} else {
-			System.out.println("--------------SESSION INVALIDE---------------");
+
 			Routeur.renvoiALaConnexion(request,response);
 		}
 	}

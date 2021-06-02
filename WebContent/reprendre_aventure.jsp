@@ -18,10 +18,17 @@
 		<h1>Partie en cours:</h1>
 		<form action="Servlet" method="get">
 			<input type="hidden" name="mode" value="accueil"/>
+			<%int i_ =0; %>
 			<%for (int i=0; i<listeIdCheminement.size(); i++) {%>
 				<%if (listeIsActive.get(i)) {%>
-					<p><%=listeTexteCheminement.get(i)%><input type="radio" name="idCheminement" 
-					value="<%=listeIdCheminement.get(i)%>"/><p/>
+				<%i_ ++; %>
+					<%if (i_==1) {%>
+						<p><%=listeTexteCheminement.get(i)%><input type="radio" name="idCheminement" 
+						value="<%=listeIdCheminement.get(i)%>" checked/><p/>
+					<%}else {%>
+						<p><%=listeTexteCheminement.get(i)%><input type="radio" name="idCheminement" 
+						value="<%=listeIdCheminement.get(i)%>"/><p/>
+					<%}%>
 				<%}%>
 			<%}%>
 			<input type="submit" value="C'est parti!"/>
@@ -29,10 +36,17 @@
 		<h1>Partie finie:</h1>
 		<form action="Servlet" method="post">
 		<input type="hidden" name="mode" value="afficheurHistoire"/>
+			<%i_=0; %>
 			<%for (int i=0; i<listeIdCheminement.size(); i++) {%>
 				<%if (!listeIsActive.get(i)) {%>
-					<p><%=listeTexteCheminement.get(i)%><input type="radio" name="histoireComplete" 
-					value="<%=listeTexteCompletCheminement.get(i)%>"/><p/>
+				<%i_ ++; %>
+					<%if (i_==1) {%>
+						<p><%=listeTexteCheminement.get(i)%><input type="radio" name="histoireComplete" 
+						value="<%=listeTexteCompletCheminement.get(i)%>" checked/><p/>
+					<%}else {%>
+						<p><%=listeTexteCheminement.get(i)%><input type="radio" name="histoireComplete" 
+						value="<%=listeTexteCompletCheminement.get(i)%>"/><p/>
+					<%}%>
 				<%}%>
 			<%}%>
 			<input type="submit" value="Relecture"/>
