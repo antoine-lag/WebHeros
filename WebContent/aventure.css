@@ -58,6 +58,9 @@ h3 {
     margin-right: auto;
     width: 10%;
 }
+button:disabled {
+	background-color : grey;
+}
 
 h1 {
 	font-family : "Raleway", sans-serif;
