@@ -15,18 +15,18 @@ public class Assesseur {
 	//Ajoute un vote du joueur sur la situation, et la valide si elle passe un certain score
 	public static Vote voter(int id_joueur, int id_situation, int note,EntityManager em)
 	{
-		int scoreValidation = 3;
+		int scoreValidation = 1;
 		Utilisateur joueur = em.find(Utilisateur.class, id_joueur);
-
 		joueur.getStatistiques().setNbVotes(joueur.getStatistiques().getNbVotes()+1);
 		Situation sit = em.find(Situation.class, id_situation);
-		Vote vote = new Vote();
-		em.persist(vote);
-		vote.setScore(note);
-		vote.setVotant(joueur);
 		Moderation mod = sit.getModeration();
+		Vote vote = new Vote();
 		if(!aVote(joueur.getId(),mod))
 		{
+			em.persist(vote);
+			vote.setScore(note);
+			vote.setVotant(joueur);
+			
 			if(note>0)
 			{
 				joueur.getStatistiques().setNbVotesPositifs(joueur.getStatistiques().getNbVotesPositifs()+1);
@@ -35,7 +35,7 @@ public class Assesseur {
 				joueur.getStatistiques().setNbVotesNegatifs(joueur.getStatistiques().getNbVotesNegatifs()+1);
 			}
 			mod.getVotes().add(vote);
-			if((!mod.getValidee()) && calculerScore(mod.getId(),em)>scoreValidation)
+			if((!mod.getValidee()) && calculerScore(mod.getId(),em)>=scoreValidation)
 			{
 				mod.setValidee(true);
 				mod.getCreateur().getStatistiques().

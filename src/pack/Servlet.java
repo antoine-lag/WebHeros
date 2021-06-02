@@ -77,6 +77,7 @@ public class Servlet extends HttpServlet {
 			//get parameter idChoix
 			Creation.initAjoutSituation(request,response);
 		}else if (request.getParameter("mode").equals("accueil")) {
+			System.out.println("DEMMANDE ACCUEIL !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 			Creation.choixAventureFait(request,response,facade);
 		}else if (request.getParameter("mode").equals("deco")) {
 			Securite.deconnexion(request,response);
